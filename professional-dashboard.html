@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="AskExpert - Professional Expert Dashboard. Manage incoming consultation requests, live client chats, answers, and earnings." />
+  <title>AskExpert | Professional Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - PROFESSIONAL DASHBOARD STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 18px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* ========================================================
+       SIDEBAR NAVIGATION
+       ======================================================== */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(4, 10, 22, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 900;
+      box-shadow: 0 4px 14px rgba(0, 217, 255, 0.4);
+    }
+
+    .brand-text {
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-text span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 20px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(0, 153, 255, 0.2), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .nav-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* ========================================================
+       MAIN WORKSPACE LAYOUT
+       ======================================================== */
+    .dashboard-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Top Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 8px 16px;
+      width: min(380px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13.5px;
+      outline: none;
+      width: 100%;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .status-toggle-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(32, 216, 137, 0.12);
+      border: 1px solid rgba(32, 216, 137, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 750;
+      color: var(--green);
+      cursor: pointer;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px 5px 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #031120;
+      font-weight: 850;
+      font-size: 12.5px;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Dashboard Body */
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(0, 153, 255, 0.18), rgba(138, 92, 255, 0.12));
+      border: 1px solid rgba(0, 217, 255, 0.25);
+      border-radius: var(--radius);
+      padding: 26px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .welcome-desc {
+      font-size: 13.5px;
+      color: #bad3eb;
+      max-width: 600px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 217, 255, 0.35);
+    }
+
+    .stat-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .icon-blue {
+      background: rgba(0, 153, 255, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .icon-green {
+      background: rgba(32, 216, 137, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(32, 216, 137, 0.3);
+    }
+
+    .icon-purple {
+      background: rgba(138, 92, 255, 0.15);
+      color: var(--purple);
+      border: 1px solid rgba(138, 92, 255, 0.3);
+    }
+
+    .icon-gold {
+      background: rgba(255, 183, 3, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(255, 183, 3, 0.3);
+    }
+
+    .stat-info span {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-info strong {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    /* Split Sections */
+    .dashboard-split {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 28px;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-all-link {
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--cyan);
+    }
+
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Consultation Request Item */
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .req-item {
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .req-item:hover {
+      border-color: rgba(0, 217, 255, 0.3);
+      background: rgba(0, 153, 255, 0.04);
+    }
+
+    .req-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .req-client-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .req-client-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0, 217, 255, 0.15);
+      border: 1px solid var(--cyan);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--cyan);
+    }
+
+    .req-fee-badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(32, 216, 137, 0.15);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .req-question-title {
+      font-size: 14px;
+      font-weight: 750;
+      color: var(--white);
+    }
+
+    .req-question-snippet {
+      font-size: 12.5px;
+      color: #bad3eb;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .req-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-action-accept {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-action-accept:hover {
+      box-shadow: 0 4px 12px rgba(0, 217, 255, 0.4);
+    }
+
+    .btn-action-reject {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 750;
+      background: rgba(255, 71, 87, 0.1);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      color: var(--red);
+      cursor: pointer;
+    }
+
+    /* Active Chats List */
+    .chats-widget-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-widget-row {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chat-widget-row:hover {
+      background: rgba(0, 153, 255, 0.08);
+      border-color: rgba(0, 217, 255, 0.3);
+    }
+
+    /* Earnings Card */
+    .earnings-hero-widget {
+      background: linear-gradient(135deg, rgba(32, 216, 137, 0.12), rgba(0, 153, 255, 0.12));
+      border: 1px solid rgba(32, 216, 137, 0.3);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .earnings-amount {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--green);
+      margin: 4px 0 10px;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========================================================
+       SIDEBAR
+       ======================================================== -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand-section">
+        <div class="brand-mark">AE</div>
+        <div class="brand-text">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="professional-dashboard.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Overview</span>
+          </div>
+        </a>
+
+        <a href="consultation-requests.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📥</span>
+            <span>Requests</span>
+          </div>
+          <span class="nav-badge" id="sidebarReqBadge">2</span>
+        </a>
+
+        <a href="chat.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💬</span>
+            <span>Active Chats</span>
+          </div>
+          <span class="nav-badge" style="background: var(--green);">4</span>
+        </a>
+
+        <a href="questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>✨</span>
+            <span>Browse Inquiries</span>
+          </div>
+        </a>
+
+        <a href="professional-earnings.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💰</span>
+            <span>Earnings</span>
+          </div>
+        </a>
+
+        <a href="professional-profile.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👤</span>
+            <span>Expert Profile</span>
+          </div>
+        </a>
+
+        <a href="professional-verification.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🛡️</span>
+            <span>Verification</span>
+          </div>
+        </a>
+
+        <a href="notifications.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🔔</span>
+            <span>Notifications</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="expertLogoutBtn" class="btn-logout">
+        <span>🚪</span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MAIN DASHBOARD WORKSPACE
+       ======================================================== */
+  -->
+  <div class="dashboard-layout">
+
+    <!-- Top Header -->
+    <header class="topbar">
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input type="text" class="search-input" placeholder="Search consultations, inquiries or clients..." />
+      </div>
+
+      <div class="top-actions">
+        <div class="status-toggle-pill" id="expertStatusToggle" title="Click to toggle availability">
+          <span>●</span>
+          <span id="expertStatusText">Available for Consultations</span>
+        </div>
+
+        <a href="notifications.html" class="icon-btn" title="Notifications">
+          <span>🔔</span>
+        </a>
+
+        <a href="professional-profile.html" class="user-pill">
+          <div class="user-avatar" id="topAvatarInitial">VR</div>
+          <div style="display: flex; flex-direction: column; line-height: 1.2;">
+            <span style="font-size: 12.5px; font-weight: 800; color: var(--white);" id="topExpertName">Adv. Vikram
+              Rao</span>
+            <span style="font-size: 10px; color: var(--cyan); font-weight: 700;">Verified Specialist</span>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="dashboard-body">
+
+      <!-- Welcome Banner -->
+      <section class="welcome-banner">
+        <div>
+          <h1 class="welcome-title">Welcome to your workspace, <span id="welcomeName">Vikram</span>! ⚖️</h1>
+          <p class="welcome-desc">You have 2 pending client consultation requests. Your bar registration #MH/2014/9842
+            is verified and active.</p>
+        </div>
+        <a href="consultation-requests.html" class="btn-action-accept" style="padding: 10px 20px; font-size: 13.5px;">
+          <span>📥</span> Review Requests
+        </a>
+      </section>
+
+      <!-- Metric Stats Cards -->
+      <section class="stats-grid">
+        <!-- 1. Answered -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap icon-blue">✨</div>
+          <div class="stat-info">
+            <span>Questions Answered</span>
+            <strong id="statAnswered">48</strong>
+          </div>
+        </div>
+
+        <!-- 2. Active Consults -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap icon-purple">💬</div>
+          <div class="stat-info">
+            <span>Active Chats</span>
+            <strong id="statActiveChats">4</strong>
+          </div>
+        </div>
+
+        <!-- 3. Completed -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap icon-green">✓</div>
+          <div class="stat-info">
+            <span>Completed Sessions</span>
+            <strong id="statCompleted">142</strong>
+          </div>
+        </div>
+
+        <!-- 4. Rating -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap icon-gold">⭐</div>
+          <div class="stat-info">
+            <span>Client Rating</span>
+            <strong id="statRating">4.9 (184)</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Split: Requests + Right Column (Chats & Earnings) -->
+      <div class="dashboard-split">
+
+        <!-- Left: Consultation Requests Queue -->
+        <section class="glass-card">
+          <div class="card-header-row">
+            <h2 class="card-title">
+              <span>📥</span> Consultation Requests (<span id="requestsCountHeader">2</span>)
+            </h2>
+            <a href="consultation-requests.html" class="view-all-link">Manage Queue →</a>
+          </div>
+
+          <div class="requests-list" id="requestsList">
+
+            <!-- Request 1 -->
+            <article class="req-item" id="req-1">
+              <div class="req-top-row">
+                <div class="req-client-info">
+                  <div class="req-client-avatar">AS</div>
+                  <div>
+                    <strong style="font-size: 13.5px; color: var(--white);">Aditya Sharma</strong>
+                    <span style="display: block; font-size: 11px; color: var(--muted);">SaaS Founder • Mumbai</span>
+                  </div>
+                </div>
+                <span class="req-fee-badge">₹1,200 Offered</span>
+              </div>
+
+              <div class="req-question-title">Vendor Contract Compliance & Arbitration Seating</div>
+              <p class="req-question-snippet">Need urgent guidance on drafting domestic arbitration and IP indemnity
+                caps under MCA 2026 mandates for enterprise vendor renewals.</p>
+
+              <div class="req-actions-row">
+                <a href="question-details.html?id=q-101" style="font-size: 12px; color: var(--cyan); font-weight: 700;">
+                  View Question Thread →
+                </a>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="btn-action-reject" data-id="req-1">Decline</button>
+                  <button type="button" class="btn-action-accept" data-id="req-1"
+                    data-expert="11111111-1111-1111-1111-111111111111">Accept & Start Chat</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Request 2 -->
+            <article class="req-item" id="req-2">
+              <div class="req-top-row">
+                <div class="req-client-info">
+                  <div class="req-client-avatar">RK</div>
+                  <div>
+                    <strong style="font-size: 13.5px; color: var(--white);">Ravi Kumar</strong>
+                    <span style="display: block; font-size: 11px; color: var(--muted);">Tech Director • Bengaluru</span>
+                  </div>
+                </div>
+                <span class="req-fee-badge">₹1,500 Offered</span>
+              </div>
+
+              <div class="req-question-title">Cross-Border Technology IP Licensing & FEMA Guidelines</div>
+              <p class="req-question-snippet">Looking for contract review on royalty remittance withholding tax and
+                intellectual property assignment clauses.</p>
+
+              <div class="req-actions-row">
+                <a href="question-details.html?id=q-103" style="font-size: 12px; color: var(--cyan); font-weight: 700;">
+                  View Question Thread →
+                </a>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="btn-action-reject" data-id="req-2">Decline</button>
+                  <button type="button" class="btn-action-accept" data-id="req-2"
+                    data-expert="11111111-1111-1111-1111-111111111111">Accept & Start Chat</button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Right: Earnings & Active Chats -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <!-- Earnings Widget -->
+          <div class="earnings-hero-widget">
+            <span style="font-size: 12px; font-weight: 750; color: #bad3eb; text-transform: uppercase;">Total Verified
+              Earnings</span>
+            <div class="earnings-amount" id="earningsDisplay">₹48,900.00</div>
+            <div
+              style="display: flex; justify-content: space-between; font-size: 12px; color: #bad3eb; margin-bottom: 12px;">
+              <span>Today: <strong style="color: var(--white);">₹3,600</strong></span>
+              <span>Pending Payout: <strong style="color: var(--gold);">₹12,400</strong></span>
+            </div>
+            <a href="professional-earnings.html" class="btn-action-accept"
+              style="width: 100%; justify-content: center; display: flex;">
+              <span>💰</span> Payout Details & History
+            </a>
+          </div>
+
+          <!-- Active Consultations Widget -->
+          <section class="glass-card">
+            <div class="card-header-row" style="margin-bottom: 12px;">
+              <h3 style="font-size: 15px; font-weight: 800; color: var(--white);">
+                <span>💬</span> Active Client Chats
+              </h3>
+              <a href="chat.html" class="view-all-link">Open All</a>
+            </div>
+
+            <div class="chats-widget-list">
+              <div class="chat-widget-row" onclick="window.location.href='chat.html'">
+                <div>
+                  <strong style="font-size: 13px; color: var(--white); display: block;">Aditya Sharma</strong>
+                  <span style="font-size: 11.5px; color: var(--muted);">Contract clauses clarification</span>
+                </div>
+                <span style="font-size: 11px; color: var(--green); font-weight: 750;">● Live</span>
+              </div>
+
+              <div class="chat-widget-row" onclick="window.location.href='chat.html'">
+                <div>
+                  <strong style="font-size: 13px; color: var(--white); display: block;">Pooja Hegde</strong>
+                  <span style="font-size: 11.5px; color: var(--muted);">Trademark registration status</span>
+                </div>
+                <span style="font-size: 11px; color: var(--muted);">10m ago</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Recent Verified Client Reviews Widget -->
+          <section class="glass-card">
+            <div class="card-header-row" style="margin-bottom: 12px;">
+              <h3 style="font-size: 15px; font-weight: 800; color: var(--white);">
+                <span>⭐</span> Recent Client Reviews
+              </h3>
+              <span style="font-size: 11.5px; color: var(--gold);" id="dashRatingSummary">4.9 ★ (184)</span>
+            </div>
+
+            <div id="dashReviewsFeed" style="display: flex; flex-direction: column; gap: 10px;">
+              <div
+                style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
+                  <strong style="color: var(--white);">Aditya Sharma</strong>
+                  <span style="color: var(--gold);">★★★★★</span>
+                </div>
+                <p style="font-size: 11.5px; color: #bad3eb; line-height: 1.4;">"Exceptional legal advice regarding
+                  vendor indemnity caps and arbitration seating."</p>
+              </div>
+
+              <div
+                style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
+                  <strong style="color: var(--white);">Ravi Kumar</strong>
+                  <span style="color: var(--gold);">★★★★★</span>
+                </div>
+                <p style="font-size: 11.5px; color: #bad3eb; line-height: 1.4;">"Prompt and thorough counsel. Explained
+                  MCA compliance with clarity."</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE PROFESSIONAL WORKSPACE SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let currentExpertId = "11111111-1111-1111-1111-111111111111";
+    let isAvailable = true;
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    async function initWorkspace() {
+      await enforceRoleAndLoadProfile();
+      await calculateProfessionalEarnings();
+      await loadConsultationRequests();
+      await loadDashboardReviews();
+      setupRequestActions();
+      setupStatusToggle();
+      setupLogout();
+      setupRealtimeRequests();
+    }
+
+    /* ========================================================
+       LOAD RECENT REVIEWS FOR EXPERT
+       ======================================================== */
+    async function loadDashboardReviews() {
+      const feed = document.getElementById("dashReviewsFeed");
+      const summaryEl = document.getElementById("dashRatingSummary");
+
+      try {
+        if (supabase && currentExpertId) {
+          // 1. Fetch Expert Rating from profiles
+          const { data: prof } = await supabase
+            .from("profiles")
+            .select("rating, reviews_count")
+            .eq("id", currentExpertId)
+            .maybeSingle();
+
+          if (prof && prof.rating) {
+            const ratingText = `${parseFloat(prof.rating).toFixed(1)} ★ (${prof.reviews_count || 0})`;
+            summaryEl.textContent = ratingText;
+            const statRatingEl = document.getElementById("statRating");
+            if (statRatingEl) statRatingEl.textContent = `${parseFloat(prof.rating).toFixed(1)} (${prof.reviews_count || 0})`;
+          }
+
+          // 2. Fetch Latest Reviews
+          if (!currentExpertId.startsWith("1111")) {
+            const { data: reviews, error } = await supabase
+              .from("reviews")
+              .select("*, profiles!reviews_user_id_fkey(full_name)")
+              .eq("expert_id", currentExpertId)
+              .order("created_at", { ascending: false })
+              .limit(3);
+
+            if (!error && reviews && reviews.length > 0) {
+              feed.innerHTML = "";
+              reviews.forEach(r => {
+                const name = (r.profiles && r.profiles.full_name) || "Verified Client";
+                const stars = "★".repeat(Math.min(5, Math.max(1, r.rating || 5)));
+                const card = document.createElement("div");
+                card.style.padding = "10px";
+                card.style.background = "rgba(255,255,255,0.03)";
+                card.style.border = "1px solid var(--card-border)";
+                card.style.borderRadius = "10px";
+                card.innerHTML = `
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
+                    <strong style="color: var(--white);">${name}</strong>
+                    <span style="color: var(--gold);">${stars}</span>
+                  </div>
+                  <p style="font-size: 11.5px; color: #bad3eb; line-height: 1.4;">"${r.comment || 'Verified consultation guidance.'}"</p>
+                `;
+                feed.appendChild(card);
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("loadDashboardReviews error:", err);
+      }
+    }
+
+    /* ========================================================
+       LOAD CONSULTATION REQUESTS
+       ======================================================== */
+    async function loadConsultationRequests() {
+      if (!supabase || !currentExpertId || currentExpertId.startsWith("1111")) return;
+
+      try {
+        const { data: requests, error } = await supabase
+          .from("consultation_requests")
+          .select("*, profiles!consultation_requests_user_id_fkey(full_name, headline, avatar_url)")
+          .eq("expert_id", currentExpertId)
+          .eq("status", "pending")
+          .order("created_at", { ascending: false });
+
+        if (!error && requests && requests.length > 0) {
+          const listEl = document.getElementById("requestsList");
+          listEl.innerHTML = "";
+
+          requests.forEach((req, idx) => {
+            const clientName = req.profiles?.full_name || "Verified Client";
+            const clientHeadline = req.profiles?.headline || "Corporate Client";
+            const initials = clientName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "VC";
+            const fee = req.offered_amount ? `₹${parseFloat(req.offered_amount).toLocaleString("en-IN")}` : "Standard Fee";
+
+            const art = document.createElement("article");
+            art.className = "req-item";
+            art.id = `req-live-${req.id}`;
+            art.innerHTML = `
+              <div class="req-top-row">
+                <div class="req-client-info">
+                  <div class="req-client-avatar">${initials}</div>
+                  <div>
+                    <strong style="font-size: 13.5px; color: var(--white);">${clientName}</strong>
+                    <span style="display: block; font-size: 11px; color: var(--muted);">${clientHeadline}</span>
+                  </div>
+                </div>
+                <span class="req-fee-badge">${fee} Offered</span>
+              </div>
+              <div class="req-question-title">${req.message ? req.message.substring(0, 60) : 'Direct Consultation Inquiry'}</div>
+              <p class="req-question-snippet">${req.message || 'Client is requesting an encrypted 1-on-1 advisory session.'}</p>
+              <div class="req-actions-row">
+                <a href="question-details.html" style="font-size: 12px; color: var(--cyan); font-weight: 700;">
+                  View Inquiry Details →
+                </a>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="btn-action-reject" data-id="req-live-${req.id}" data-dbid="${req.id}">Decline</button>
+                  <button type="button" class="btn-action-accept" data-id="req-live-${req.id}" data-dbid="${req.id}" data-expert="${currentExpertId}">Accept & Start Chat</button>
+                </div>
+              </div>
+            `;
+            listEl.appendChild(art);
+          });
+
+          updateRequestsBadge();
+          setupRequestActions();
+        }
+      } catch (err) {
+        console.warn("loadConsultationRequests error:", err);
+      }
+    }
+
+    /* ========================================================
+       ROLE ENFORCEMENT & PROFILE
+       ======================================================== */
+    async function enforceRoleAndLoadProfile() {
+      try {
+        if (supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session && session.user) {
+            currentExpertId = session.user.id;
+            const meta = session.user.user_metadata || {};
+
+            // Role guard
+            if (meta.role === "user") {
+              window.location.replace("user-dashboard.html");
+              return;
+            } else if (meta.role === "admin") {
+              window.location.replace("admin-dashboard.html");
+              return;
+            }
+
+            const name = (meta.full_name || "Adv. Vikram Rao").trim();
+            const nameParts = name.split(/\s+/);
+            const firstName = nameParts[0] || name;
+            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : firstName;
+            const initials = nameParts.map(n => n[0]).join("").slice(0, 2).toUpperCase() || "VR";
+
+            document.getElementById("topExpertName").textContent = name;
+            document.getElementById("welcomeName").textContent = lastName;
+            document.getElementById("topAvatarInitial").textContent = initials;
+          }
+        }
+      } catch (err) {
+        console.warn("Auth role check warning:", err);
+      }
+    }
+
+    /* ========================================================
+       CALCULATE VERIFIED EARNINGS FROM PAYMENTS TABLE
+       ======================================================== */
+    async function calculateProfessionalEarnings() {
+      let totalEarned = 48900.00;
+
+      if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
+        try {
+          const { data: payments, error } = await supabase
+            .from("payments")
+            .select("amount, status")
+            .eq("expert_id", currentExpertId)
+            .eq("status", "successful");
+
+          if (!error && payments) {
+            totalEarned = payments.reduce((acc, p) => acc + parseFloat(p.amount || 0), 0);
+            const statCompletedEl = document.getElementById("statCompleted");
+            if (statCompletedEl) statCompletedEl.textContent = payments.length.toString();
+          }
+        } catch (err) {
+          console.warn("Earnings calculation error:", err);
+        }
+      }
+
+      document.getElementById("earningsDisplay").textContent = `₹${totalEarned.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+    }
+
+    /* ========================================================
+       CONSULTATION REQUEST ACTIONS (ACCEPT / REJECT)
+       ======================================================== */
+    function setupRequestActions() {
+      // Accept
+      document.querySelectorAll(".btn-action-accept").forEach(btn => {
+        // Remove previous listener if cloned
+        btn.onclick = async () => {
+          const reqId = btn.dataset.id;
+          const dbId = btn.dataset.dbid;
+          const expertId = btn.dataset.expert || currentExpertId;
+
+          showToast("✓ Request accepted! Launching encrypted chat room...");
+
+          // Persist status to Supabase
+          if (supabase && dbId) {
+            try {
+              await supabase
+                .from("consultation_requests")
+                .update({ status: "accepted", updated_at: new Date().toISOString() })
+                .eq("id", dbId);
+            } catch (e) {
+              console.warn("DB accept update error:", e);
+            }
+          }
+
+          // Remove item from view
+          const item = document.getElementById(reqId);
+          if (item) item.remove();
+
+          updateRequestsBadge();
+
+          setTimeout(() => {
+            window.location.href = `chat.html?expert=${encodeURIComponent(expertId)}`;
+          }, 800);
+        };
+      });
+
+      // Reject
+      document.querySelectorAll(".btn-action-reject").forEach(btn => {
+        btn.onclick = async () => {
+          const reqId = btn.dataset.id;
+          const dbId = btn.dataset.dbid;
+
+          if (supabase && dbId) {
+            try {
+              await supabase
+                .from("consultation_requests")
+                .update({ status: "declined", updated_at: new Date().toISOString() })
+                .eq("id", dbId);
+            } catch (e) {
+              console.warn("DB decline update error:", e);
+            }
+          }
+
+          const item = document.getElementById(reqId);
+          if (item) item.remove();
+          updateRequestsBadge();
+          showToast("Request declined.");
+        };
+      });
+    }
+
+    function updateRequestsBadge() {
+      const count = document.querySelectorAll(".req-item").length;
+      const countEl = document.getElementById("requestsCountHeader");
+      const sidebarBadge = document.getElementById("sidebarReqBadge");
+      if (countEl) countEl.textContent = count;
+      if (sidebarBadge) sidebarBadge.textContent = count;
+    }
+
+    /* ========================================================
+       REALTIME REQUESTS LISTENER
+       ======================================================== */
+    function setupRealtimeRequests() {
+      if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
+        supabase
+          .channel(`expert_consultations_${currentExpertId}`)
+          .on("postgres_changes", {
+            event: "INSERT",
+            schema: "public",
+            table: "consultation_requests",
+            filter: `expert_id=eq.${currentExpertId}`
+          }, () => {
+            showToast("🔔 New consultation request received!");
+            loadConsultationRequests();
+          })
+          .subscribe();
+      }
+    }
+
+    /* ========================================================
+       STATUS TOGGLE
+       ======================================================== */
+    function setupStatusToggle() {
+      const toggle = document.getElementById("expertStatusToggle");
+      const text = document.getElementById("expertStatusText");
+
+      toggle.addEventListener("click", async () => {
+        isAvailable = !isAvailable;
+        const newStatus = isAvailable ? "available" : "busy";
+        if (isAvailable) {
+          toggle.style.color = "var(--green)";
+          toggle.style.borderColor = "rgba(32, 216, 137, 0.3)";
+          toggle.style.background = "rgba(32, 216, 137, 0.12)";
+          text.textContent = "Available for Consultations";
+          showToast("🟢 Your status is now Online & Available.");
+        } else {
+          toggle.style.color = "var(--muted)";
+          toggle.style.borderColor = "var(--card-border)";
+          toggle.style.background = "rgba(255, 255, 255, 0.04)";
+          text.textContent = "Currently Busy / Offline";
+          showToast("⚪ Your status is now Offline.");
+        }
+
+        if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
+          try {
+            await supabase.from("profiles").update({ availability_status: newStatus }).eq("id", currentExpertId);
+          } catch (e) {
+            console.warn("Status update error:", e);
+          }
+        }
+      });
+    }
+
+    /* ========================================================
+       LOGOUT
+       ======================================================== */
+    function setupLogout() {
+      const logoutBtn = document.getElementById("expertLogoutBtn");
+      logoutBtn.addEventListener("click", async () => {
+        showToast("Signing out...");
+        try {
+          if (supabase) await supabase.auth.signOut();
+        } catch (e) { }
+        setTimeout(() => window.location.href = "login.html", 500);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    // Start App
+    initWorkspace();
+  </script>
+</body>
+
+</html>

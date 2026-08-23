@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative Financial Control Center. Monitor platform GMV, consultation fee collections, GST ledger, refunds, and payout disbursements." />
+  <title>AskExpert | Admin Financial & Payout Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN PAYMENTS & FINANCIALS STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #02050e;
+      --bg-2: #050d1e;
+      --bg-3: #0a1128;
+      --card-bg: rgba(10, 18, 36, 0.88);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #8499b5;
+      --cyan: #00d9ff;
+      --blue: #0088ff;
+      --purple: #7952ff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(32, 216, 137, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(32, 216, 137, 0.2), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(32, 216, 137, 0.35);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Main Area */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Financial Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(32, 216, 137, 0.35);
+    }
+
+    .metric-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 750;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-val {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    /* Section Tabs */
+    .module-nav-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+    }
+
+    .module-tab-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .module-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--white);
+    }
+
+    .module-tab-btn.active {
+      background: linear-gradient(135deg, rgba(32, 216, 137, 0.2), rgba(0, 217, 255, 0.1));
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Filters Card */
+    .filters-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 750;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tab-btn.active {
+      background: rgba(32, 216, 137, 0.15);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: min(340px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Table */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .fin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .fin-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .fin-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .fin-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .status-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-successful { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .status-pending { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .status-failed { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.3); }
+    .status-refunded { background: rgba(148, 163, 184, 0.15); color: #bad3eb; border: 1px solid var(--card-border); }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action {
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 750;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-action.action-view { color: var(--cyan); border-color: rgba(0, 217, 255, 0.3); }
+    .btn-action.action-refund { color: var(--gold); border-color: rgba(255, 183, 3, 0.3); }
+    .btn-action.action-approve { color: var(--green); border-color: rgba(32, 216, 137, 0.3); }
+    .btn-action.action-reject { color: var(--red); border-color: rgba(255, 71, 87, 0.3); }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      place-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #0b172a;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      width: min(600px, 100%);
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: modalPop 0.25s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      font-size: 12.5px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+      color: var(--red);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 71, 87, 0.25);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count">37</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="admin-main-wrap">
+    
+    <header class="topbar">
+      <h1 class="page-title">
+        <span>💳</span> Financial Control Center & Payout Settlements
+      </h1>
+
+      <div style="font-size: 12px; color: var(--muted);">
+        Platform Revenue (10% Net): <strong style="color: var(--green);">₹4,82,090.00</strong>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+
+      <!-- Financial Metrics Grid -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Total Platform GMV</span>
+            <span>💰</span>
+          </div>
+          <div class="metric-val" style="color: var(--green);">₹48.2L</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Successful Transactions</span>
+            <span>💳</span>
+          </div>
+          <div class="metric-val">3,214</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Pending Settlements</span>
+            <span>⏳</span>
+          </div>
+          <div class="metric-val" style="color: var(--gold);">₹84,500</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Total Refunds (12)</span>
+            <span>↩️</span>
+          </div>
+          <div class="metric-val" style="color: var(--red);">₹18,390</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Platform Net Cut</span>
+            <span>🏦</span>
+          </div>
+          <div class="metric-val" style="color: var(--cyan);">₹4.82L</div>
+        </div>
+      </section>
+
+      <!-- Module Dual Tabs (Transactions vs Payout Requests) -->
+      <div class="module-nav-tabs">
+        <button type="button" class="module-tab-btn active" id="tabConsultationPayments">
+          <span>💳</span> Consultation Transactions
+        </button>
+        <button type="button" class="module-tab-btn" id="tabPayoutRequests">
+          <span>💸</span> Professional Payout Requests (5)
+        </button>
+      </div>
+
+      <!-- SECTION 1: CONSULTATION PAYMENTS -->
+      <div id="sectionPayments">
+        
+        <!-- Filter Card -->
+        <div class="filters-card">
+          <div class="tabs-group">
+            <button type="button" class="tab-btn active" data-filter="all">All Transactions</button>
+            <button type="button" class="tab-btn" data-filter="successful">Successful (3,214)</button>
+            <button type="button" class="tab-btn" data-filter="pending">Pending (18)</button>
+            <button type="button" class="tab-btn" data-filter="refunded">Refunded (12)</button>
+          </div>
+
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="paySearchInput" class="search-input" placeholder="Search by TXN ID, client, or expert..." />
+          </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <section class="glass-card" style="margin-top: 18px;">
+          <div class="table-wrap">
+            <table class="fin-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Date & Time</th>
+                  <th>Client / Payer</th>
+                  <th>Professional / Payee</th>
+                  <th>Gross Amount</th>
+                  <th>Platform Fee (10%)</th>
+                  <th>GST (18%)</th>
+                  <th>Professional Net</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody">
+                
+                <!-- Row 1 -->
+                <tr data-status="successful" data-id="tx-1">
+                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849201</strong><br><small style="color: var(--muted);">pay_K9482014</small></td>
+                  <td>Aug 22, 2026<br><small style="color: var(--muted);">16:45 PM</small></td>
+                  <td><strong>Aditya Sharma</strong><br><small style="color: var(--muted);">#USR-10920</small></td>
+                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
+                  <td>₹1,200.00</td>
+                  <td style="color: var(--cyan);">₹120.00</td>
+                  <td style="color: var(--muted);">₹21.60</td>
+                  <td><strong style="color: var(--green);">₹1,058.40</strong></td>
+                  <td><span>UPI (GPay)</span></td>
+                  <td><span class="status-badge status-successful">● Successful</span></td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849201" data-user="Aditya Sharma" data-exp="Adv. Vikram Rao" data-amount="₹1,200.00" data-fee="₹120.00" data-net="₹1,058.40" data-method="UPI" data-status="Successful">Details</button>
+                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849201" data-amount="₹1,200.00">Refund</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr data-status="successful" data-id="tx-2">
+                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849182</strong><br><small style="color: var(--muted);">pay_K9481992</small></td>
+                  <td>Aug 22, 2026<br><small style="color: var(--muted);">14:10 PM</small></td>
+                  <td><strong>Ravi Kumar</strong><br><small style="color: var(--muted);">#USR-10884</small></td>
+                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
+                  <td>₹1,500.00</td>
+                  <td style="color: var(--cyan);">₹150.00</td>
+                  <td style="color: var(--muted);">₹27.00</td>
+                  <td><strong style="color: var(--green);">₹1,323.00</strong></td>
+                  <td><span>Card (Visa)</span></td>
+                  <td><span class="status-badge status-successful">● Successful</span></td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849182" data-user="Ravi Kumar" data-exp="Adv. Vikram Rao" data-amount="₹1,500.00" data-fee="₹150.00" data-net="₹1,323.00" data-method="Card" data-status="Successful">Details</button>
+                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849182" data-amount="₹1,500.00">Refund</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 3 (Refunded) -->
+                <tr data-status="refunded" data-id="tx-3">
+                  <td><strong style="font-family: monospace; color: #bad3eb;">#TXN-848500</strong><br><small style="color: var(--muted);">pay_K9481100</small></td>
+                  <td>Aug 19, 2026<br><small style="color: var(--muted);">10:20 AM</small></td>
+                  <td><strong>Karan Verma</strong><br><small style="color: var(--muted);">#USR-10119</small></td>
+                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
+                  <td>₹2,000.00</td>
+                  <td style="color: var(--muted);">₹0.00</td>
+                  <td style="color: var(--muted);">₹0.00</td>
+                  <td style="color: var(--muted);">₹0.00</td>
+                  <td><span>Net Banking</span></td>
+                  <td><span class="status-badge status-refunded">↩️ Refunded</span></td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-848500" data-user="Karan Verma" data-exp="CA Rajesh Joshi" data-amount="₹2,000.00" data-fee="₹0.00" data-net="₹0.00" data-method="Net Banking" data-status="Refunded">Details</button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- SECTION 2: PAYOUT REQUESTS -->
+      <div id="sectionPayouts" style="display: none;">
+        
+        <section class="glass-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <h2 style="font-size: 17px; font-weight: 850; color: var(--white);">
+              <span>💸</span> Verified Professional Payout Queue
+            </h2>
+            <span style="font-size: 12px; color: var(--gold);">5 Pending Bank Settlements</span>
+          </div>
+
+          <div class="table-wrap">
+            <table class="fin-table">
+              <thead>
+                <tr>
+                  <th>Payout ID</th>
+                  <th>Professional Specialist</th>
+                  <th>Beneficiary Bank Account / UPI</th>
+                  <th>Requested Amount</th>
+                  <th>Requested Date</th>
+                  <th>Status</th>
+                  <th>Settlement Actions</th>
+                </tr>
+              </thead>
+              <tbody id="payoutsTableBody">
+                
+                <tr data-payout-id="pay-1">
+                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992014</strong></td>
+                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Advisor</small></td>
+                  <td><span>HDFC Bank ••••••4819</span><br><small style="color: var(--muted);">IFSC: HDFC0001824</small></td>
+                  <td><strong style="color: var(--green); font-size: 14px;">₹25,000.00</strong></td>
+                  <td>Aug 22, 2026</td>
+                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="btn-action action-approve" data-payout="pay-1" data-amount="₹25,000.00" data-name="Adv. Vikram Rao">Approve & Disburse</button>
+                      <button type="button" class="btn-action action-reject" data-payout="pay-1" data-name="Adv. Vikram Rao">Reject</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr data-payout-id="pay-2">
+                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992015</strong></td>
+                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
+                  <td><span>ICICI Bank ••••••9102</span><br><small style="color: var(--muted);">IFSC: ICIC0000102</small></td>
+                  <td><strong style="color: var(--green); font-size: 14px;">₹18,000.00</strong></td>
+                  <td>Aug 21, 2026</td>
+                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="btn-action action-approve" data-payout="pay-2" data-amount="₹18,000.00" data-name="CA Rajesh Joshi">Approve & Disburse</button>
+                      <button type="button" class="btn-action action-reject" data-payout="pay-2" data-name="CA Rajesh Joshi">Reject</button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Transaction Details Modal -->
+  <div id="txnModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 850; color: var(--white);" id="modalTxnTitle">Transaction Ledger</h3>
+        <button type="button" id="closeTxnModalBtn" style="background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="details-grid">
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Client Name</span>
+          <strong style="color: var(--white);" id="modalUser">Aditya Sharma</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Professional Specialist</span>
+          <strong style="color: var(--cyan);" id="modalExp">Adv. Vikram Rao</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Gross Paid</span>
+          <strong style="color: var(--white);" id="modalAmount">₹1,200.00</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Platform Commission (10%)</span>
+          <strong style="color: var(--green);" id="modalFee">₹120.00</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Professional Net</span>
+          <strong style="color: var(--green);" id="modalNet">₹1,058.40</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Payment Method & Status</span>
+          <strong style="color: var(--white);" id="modalStatus">UPI • Successful</strong>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button type="button" id="dismissTxnModalBtn" class="btn btn-secondary">Close Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Refund Confirmation Modal -->
+  <div id="refundModal" class="modal-backdrop">
+    <div class="modal-card" style="width: min(480px, 100%);">
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">⚠️ Process Consultation Refund</h3>
+      <p style="font-size: 13px; color: #bad3eb;">
+        Are you sure you want to refund <strong style="color: var(--white);" id="refundAmountText">₹1,200.00</strong> for <span id="refundTxnText">#TXN-849201</span>?
+      </p>
+
+      <div>
+        <label style="font-size: 11.5px; font-weight: 750; color: #bad3eb; display: block; margin-bottom: 4px;">
+          Mandatory Refund Compliance Reason:
+        </label>
+        <textarea id="refundReasonText" style="width: 100%; height: 70px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 10px; font-size: 13px;" placeholder="e.g. Mutual dispute agreement / professional unavailable."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button type="button" id="cancelRefundBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirmRefundBtn" class="btn btn-danger">Confirm & Execute Refund</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN PAYMENTS SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let selectedFilter = "all";
+    let pendingRefundData = null;
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    function initAdminPayments() {
+      setupModuleTabs();
+      setupFilters();
+      setupSearch();
+      setupActionHandlers();
+      setupLogout();
+    }
+
+    /* ========================================================
+       MODULE TABS (PAYMENTS VS PAYOUTS)
+       ======================================================== */
+    function setupModuleTabs() {
+      const tabPayments = document.getElementById("tabConsultationPayments");
+      const tabPayouts = document.getElementById("tabPayoutRequests");
+      const secPayments = document.getElementById("sectionPayments");
+      const secPayouts = document.getElementById("sectionPayouts");
+
+      tabPayments.addEventListener("click", () => {
+        tabPayments.classList.add("active");
+        tabPayouts.classList.remove("active");
+        secPayments.style.display = "block";
+        secPayouts.style.display = "none";
+      });
+
+      tabPayouts.addEventListener("click", () => {
+        tabPayouts.classList.add("active");
+        tabPayments.classList.remove("active");
+        secPayments.style.display = "none";
+        secPayouts.style.display = "block";
+      });
+    }
+
+    /* ========================================================
+       FILTERS & SEARCH
+       ======================================================== */
+    function setupFilters() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          selectedFilter = tab.dataset.filter;
+          filterPaymentsTable();
+        });
+      });
+    }
+
+    function setupSearch() {
+      const input = document.getElementById("paySearchInput");
+      input.addEventListener("input", () => filterPaymentsTable());
+    }
+
+    function filterPaymentsTable() {
+      const term = document.getElementById("paySearchInput").value.toLowerCase().trim();
+      const rows = document.querySelectorAll("#paymentsTableBody tr");
+
+      rows.forEach(row => {
+        const st = row.dataset.status;
+        const text = row.textContent.toLowerCase();
+
+        const matchFilter = selectedFilter === "all" || st === selectedFilter;
+        const matchSearch = !term || text.includes(term);
+
+        row.style.display = (matchFilter && matchSearch) ? "" : "none";
+      });
+    }
+
+    /* ========================================================
+       ACTIONS & MODALS
+       ======================================================== */
+    function setupActionHandlers() {
+      // View Details
+      document.querySelectorAll('.btn-action[data-action="view"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.getElementById("modalTxnTitle").textContent = `Ledger #${btn.dataset.txn}`;
+          document.getElementById("modalUser").textContent = btn.dataset.user;
+          document.getElementById("modalExp").textContent = btn.dataset.exp;
+          document.getElementById("modalAmount").textContent = btn.dataset.amount;
+          document.getElementById("modalFee").textContent = btn.dataset.fee;
+          document.getElementById("modalNet").textContent = btn.dataset.net;
+          document.getElementById("modalStatus").textContent = `${btn.dataset.method} • ${btn.dataset.status}`;
+
+          document.getElementById("txnModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("closeTxnModalBtn").addEventListener("click", () => {
+        document.getElementById("txnModal").classList.remove("show");
+      });
+      document.getElementById("dismissTxnModalBtn").addEventListener("click", () => {
+        document.getElementById("txnModal").classList.remove("show");
+      });
+
+      // Refund Modal
+      document.querySelectorAll('.btn-action[data-action="refund"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          pendingRefundData = { txn: btn.dataset.txn, amount: btn.dataset.amount };
+          document.getElementById("refundTxnText").textContent = `#${btn.dataset.txn}`;
+          document.getElementById("refundAmountText").textContent = btn.dataset.amount;
+          document.getElementById("refundModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("cancelRefundBtn").addEventListener("click", () => {
+        document.getElementById("refundModal").classList.remove("show");
+      });
+
+      document.getElementById("confirmRefundBtn").addEventListener("click", async () => {
+        const reason = document.getElementById("refundReasonText").value.trim();
+        if (!reason) {
+          showToast("Please provide a compliance reason for the refund.", true);
+          return;
+        }
+
+        document.getElementById("refundModal").classList.remove("show");
+        showToast(`✓ Refund executed for ${pendingRefundData.txn} (${pendingRefundData.amount}).`);
+      });
+
+      // Payout Approve / Reject
+      document.querySelectorAll('.btn-action[data-payout]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          const payoutId = btn.dataset.payout;
+          const name = btn.dataset.name;
+          const isApprove = btn.classList.contains("action-approve");
+
+          if (isApprove) {
+            showToast(`✓ Payout of ${btn.dataset.amount} approved for ${name}! Transferred via IMPS.`);
+            const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
+            if (row) {
+              const badge = row.querySelector(".status-badge");
+              if (badge) {
+                badge.className = "status-badge status-successful";
+                badge.textContent = "✓ Disbursed (Paid)";
+              }
+            }
+          } else {
+            showToast(`✕ Payout request rejected.`);
+            const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
+            if (row) {
+              const badge = row.querySelector(".status-badge");
+              if (badge) {
+                badge.className = "status-badge status-failed";
+                badge.textContent = "✕ Rejected";
+              }
+            }
+          }
+        });
+      });
+    }
+
+    function setupLogout() {
+      document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+        showToast("Ending admin session...");
+        sessionStorage.removeItem("askexpert_admin_auth");
+        try {
+          if (supabase) await supabase.auth.signOut();
+        } catch (e) {}
+        setTimeout(() => window.location.href = "admin-login.html", 500);
+      });
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.className = isError ? "toast-pill error show" : "toast-pill show";
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    initAdminPayments();
+  </script>
+</body>
+</html>

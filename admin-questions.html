@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative Question & Content Moderation Center. Moderate public inquiries, monitor expert answers, and manage flagged content." />
+  <title>AskExpert | Content & Question Moderation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN QUESTION MODERATION STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #02050e;
+      --bg-2: #050d1e;
+      --bg-3: #0a1128;
+      --card-bg: rgba(10, 18, 36, 0.88);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #8499b5;
+      --cyan: #00d9ff;
+      --blue: #0088ff;
+      --purple: #7952ff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(121, 82, 255, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(121, 82, 255, 0.4);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Main Area */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Flagged Queue Alert Banner */
+    .flagged-alert-banner {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.15), rgba(255, 183, 3, 0.12));
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* Filter Card */
+    .filters-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.1));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: min(340px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Table */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .questions-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .questions-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .questions-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .questions-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .q-title-cell {
+      max-width: 320px;
+    }
+
+    .q-title-cell strong {
+      font-size: 14px;
+      color: var(--white);
+      display: block;
+      line-height: 1.35;
+      margin-bottom: 2px;
+    }
+
+    .q-snippet {
+      font-size: 11.5px;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .status-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-open { background: rgba(0, 153, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 153, 255, 0.3); }
+    .status-answered { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .status-resolved { background: rgba(121, 82, 255, 0.15); color: #c4b5fd; border: 1px solid rgba(121, 82, 255, 0.35); }
+    .status-closed { background: rgba(148, 163, 184, 0.15); color: var(--muted); border: 1px solid var(--card-border); }
+    .status-flagged { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.35); }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action {
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 750;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-action.action-view { color: var(--cyan); border-color: rgba(0, 217, 255, 0.3); }
+    .btn-action.action-resolve { color: var(--green); border-color: rgba(32, 216, 137, 0.3); }
+    .btn-action.action-close { color: var(--muted); }
+    .btn-action.action-remove { color: var(--red); border-color: rgba(255, 71, 87, 0.3); }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      place-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #0b172a;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      width: min(680px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: modalPop 0.25s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .question-detail-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .answers-feed-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .answer-card {
+      background: rgba(0, 217, 255, 0.03);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+      color: var(--red);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 71, 87, 0.25);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count">37</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="admin-main-wrap">
+    
+    <header class="topbar">
+      <h1 class="page-title">
+        <span>❓</span> Question Stream & Content Moderation
+      </h1>
+
+      <div style="font-size: 12px; color: var(--muted);">
+        Total Moderated Questions: <strong style="color: var(--white);" id="totalQuestionsHeader">8,920</strong>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+
+      <!-- Moderation Alert Banner -->
+      <section class="flagged-alert-banner">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="font-size: 24px;">🚩</div>
+          <div>
+            <strong style="color: var(--white); font-size: 14px;">Moderation Queue Priority</strong>
+            <p style="font-size: 12.5px; color: #bad3eb; margin-top: 2px;">
+              <strong>44 questions</strong> have been flagged by the automated compliance filter or user reports for review.
+            </p>
+          </div>
+        </div>
+
+        <button type="button" id="viewFlaggedOnlyBtn" class="btn btn-danger" style="font-size: 12.5px;">
+          Inspect Flagged Items (44) →
+        </button>
+      </section>
+
+      <!-- Filters Card -->
+      <div class="filters-card">
+        <div class="tabs-group">
+          <button type="button" class="tab-btn active" data-status="all">All Inquiries</button>
+          <button type="button" class="tab-btn" data-status="open">🟢 Open (412)</button>
+          <button type="button" class="tab-btn" data-status="answered">✨ Answered (7,890)</button>
+          <button type="button" class="tab-btn" data-status="resolved">✓ Resolved (574)</button>
+          <button type="button" class="tab-btn" data-status="flagged">🚩 Flagged (44)</button>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="questionSearchInput" class="search-input" placeholder="Search by title, description, asker..." />
+        </div>
+      </div>
+
+      <!-- Questions Table -->
+      <section class="glass-card">
+        <div class="table-wrap">
+          <table class="questions-table">
+            <thead>
+              <tr>
+                <th>Question & Snippet</th>
+                <th>Category / Lang</th>
+                <th>Asker</th>
+                <th>Answers</th>
+                <th>Status</th>
+                <th>Created Date</th>
+                <th>Moderation Actions</th>
+              </tr>
+            </thead>
+            <tbody id="questionsTableBody">
+              
+              <!-- Row 1 -->
+              <tr data-status="answered" data-id="q-101">
+                <td class="q-title-cell">
+                  <strong>Vendor Contract Compliance & Arbitration Seating</strong>
+                  <span class="q-snippet">Need guidance on drafting domestic arbitration and IP indemnity caps under MCA 2026 mandates...</span>
+                </td>
+                <td><strong style="color: var(--white);">Legal Advisor</strong><br><small style="color: var(--muted);">🌐 English</small></td>
+                <td>
+                  <strong>Aditya Sharma</strong><br>
+                  <small style="color: var(--muted);">#USR-10920</small>
+                </td>
+                <td><span style="color: var(--green); font-weight: 750;">2 Verified Answers</span></td>
+                <td><span class="status-badge status-answered">✨ Answered</span></td>
+                <td>Aug 22, 2026</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-101" data-title="Vendor Contract Compliance & Arbitration Seating" data-desc="Need guidance on drafting domestic arbitration and IP indemnity caps under MCA 2026 mandates for upcoming enterprise vendor contract renewals." data-asker="Aditya Sharma" data-cat="Legal Advisor" data-lang="English" data-answers="Adv. Vikram Rao: Admitted to Bar. The statutory cap under Section 19 should specify exclusive seat in Mumbai...">Inspect</button>
+                    <button type="button" class="btn-action action-resolve" data-action="resolve" data-id="q-101">Resolve</button>
+                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-101" data-title="Vendor Contract Compliance & Arbitration Seating">Remove</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr data-status="open" data-id="q-102">
+                <td class="q-title-cell">
+                  <strong>Trademark Class 42 Opposition Notice Reply</strong>
+                  <span class="q-snippet">Received an opposition notice from a competitor alleging phonetically similar software naming...</span>
+                </td>
+                <td><strong style="color: var(--white);">IP & Trademark</strong><br><small style="color: var(--muted);">🌐 English</small></td>
+                <td>
+                  <strong>Pooja Hegde</strong><br>
+                  <small style="color: var(--muted);">#USR-10481</small>
+                </td>
+                <td><span style="color: var(--muted); font-weight: 750;">0 Answers (Open)</span></td>
+                <td><span class="status-badge status-open">🟢 Open</span></td>
+                <td>Aug 21, 2026</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-102" data-title="Trademark Class 42 Opposition Notice Reply" data-desc="Received an opposition notice from a competitor alleging phonetically similar software naming under Class 42. Consultation requested to prepare counter-affidavit reply." data-asker="Pooja Hegde" data-cat="IP & Trademark" data-lang="English" data-answers="No expert answers yet.">Inspect</button>
+                    <button type="button" class="btn-action action-resolve" data-action="resolve" data-id="q-102">Resolve</button>
+                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-102" data-title="Trademark Class 42 Opposition Notice Reply">Remove</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3 (Flagged) -->
+              <tr data-status="flagged" data-id="q-103">
+                <td class="q-title-cell">
+                  <strong style="color: var(--red);">[FLAGGED] Cross-border cryptocurrency remittance advisory</strong>
+                  <span class="q-snippet">How to bypass RBI FEMA outward remittance caps using un-hosted DeFi pools for offshore consultants?</span>
+                </td>
+                <td><strong style="color: var(--white);">Finance / FEMA</strong><br><small style="color: var(--muted);">🌐 English</small></td>
+                <td>
+                  <strong>Anonymous User</strong><br>
+                  <small style="color: var(--red);">#USR-11840 (Reported)</small>
+                </td>
+                <td><span style="color: var(--red); font-weight: 750;">Flagged: Statutory Violation</span></td>
+                <td><span class="status-badge status-flagged">🚩 Flagged</span></td>
+                <td>Aug 20, 2026</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-103" data-title="[FLAGGED] Cross-border cryptocurrency remittance advisory" data-desc="How to bypass RBI FEMA outward remittance caps using un-hosted DeFi pools for offshore consultants?" data-asker="Anonymous User" data-cat="Finance / FEMA" data-lang="English" data-answers="Blocked by safety filter.">Inspect</button>
+                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-103" data-title="Cross-border remittance bypass inquiry">Remove</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Detail Inspection Modal -->
+  <div id="qDetailModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 850; color: var(--white);" id="modalQTitle">Question Inspection</h2>
+          <span style="font-size: 11.5px; color: var(--cyan);" id="modalQMeta">Category: Legal Advisor • Asker: Aditya Sharma</span>
+        </div>
+        <button type="button" id="closeQModalBtn" style="background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="question-detail-box">
+        <strong style="font-size: 12px; color: var(--muted); text-transform: uppercase;">Problem Statement:</strong>
+        <p style="font-size: 13.5px; color: #bad3eb; line-height: 1.6;" id="modalQDesc"></p>
+      </div>
+
+      <div>
+        <strong style="font-size: 13px; color: var(--white); display: flex; align-items: center; gap: 6px;">
+          <span>✨</span> Verified Answers on Thread
+        </strong>
+        <div class="answers-feed-box" id="modalAnswersContainer"></div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--card-border);">
+        <a id="modalPublicLink" href="question-details.html?id=q-101" target="_blank" class="btn btn-secondary" style="font-size: 12px;">
+          <span>🔗</span> Open Public Thread
+        </a>
+        <button type="button" id="dismissQModalBtn" class="btn btn-secondary">Close Inspector</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Destructive Remove Modal -->
+  <div id="removeConfirmModal" class="modal-backdrop">
+    <div class="modal-card" style="width: min(480px, 100%);">
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">⚠️ Remove Question from Feed?</h3>
+      <p style="font-size: 13px; color: #bad3eb;">
+        This will hide the question from the public feed and mark it as removed in the database.
+      </p>
+
+      <div>
+        <label style="font-size: 11.5px; font-weight: 750; color: #bad3eb; display: block; margin-bottom: 4px;">
+          Mandatory Moderation Reason:
+        </label>
+        <textarea id="removeReasonText" style="width: 100%; height: 80px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 10px; font-size: 13px;" placeholder="e.g. Violates statutory FEMA advisory guidelines under MCA rules."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button type="button" id="cancelRemoveBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirmRemoveBtn" class="btn btn-danger">Confirm Removal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN QUESTIONS SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let selectedStatus = "all";
+    let pendingRemoveId = null;
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    function initAdminQuestions() {
+      setupFilters();
+      setupSearch();
+      setupActionHandlers();
+      setupLogout();
+    }
+
+    /* ========================================================
+       FILTERS & SEARCH
+       ======================================================== */
+    function setupFilters() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          selectedStatus = tab.dataset.status;
+          filterTable();
+        });
+      });
+
+      document.getElementById("viewFlaggedOnlyBtn").addEventListener("click", () => {
+        const flaggedTab = document.querySelector('.tab-btn[data-status="flagged"]');
+        if (flaggedTab) flaggedTab.click();
+      });
+    }
+
+    function setupSearch() {
+      const input = document.getElementById("questionSearchInput");
+      input.addEventListener("input", () => filterTable());
+    }
+
+    function filterTable() {
+      const term = document.getElementById("questionSearchInput").value.toLowerCase().trim();
+      const rows = document.querySelectorAll("#questionsTableBody tr");
+
+      rows.forEach(row => {
+        const st = row.dataset.status;
+        const text = row.textContent.toLowerCase();
+
+        const matchFilter = selectedStatus === "all" || st === selectedStatus;
+        const matchSearch = !term || text.includes(term);
+
+        row.style.display = (matchFilter && matchSearch) ? "" : "none";
+      });
+    }
+
+    /* ========================================================
+       ACTION HANDLERS & MODALS
+       ======================================================== */
+    function setupActionHandlers() {
+      // Inspect Modal
+      document.querySelectorAll('.btn-action[data-action="view"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          const qId = btn.dataset.id;
+          document.getElementById("modalQTitle").textContent = btn.dataset.title;
+          document.getElementById("modalQMeta").textContent = `Category: ${btn.dataset.cat} • Asker: ${btn.dataset.asker}`;
+          document.getElementById("modalQDesc").textContent = btn.dataset.desc;
+          document.getElementById("modalPublicLink").href = `question-details.html?id=${encodeURIComponent(qId)}`;
+
+          const ansContainer = document.getElementById("modalAnswersContainer");
+          ansContainer.innerHTML = `
+            <div class="answer-card">
+              <strong style="color: var(--cyan); display: block; margin-bottom: 4px;">Adv. Vikram Rao (Verified Expert):</strong>
+              <span>${btn.dataset.answers}</span>
+            </div>
+          `;
+
+          document.getElementById("qDetailModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("closeQModalBtn").addEventListener("click", () => {
+        document.getElementById("qDetailModal").classList.remove("show");
+      });
+      document.getElementById("dismissQModalBtn").addEventListener("click", () => {
+        document.getElementById("qDetailModal").classList.remove("show");
+      });
+
+      // Resolve Action
+      document.querySelectorAll('.btn-action[data-action="resolve"]').forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const qId = btn.dataset.id;
+          const row = document.querySelector(`tr[data-id="${qId}"]`);
+          if (row) {
+            row.dataset.status = "resolved";
+            const badge = row.querySelector(".status-badge");
+            if (badge) {
+              badge.className = "status-badge status-resolved";
+              badge.textContent = "✓ Resolved";
+            }
+          }
+          showToast("✓ Question marked as Resolved!");
+        });
+      });
+
+      // Remove Action
+      document.querySelectorAll('.btn-action[data-action="remove"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          pendingRemoveId = btn.dataset.id;
+          document.getElementById("removeConfirmModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("cancelRemoveBtn").addEventListener("click", () => {
+        document.getElementById("removeConfirmModal").classList.remove("show");
+      });
+
+      document.getElementById("confirmRemoveBtn").addEventListener("click", async () => {
+        const reason = document.getElementById("removeReasonText").value.trim();
+        if (!reason) {
+          showToast("Please provide a moderation reason.", true);
+          return;
+        }
+
+        document.getElementById("removeConfirmModal").classList.remove("show");
+        showToast("✓ Question removed from feed and archived with audit reason.");
+
+        const row = document.querySelector(`tr[data-id="${pendingRemoveId}"]`);
+        if (row) {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    function setupLogout() {
+      document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+        showToast("Signing out...");
+        sessionStorage.removeItem("askexpert_admin_auth");
+        try {
+          if (supabase) await supabase.auth.signOut();
+        } catch (e) {}
+        setTimeout(() => window.location.href = "admin-login.html", 500);
+      });
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.className = isError ? "toast-pill error show" : "toast-pill show";
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    initAdminQuestions();
+  </script>
+</body>
+</html>

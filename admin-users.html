@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative User Management. Search, inspect profiles, filter roles, and manage account statuses." />
+  <title>AskExpert | Admin User Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN USER MANAGEMENT STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #02050e;
+      --bg-2: #050d1e;
+      --bg-3: #0a1128;
+      --card-bg: rgba(10, 18, 36, 0.88);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #8499b5;
+      --cyan: #00d9ff;
+      --blue: #0088ff;
+      --purple: #7952ff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(121, 82, 255, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(121, 82, 255, 0.4);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Main Area */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Filters Card */
+    .filters-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.1));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: min(340px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Table */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .users-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .users-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .users-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .user-profile-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(121, 82, 255, 0.2));
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      display: grid;
+      place-items: center;
+      font-size: 13.5px;
+      font-weight: 850;
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    .role-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .role-user { background: rgba(0, 153, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 153, 255, 0.3); }
+    .role-expert { background: rgba(121, 82, 255, 0.15); color: #c4b5fd; border: 1px solid rgba(121, 82, 255, 0.35); }
+    .role-admin { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.35); }
+
+    .status-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-active { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .status-suspended { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .status-blocked { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.3); }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action {
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 750;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-action.action-view { color: var(--cyan); border-color: rgba(0, 217, 255, 0.3); }
+    .btn-action.action-suspend { color: var(--gold); border-color: rgba(255, 183, 3, 0.3); }
+    .btn-action.action-activate { color: var(--green); border-color: rgba(32, 216, 137, 0.3); }
+    .btn-action.action-block { color: var(--red); border-color: rgba(255, 71, 87, 0.3); }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      place-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #0b172a;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      width: min(520px, 100%);
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: modalPop 0.25s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 12.5px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030d1a;
+      box-shadow: 0 4px 14px rgba(121, 82, 255, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+      color: var(--red);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 71, 87, 0.25);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count">37</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <div class="admin-main-wrap">
+    
+    <header class="topbar">
+      <h1 class="page-title" style="font-size: 20px;">
+        <span>👥</span> User Account Management
+      </h1>
+
+      <div class="topbar-right">
+        <div style="font-size: 12px; color: var(--muted);">
+          Total Directory: <strong style="color: var(--white);" id="totalUsersHeader">12,480 Accounts</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+      
+      <!-- Filters Card -->
+      <div class="filters-card">
+        <div class="tabs-group">
+          <button type="button" class="tab-btn active" data-role="all">All Roles</button>
+          <button type="button" class="tab-btn" data-role="user">Users (11,196)</button>
+          <button type="button" class="tab-btn" data-role="expert">Professionals (1,284)</button>
+          <button type="button" class="tab-btn" data-role="admin">Admins (8)</button>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="userSearchInput" class="search-input" placeholder="Search by name, email or phone..." />
+        </div>
+      </div>
+
+      <!-- Users Table Card -->
+      <section class="glass-card">
+        <div class="table-wrap">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Contact</th>
+                <th>Account Status</th>
+                <th>Activity Metrics</th>
+                <th>Joined Date</th>
+                <th>Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              
+              <!-- User 1 -->
+              <tr data-role="expert" data-status="active" data-id="u-101">
+                <td>
+                  <div class="user-profile-cell">
+                    <div class="user-avatar">VR</div>
+                    <div>
+                      <strong style="color: var(--white);">Adv. Vikram Rao</strong>
+                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10148</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="role-badge role-expert">Expert</span></td>
+                <td>
+                  <span>vikram.rao@legal.in</span><br>
+                  <small style="color: var(--muted);">+91 98765 43210</small>
+                </td>
+                <td><span class="status-badge status-active">● Active</span></td>
+                <td>
+                  <span>✨ 48 Answers • 💬 146 Chats</span><br>
+                  <small style="color: var(--green);">💳 ₹48.9k Earned</small>
+                </td>
+                <td>Jan 14, 2025</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-name="Adv. Vikram Rao" data-role="expert" data-email="vikram.rao@legal.in" data-phone="+91 98765 43210" data-status="active" data-joined="Jan 14, 2025" data-stats="48 Answers | 146 Consultations">View</button>
+                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Adv. Vikram Rao">Suspend</button>
+                    <button type="button" class="btn-action action-block" data-action="block" data-name="Adv. Vikram Rao">Block</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 2 -->
+              <tr data-role="user" data-status="active" data-id="u-102">
+                <td>
+                  <div class="user-profile-cell">
+                    <div class="user-avatar" style="background: rgba(0, 153, 255, 0.2); color: var(--cyan);">AS</div>
+                    <div>
+                      <strong style="color: var(--white);">Aditya Sharma</strong>
+                      <span style="display: block; font-size: 11px; color: var(--muted); font-family: monospace;">#USR-10920</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="role-badge role-user">User</span></td>
+                <td>
+                  <span>aditya.s@saas.com</span><br>
+                  <small style="color: var(--muted);">+91 91234 56789</small>
+                </td>
+                <td><span class="status-badge status-active">● Active</span></td>
+                <td>
+                  <span>❓ 6 Questions • 💬 4 Chats</span><br>
+                  <small style="color: var(--muted);">💳 ₹4.5k Paid</small>
+                </td>
+                <td>Mar 02, 2026</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-name="Aditya Sharma" data-role="user" data-email="aditya.s@saas.com" data-phone="+91 91234 56789" data-status="active" data-joined="Mar 02, 2026" data-stats="6 Questions | 4 Chats">View</button>
+                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Aditya Sharma">Suspend</button>
+                    <button type="button" class="btn-action action-block" data-action="block" data-name="Aditya Sharma">Block</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 3 -->
+              <tr data-role="expert" data-status="active" data-id="u-103">
+                <td>
+                  <div class="user-profile-cell">
+                    <div class="user-avatar">AS</div>
+                    <div>
+                      <strong style="color: var(--white);">CA Ananya Sharma</strong>
+                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10332</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="role-badge role-expert">Expert</span></td>
+                <td>
+                  <span>ananya.tax@icai.org</span><br>
+                  <small style="color: var(--muted);">+91 98111 22334</small>
+                </td>
+                <td><span class="status-badge status-active">● Active</span></td>
+                <td>
+                  <span>✨ 34 Answers • 💬 89 Chats</span><br>
+                  <small style="color: var(--green);">💳 ₹32.4k Earned</small>
+                </td>
+                <td>Feb 18, 2025</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-name="CA Ananya Sharma" data-role="expert" data-email="ananya.tax@icai.org" data-phone="+91 98111 22334" data-status="active" data-joined="Feb 18, 2025" data-stats="34 Answers | 89 Consultations">View</button>
+                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="CA Ananya Sharma">Suspend</button>
+                    <button type="button" class="btn-action action-block" data-action="block" data-name="CA Ananya Sharma">Block</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 4 (Suspended Demo) -->
+              <tr data-role="user" data-status="suspended" data-id="u-104">
+                <td>
+                  <div class="user-profile-cell">
+                    <div class="user-avatar" style="background: rgba(255, 183, 3, 0.2); color: var(--gold);">RK</div>
+                    <div>
+                      <strong style="color: var(--white);">Rohan Kapoor</strong>
+                      <span style="display: block; font-size: 11px; color: var(--gold); font-family: monospace;">#USR-10884</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="role-badge role-user">User</span></td>
+                <td>
+                  <span>rohan.k@mail.com</span><br>
+                  <small style="color: var(--muted);">+91 94567 89012</small>
+                </td>
+                <td><span class="status-badge status-suspended">⏸️ Suspended</span></td>
+                <td>
+                  <span>❓ 2 Questions • 💬 1 Chat</span><br>
+                  <small style="color: var(--red);">Spam Warning</small>
+                </td>
+                <td>Apr 11, 2026</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="btn-action action-view" data-action="view" data-name="Rohan Kapoor" data-role="user" data-email="rohan.k@mail.com" data-phone="+91 94567 89012" data-status="suspended" data-joined="Apr 11, 2026" data-stats="2 Questions | 1 Chat">View</button>
+                    <button type="button" class="btn-action action-activate" data-action="activate" data-name="Rohan Kapoor">Re-Activate</button>
+                    <button type="button" class="btn-action action-block" data-action="block" data-name="Rohan Kapoor">Block</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- User Details Modal -->
+  <div id="userDetailsModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 18px; font-weight: 850; color: var(--white);" id="modalUserName">User Profile Details</h3>
+        <button type="button" id="closeDetailsModalBtn" style="background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="details-grid">
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Primary Email</span>
+          <strong style="color: var(--white);" id="modalEmail">aditya.s@saas.com</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Phone Number</span>
+          <strong style="color: var(--white);" id="modalPhone">+91 91234 56789</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Assigned Role</span>
+          <strong style="color: var(--cyan);" id="modalRole">User</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Status</span>
+          <strong style="color: var(--green);" id="modalStatus">Active</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Registration Date</span>
+          <strong style="color: var(--white);" id="modalJoined">Mar 02, 2026</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Activity Summary</span>
+          <strong style="color: var(--white);" id="modalStats">6 Questions | 4 Chats</strong>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button type="button" id="dismissDetailsModalBtn" class="btn btn-secondary">Close Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger Confirmation Modal -->
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);" id="confirmModalTitle">⚠️ Confirm Administrative Action</h3>
+      <p style="font-size: 13.5px; color: #bad3eb;" id="confirmModalMsg">
+        Are you sure you want to perform this action?
+      </p>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px;">
+        <button type="button" id="cancelConfirmBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="proceedConfirmBtn" class="btn btn-danger">Confirm Action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN USERS SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let selectedRole = "all";
+    let searchTerm = "";
+    let pendingActionData = null;
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    function initAdminUsers() {
+      setupFilters();
+      setupSearch();
+      setupActionHandlers();
+      setupLogout();
+    }
+
+    /* ========================================================
+       FILTERS & SEARCH
+       ======================================================== */
+    function setupFilters() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          selectedRole = tab.dataset.role;
+          filterTable();
+        });
+      });
+    }
+
+    function setupSearch() {
+      const searchInput = document.getElementById("userSearchInput");
+      searchInput.addEventListener("input", (e) => {
+        searchTerm = e.target.value.toLowerCase().trim();
+        filterTable();
+      });
+    }
+
+    function filterTable() {
+      const rows = document.querySelectorAll("#usersTableBody tr");
+
+      rows.forEach(row => {
+        const role = row.dataset.role;
+        const text = row.textContent.toLowerCase();
+
+        const matchRole = selectedRole === "all" || role === selectedRole;
+        const matchSearch = !searchTerm || text.includes(searchTerm);
+
+        if (matchRole && matchSearch) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    /* ========================================================
+       ACTION HANDLERS & MODALS
+       ======================================================== */
+    function setupActionHandlers() {
+      // View Modal
+      document.querySelectorAll('.btn-action[data-action="view"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.getElementById("modalUserName").textContent = btn.dataset.name;
+          document.getElementById("modalEmail").textContent = btn.dataset.email;
+          document.getElementById("modalPhone").textContent = btn.dataset.phone;
+          document.getElementById("modalRole").textContent = btn.dataset.role.toUpperCase();
+          document.getElementById("modalStatus").textContent = btn.dataset.status.toUpperCase();
+          document.getElementById("modalJoined").textContent = btn.dataset.joined;
+          document.getElementById("modalStats").textContent = btn.dataset.stats;
+
+          document.getElementById("userDetailsModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("closeDetailsModalBtn").addEventListener("click", () => {
+        document.getElementById("userDetailsModal").classList.remove("show");
+      });
+      document.getElementById("dismissDetailsModalBtn").addEventListener("click", () => {
+        document.getElementById("userDetailsModal").classList.remove("show");
+      });
+
+      // Suspend / Block / Activate
+      document.querySelectorAll('.btn-action[data-action="suspend"], .btn-action[data-action="block"], .btn-action[data-action="activate"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          const action = btn.dataset.action;
+          const name = btn.dataset.name;
+          pendingActionData = { action, name, btn };
+
+          const title = document.getElementById("confirmModalTitle");
+          const msg = document.getElementById("confirmModalMsg");
+
+          if (action === "suspend") {
+            title.textContent = `⚠️ Suspend Account: ${name}`;
+            msg.textContent = `Are you sure you want to suspend ${name}? They will temporarily lose access to consultations.`;
+          } else if (action === "block") {
+            title.textContent = `🚫 Block Account: ${name}`;
+            msg.textContent = `Are you sure you want to permanently block ${name}? All active sessions will be terminated.`;
+          } else {
+            title.textContent = `✓ Re-Activate Account: ${name}`;
+            msg.textContent = `Re-enable full consultation and login privileges for ${name}?`;
+          }
+
+          document.getElementById("confirmModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("cancelConfirmBtn").addEventListener("click", () => {
+        document.getElementById("confirmModal").classList.remove("show");
+      });
+
+      document.getElementById("proceedConfirmBtn").addEventListener("click", async () => {
+        if (!pendingActionData) return;
+        const { action, name } = pendingActionData;
+        document.getElementById("confirmModal").classList.remove("show");
+
+        showToast(`✓ Account for ${name} updated: ${action.toUpperCase()}`);
+      });
+    }
+
+    function setupLogout() {
+      document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+        showToast("Logging out...");
+        sessionStorage.removeItem("askexpert_admin_auth");
+        try {
+          if (supabase) await supabase.auth.signOut();
+        } catch (e) {}
+        setTimeout(() => window.location.href = "admin-login.html", 500);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    initAdminUsers();
+  </script>
+</body>
+</html>

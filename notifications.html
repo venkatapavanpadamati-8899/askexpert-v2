@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Live Notification Center. Instant alerts on expert answers, live chat messages, and payment receipts." />
+  <title>AskExpert | Notification Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - NOTIFICATIONS CENTER STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --orange: #ff9d3c;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(880px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.88);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand span:last-child {
+      color: var(--cyan);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+      background: rgba(0, 153, 255, 0.12);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ========================================================
+       PAGE SHELL
+       ======================================================== */
+    .page-shell {
+      padding: 30px 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--cyan);
+    }
+
+    .breadcrumb span.current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ========================================================
+       HEADER CONTROLS & FILTER TABS
+       ======================================================== */
+    .notif-header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .header-title-box h1 {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .unread-pill {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(0, 217, 255, 0.15);
+      border: 1px solid rgba(0, 217, 255, 0.35);
+      color: var(--cyan);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 14px;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0, 153, 255, 0.25), rgba(0, 217, 255, 0.15));
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    /* ========================================================
+       NOTIFICATIONS LIST
+       ======================================================== */
+    .notifications-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .notif-item {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notif-item:hover {
+      border-color: rgba(0, 217, 255, 0.35);
+      background: rgba(18, 30, 54, 0.9);
+      transform: translateX(3px);
+    }
+
+    .notif-item.unread {
+      background: linear-gradient(90deg, rgba(0, 153, 255, 0.12), rgba(13, 22, 41, 0.95));
+      border-left: 3px solid var(--cyan);
+    }
+
+    .notif-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .icon-answer { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .icon-chat { background: rgba(0, 217, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 217, 255, 0.3); }
+    .icon-payment { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .icon-question { background: rgba(138, 92, 255, 0.15); color: var(--purple); border: 1px solid rgba(138, 92, 255, 0.3); }
+    .icon-expert { background: rgba(0, 153, 255, 0.15); color: var(--blue); border: 1px solid rgba(0, 153, 255, 0.3); }
+
+    .notif-body {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      line-height: 1.4;
+    }
+
+    .notif-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .notif-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .unread-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .notif-message {
+      font-size: 13px;
+      color: #bad3eb;
+    }
+
+    .notif-time {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .notif-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-dismiss {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-dismiss:hover {
+      color: var(--red);
+      background: rgba(255, 71, 87, 0.1);
+    }
+
+    /* Skeleton */
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.9; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+    }
+
+    .empty-icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .empty-text {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    footer.bottom-bar {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      padding: 20px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="questions.html">Questions</a>
+        <a href="experts.html">Experts</a>
+        <a href="chat.html">Chat</a>
+        <a href="notifications.html" class="active">Notifications</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-secondary" href="user-dashboard.html">
+          <span>📊</span> Dashboard
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container page-shell">
+    
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="user-dashboard.html">Dashboard</a>
+      <span>›</span>
+      <span class="current">Notification Center</span>
+    </nav>
+
+    <!-- Notification Header Card -->
+    <section class="notif-header-card">
+      <div class="header-top-row">
+        <div class="header-title-box">
+          <h1>
+            <span>🔔 Notifications</span>
+            <span class="unread-pill" id="unreadBadge">0 Unread</span>
+          </h1>
+        </div>
+        <div class="header-actions">
+          <button type="button" id="markAllReadBtn" class="btn btn-secondary">
+            <span>✓✓</span> Mark All as Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs" id="notifFilterTabs">
+        <button type="button" class="tab-btn active" data-filter="all">All Alerts</button>
+        <button type="button" class="tab-btn" data-filter="unread">Unread Only</button>
+        <button type="button" class="tab-btn" data-filter="answer">✨ Verified Answers</button>
+        <button type="button" class="tab-btn" data-filter="chat">💬 Chat & Messages</button>
+        <button type="button" class="tab-btn" data-filter="payment">💳 Payments & Wallet</button>
+      </div>
+    </section>
+
+    <!-- Notification Feed -->
+    <section class="notifications-feed" id="notificationsFeed">
+      <!-- Skeletons shown during load -->
+      <div class="skeleton-card">
+        <div class="skeleton-line" style="width: 40%;"></div>
+        <div class="skeleton-line" style="width: 85%;"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-line" style="width: 50%;"></div>
+        <div class="skeleton-line" style="width: 70%;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- Footer -->
+  <footer class="bottom-bar">
+    <div class="container">
+      <p>© 2026 AskExpert Platform. Verified professional consultations.</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       SUPABASE NOTIFICATIONS SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       DEFAULT SEED NOTIFICATIONS (FALLBACK)
+       ======================================================== */
+    const SEED_NOTIFICATIONS = [
+      {
+        id: "notif-1",
+        type: "answer",
+        title: "New Verified Answer",
+        message: "Adv. Vikram Rao posted a structured compliance roadmap on your vendor contract inquiry.",
+        related_id: "q-101",
+        target_url: "question-details.html?id=q-101",
+        is_read: false,
+        created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString()
+      },
+      {
+        id: "notif-2",
+        type: "chat",
+        title: "Encrypted Message Received",
+        message: "CA Ananya Sharma sent consultation notes regarding GST reverse charge compliance.",
+        related_id: "22222222-2222-2222-2222-222222222222",
+        target_url: "chat.html?expert=22222222-2222-2222-2222-222222222222",
+        is_read: false,
+        created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
+      },
+      {
+        id: "notif-3",
+        type: "payment",
+        title: "Wallet Recharge Successful",
+        message: "Your consultation wallet was credited with ₹2,000.00 via UPI. Current balance: ₹4,500.00.",
+        related_id: null,
+        target_url: "payments.html",
+        is_read: true,
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString()
+      },
+      {
+        id: "notif-4",
+        type: "question",
+        title: "Question Status Updated",
+        message: "Your inquiry 'Compliance renewal statutory requirements' has been marked as Answered.",
+        related_id: "q-101",
+        target_url: "question-details.html?id=q-101",
+        is_read: true,
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
+      },
+      {
+        id: "notif-5",
+        type: "expert",
+        title: "Expert Follow Alert",
+        message: "Dr. Rahul Kumar is now available for direct IP & Patent drafting consultations.",
+        related_id: "33333333-3333-3333-3333-333333333333",
+        target_url: "expert-profile.html?expert=33333333-3333-3333-3333-333333333333",
+        is_read: true,
+        created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString()
+      }
+    ];
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let currentUserId = null;
+    let notificationsList = [];
+    let activeFilter = "all";
+    let realtimeChannel = null;
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    async function initNotifications() {
+      await loadAuthUser();
+      await loadNotificationsFromSupabase();
+      subscribeRealtimeNotifications();
+      setupTabs();
+      setupMarkAllRead();
+    }
+
+    async function loadAuthUser() {
+      try {
+        if (supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session && session.user) {
+            currentUserId = session.user.id;
+          }
+        }
+      } catch (err) {
+        console.warn("Auth session error:", err);
+      }
+
+      if (!currentUserId) {
+        currentUserId = localStorage.getItem("askexpert_guest_user_id") || "guest_user";
+      }
+    }
+
+    /* ========================================================
+       LOAD NOTIFICATIONS
+       ======================================================== */
+    async function loadNotificationsFromSupabase() {
+      const feed = document.getElementById("notificationsFeed");
+
+      try {
+        let fetched = [];
+
+        if (supabase && currentUserId && !currentUserId.startsWith("guest_")) {
+          const { data, error } = await supabase
+            .from("notifications")
+            .select("*")
+            .eq("user_id", currentUserId)
+            .order("created_at", { ascending: false });
+
+          if (!error && data && data.length > 0) {
+            fetched = data.map(n => ({
+              ...n,
+              target_url: resolveTargetUrl(n.type, n.related_id)
+            }));
+          }
+        }
+
+        if (fetched.length === 0) {
+          const stored = JSON.parse(localStorage.getItem("askexpert_notifications") || "null");
+          if (stored && stored.length > 0) {
+            fetched = stored;
+          } else {
+            fetched = SEED_NOTIFICATIONS;
+          }
+        }
+
+        notificationsList = fetched;
+        applyFilterAndRender();
+
+      } catch (err) {
+        console.error("loadNotifications error:", err);
+        notificationsList = SEED_NOTIFICATIONS;
+        applyFilterAndRender();
+      }
+    }
+
+    function resolveTargetUrl(type, relatedId) {
+      if (type === "answer" || type === "question") {
+        return `question-details.html?id=${encodeURIComponent(relatedId || "q-101")}`;
+      }
+      if (type === "chat") {
+        return `chat.html?expert=${encodeURIComponent(relatedId || "11111111-1111-1111-1111-111111111111")}`;
+      }
+      if (type === "expert") {
+        return `expert-profile.html?expert=${encodeURIComponent(relatedId || "11111111-1111-1111-1111-111111111111")}`;
+      }
+      if (type === "payment") {
+        return "payments.html";
+      }
+      return "user-dashboard.html";
+    }
+
+    /* ========================================================
+       RENDER FEED
+       ======================================================== */
+    function applyFilterAndRender() {
+      const unreadCount = notificationsList.filter(n => !n.is_read).length;
+      document.getElementById("unreadBadge").textContent = `${unreadCount} Unread`;
+
+      let filtered = notificationsList;
+
+      if (activeFilter === "unread") {
+        filtered = notificationsList.filter(n => !n.is_read);
+      } else if (activeFilter === "answer") {
+        filtered = notificationsList.filter(n => n.type === "answer" || n.type === "question");
+      } else if (activeFilter === "chat") {
+        filtered = notificationsList.filter(n => n.type === "chat");
+      } else if (activeFilter === "payment") {
+        filtered = notificationsList.filter(n => n.type === "payment");
+      }
+
+      renderFeed(filtered);
+    }
+
+    function renderFeed(items) {
+      const feed = document.getElementById("notificationsFeed");
+      feed.innerHTML = "";
+
+      if (items.length === 0) {
+        feed.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🎉</div>
+            <div class="empty-title">All Caught Up!</div>
+            <p class="empty-text">No notifications found for this filter tab.</p>
+            <button type="button" id="resetNotifTabBtn" class="btn btn-secondary" style="display: inline-flex;">
+              View All Alerts
+            </button>
+          </div>
+        `;
+        document.getElementById("resetNotifTabBtn")?.addEventListener("click", () => {
+          const tabs = document.querySelectorAll(".tab-btn");
+          tabs.forEach(t => t.classList.remove("active"));
+          tabs[0].classList.add("active");
+          activeFilter = "all";
+          applyFilterAndRender();
+        });
+        return;
+      }
+
+      items.forEach(notif => {
+        const item = document.createElement("article");
+        item.className = `notif-item ${notif.is_read ? "" : "unread"}`;
+        item.id = `notif-${notif.id}`;
+
+        const iconConfig = getIconConfig(notif.type);
+        const timeStr = formatTimeAgo(notif.created_at);
+
+        item.innerHTML = `
+          <div class="notif-icon-box ${iconConfig.class}">
+            ${iconConfig.emoji}
+          </div>
+
+          <div class="notif-body">
+            <div class="notif-title-row">
+              <span class="notif-title">${escapeHTML(notif.title)}</span>
+              ${notif.is_read ? "" : '<span class="unread-dot" title="Unread alert"></span>'}
+            </div>
+            <p class="notif-message">${escapeHTML(notif.message)}</p>
+            <span class="notif-time">${timeStr}</span>
+          </div>
+
+          <div class="notif-actions">
+            <button type="button" class="btn-dismiss" title="Dismiss notification" data-id="${notif.id}">
+              ✕
+            </button>
+          </div>
+        `;
+
+        // Click to open & mark read
+        item.addEventListener("click", async (e) => {
+          if (e.target.closest(".btn-dismiss")) return;
+
+          // Mark as read
+          notif.is_read = true;
+          saveLocalNotifications();
+
+          if (supabase && notif.id && !notif.id.startsWith("notif-")) {
+            await supabase.from("notifications").update({ is_read: true }).eq("id", notif.id).catch(() => {});
+          }
+
+          if (notif.target_url) {
+            window.location.href = notif.target_url;
+          }
+        });
+
+        // Dismiss action
+        item.querySelector(".btn-dismiss").addEventListener("click", async (e) => {
+          e.stopPropagation();
+          deleteNotification(notif.id);
+        });
+
+        feed.appendChild(item);
+      });
+    }
+
+    function getIconConfig(type) {
+      switch (type) {
+        case "answer":
+          return { emoji: "✨", class: "icon-answer" };
+        case "chat":
+          return { emoji: "💬", class: "icon-chat" };
+        case "payment":
+          return { emoji: "💳", class: "icon-payment" };
+        case "question":
+          return { emoji: "❓", class: "icon-question" };
+        case "expert":
+          return { emoji: "⭐", class: "icon-expert" };
+        default:
+          return { emoji: "🔔", class: "icon-answer" };
+      }
+    }
+
+    /* ========================================================
+       ACTIONS: DELETE & MARK ALL AS READ
+       ======================================================== */
+    async function deleteNotification(id) {
+      notificationsList = notificationsList.filter(n => n.id !== id);
+      saveLocalNotifications();
+      applyFilterAndRender();
+      showToast("Notification dismissed.");
+
+      if (supabase && id && !id.startsWith("notif-")) {
+        await supabase.from("notifications").delete().eq("id", id).catch(() => {});
+      }
+    }
+
+    function setupMarkAllRead() {
+      const btn = document.getElementById("markAllReadBtn");
+      btn.addEventListener("click", async () => {
+        notificationsList.forEach(n => n.is_read = true);
+        saveLocalNotifications();
+        applyFilterAndRender();
+        showToast("✓ All notifications marked as read.");
+
+        if (supabase && currentUserId && !currentUserId.startsWith("guest_")) {
+          await supabase.from("notifications").update({ is_read: true }).eq("user_id", currentUserId).catch(() => {});
+        }
+      });
+    }
+
+    function setupTabs() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          activeFilter = tab.dataset.filter;
+          applyFilterAndRender();
+        });
+      });
+    }
+
+    /* ========================================================
+       REALTIME NOTIFICATIONS SUBSCRIPTION
+       ======================================================== */
+    function subscribeRealtimeNotifications() {
+      if (!supabase || !currentUserId || currentUserId.startsWith("guest_")) return;
+
+      if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel);
+      }
+
+      realtimeChannel = supabase
+        .channel(`user_notifs:${currentUserId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${currentUserId}`
+          },
+          (payload) => {
+            const newNotif = {
+              ...payload.new,
+              target_url: resolveTargetUrl(payload.new.type, payload.new.related_id)
+            };
+            if (!notificationsList.some(n => n.id === newNotif.id)) {
+              notificationsList.unshift(newNotif);
+              applyFilterAndRender();
+              showToast(`🔔 ${newNotif.title}: ${newNotif.message}`);
+            }
+          }
+        )
+        .subscribe();
+    }
+
+    function saveLocalNotifications() {
+      localStorage.setItem("askexpert_notifications", JSON.stringify(notificationsList));
+    }
+
+    /* ========================================================
+       HELPERS
+       ======================================================== */
+    function showToast(msg) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function formatTimeAgo(isoString) {
+      if (!isoString) return "Recently";
+      const date = new Date(isoString);
+      const diffSecs = Math.floor((Date.now() - date.getTime()) / 1000);
+      if (diffSecs < 60) return "Just now";
+      const mins = Math.floor(diffSecs / 60);
+      if (mins < 60) return `${mins}m ago`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours}h ago`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `${days}d ago`;
+      return date.toLocaleDateString([], { month: "short", day: "numeric" });
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Start App
+    initNotifications();
+  </script>
+</body>
+</html>

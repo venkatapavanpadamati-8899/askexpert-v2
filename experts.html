@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Verified Experts Directory. Find and consult certified lawyers, chartered accountants, tech architects, and doctors." />
+  <title>AskExpert | Verified Experts Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - EXPERTS DIRECTORY STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --orange: #ff9d3c;
+      --gold: #ffb703;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.88);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand span:last-child {
+      color: var(--cyan);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+      background: rgba(0, 153, 255, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ========================================================
+       HERO DIRECTORY BANNER
+       ======================================================== */
+    .hero-banner {
+      padding: 32px 0 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+      font-size: 12.5px;
+      font-weight: 750;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-desc {
+      font-size: 14.5px;
+      color: #bad3eb;
+      max-width: 620px;
+    }
+
+    /* ========================================================
+       SEARCH & FILTER CONTROLS
+       ======================================================== */
+    .controls-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+      margin-bottom: 28px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      transition: all 0.2s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--cyan);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Domain Filter Chips */
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .chips-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .chip-btn:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .chip-btn.active {
+      background: linear-gradient(135deg, rgba(0, 153, 255, 0.25), rgba(0, 217, 255, 0.15));
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    /* Dropdown Filters Bar */
+    .filters-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .filters-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-select {
+      background: #081427;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 650;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .filter-select:focus {
+      border-color: var(--cyan);
+    }
+
+    .available-toggle-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--green);
+      cursor: pointer;
+      background: rgba(32, 216, 137, 0.08);
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(32, 216, 137, 0.25);
+    }
+
+    .results-count-text {
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ========================================================
+       EXPERTS GRID
+       ======================================================== */
+    .experts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 480px) {
+      .experts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .expert-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .expert-card:hover {
+      border-color: rgba(0, 217, 255, 0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .expert-card-top {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .avatar-box {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+      background: #09172c;
+    }
+
+    .dot-status {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2.5px solid #07152d;
+    }
+
+    .dot-online { background: var(--green); }
+    .dot-offline { background: var(--muted); }
+
+    .expert-meta {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .expert-name-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .expert-name {
+      font-size: 17px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .badge-verif {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .expert-headline {
+      font-size: 13px;
+      color: #bad3eb;
+      font-weight: 550;
+      line-height: 1.35;
+    }
+
+    .meta-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Skills Chips */
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-badge {
+      font-size: 11px;
+      font-weight: 650;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #c5dcf2;
+    }
+
+    /* Card Footer Details & Actions */
+    .card-footer-details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .fee-col {
+      line-height: 1.2;
+    }
+
+    .fee-col span {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .fee-col strong {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .card-actions-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-profile-link {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 750;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--white);
+      transition: all 0.2s;
+    }
+
+    .btn-profile-link:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-chat-link {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      box-shadow: 0 4px 12px rgba(0, 153, 255, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-chat-link:hover {
+      box-shadow: 0 6px 18px rgba(0, 217, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* Skeleton Loading Cards */
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.9; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .empty-text {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    footer.bottom-bar {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      padding: 20px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="questions.html">Questions</a>
+        <a href="experts.html" class="active">Experts</a>
+        <a href="chat.html">Chat</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="ask-question.html">
+          <span>➕</span> Ask Question
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Hero Directory Banner -->
+    <section class="hero-banner">
+      <div class="hero-badge">
+        <span>🛡️</span> 100% Background & Council Verified Specialists
+      </div>
+      <h1 class="hero-title">Verified Domain Experts Directory</h1>
+      <p class="hero-desc">Connect with certified lawyers, chartered accountants, tech consultants, and doctors for encrypted 1-on-1 consultations.</p>
+    </section>
+
+    <!-- Controls Panel: Search & Filters -->
+    <section class="controls-panel">
+      
+      <!-- Search Row -->
+      <div class="search-row">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" id="expertSearchInput" class="search-input" placeholder="Search by expert name, qualification, or practice area..." />
+        </div>
+      </div>
+
+      <!-- Domain Filter Chips -->
+      <div class="chips-row" id="domainChipsContainer">
+        <button type="button" class="chip-btn active" data-domain="all">All Domains</button>
+        <button type="button" class="chip-btn" data-domain="Legal">⚖️ Legal Advisor</button>
+        <button type="button" class="chip-btn" data-domain="Tax">📊 CA & Tax Consultant</button>
+        <button type="button" class="chip-btn" data-domain="Tech">💻 Tech & Software</button>
+        <button type="button" class="chip-btn" data-domain="Healthcare">🏥 Healthcare & Med</button>
+        <button type="button" class="chip-btn" data-domain="Finance">📈 Finance & Investment</button>
+        <button type="button" class="chip-btn" data-domain="Business">🏢 Business & Strategy</button>
+      </div>
+
+      <!-- Dropdown Filter Controls -->
+      <div class="filters-bar">
+        <div class="filters-group">
+          <!-- Rating Filter -->
+          <select id="ratingFilter" class="filter-select" aria-label="Rating filter">
+            <option value="0">⭐ All Ratings</option>
+            <option value="4.8">4.8+ Stars</option>
+            <option value="4.5">4.5+ Stars</option>
+            <option value="4.0">4.0+ Stars</option>
+          </select>
+
+          <!-- Fee Filter -->
+          <select id="feeFilter" class="filter-select" aria-label="Fee filter">
+            <option value="all">💰 All Pricing</option>
+            <option value="under1000">Under ₹1,000</option>
+            <option value="1000to2000">₹1,000 - ₹2,000</option>
+            <option value="above2000">₹2,000+</option>
+          </select>
+
+          <!-- Language Filter -->
+          <select id="languageFilter" class="filter-select" aria-label="Language filter">
+            <option value="all">🌐 All Languages</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Marathi">Marathi</option>
+            <option value="Gujarati">Gujarati</option>
+            <option value="Kannada">Kannada</option>
+            <option value="Tamil">Tamil</option>
+          </select>
+
+          <!-- Availability Filter -->
+          <label class="available-toggle-label">
+            <input type="checkbox" id="availableOnlyToggle" style="accent-color: var(--green);" />
+            <span>🟢 Available Now</span>
+          </label>
+        </div>
+
+        <div class="results-count-text" id="resultsCountText">
+          Loading experts...
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Experts Cards Grid -->
+    <section class="experts-grid" id="expertsGrid">
+      <!-- Skeletons shown during initial load -->
+      <div class="skeleton-card">
+        <div style="display: flex; gap: 14px; margin-bottom: 14px;">
+          <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.08); border-radius: 18px;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton-line" style="width: 60%;"></div>
+            <div class="skeleton-line" style="width: 90%;"></div>
+          </div>
+        </div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line" style="width: 75%;"></div>
+      </div>
+      <div class="skeleton-card">
+        <div style="display: flex; gap: 14px; margin-bottom: 14px;">
+          <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.08); border-radius: 18px;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton-line" style="width: 60%;"></div>
+            <div class="skeleton-line" style="width: 90%;"></div>
+          </div>
+        </div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line" style="width: 75%;"></div>
+      </div>
+      <div class="skeleton-card">
+        <div style="display: flex; gap: 14px; margin-bottom: 14px;">
+          <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.08); border-radius: 18px;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton-line" style="width: 60%;"></div>
+            <div class="skeleton-line" style="width: 90%;"></div>
+          </div>
+        </div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line" style="width: 75%;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- Footer -->
+  <footer class="bottom-bar">
+    <div class="container">
+      <p>© 2026 AskExpert Platform. Verified professional consultations.</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       SUPABASE EXPERTS DIRECTORY SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    /* ========================================================
+       SEED / DEFAULT EXPERTS DIRECTORY
+       ======================================================== */
+    const SEED_EXPERTS = [
+      {
+        id: "11111111-1111-1111-1111-111111111111",
+        full_name: "Adv. Vikram Rao",
+        role: "expert",
+        headline: "Senior Corporate & Regulatory Attorney",
+        specialization: "Legal",
+        experience_years: 12,
+        languages: ["English", "Hindi", "Marathi"],
+        rating: 4.9,
+        reviews_count: 184,
+        consultation_fee: 1200,
+        avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+        skills: ["Corporate Law", "Contract Negotiation", "Arbitration", "MCA Filings"],
+        availability_status: "available",
+        verified: true
+      },
+      {
+        id: "22222222-2222-2222-2222-222222222222",
+        full_name: "CA Ananya Sharma",
+        role: "expert",
+        headline: "Chartered Accountant & Tax Consultant",
+        specialization: "Tax",
+        experience_years: 9,
+        languages: ["English", "Hindi", "Gujarati"],
+        rating: 5.0,
+        reviews_count: 210,
+        consultation_fee: 1500,
+        avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+        skills: ["GST Audit", "Corporate Tax", "Transfer Pricing", "TDS Returns"],
+        availability_status: "available",
+        verified: true
+      },
+      {
+        id: "33333333-3333-3333-3333-333333333333",
+        full_name: "Dr. Rahul Kumar",
+        role: "expert",
+        headline: "Patent Attorney & IP Specialist",
+        specialization: "Tech",
+        experience_years: 15,
+        languages: ["English", "Hindi", "Kannada"],
+        rating: 4.8,
+        reviews_count: 95,
+        consultation_fee: 2000,
+        avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+        skills: ["Patent Prosecution", "Prior Art Searches", "IP Licensing", "Tech Transfer"],
+        availability_status: "available",
+        verified: true
+      },
+      {
+        id: "44444444-4444-4444-4444-444444444444",
+        full_name: "Dr. Priya Patel",
+        role: "expert",
+        headline: "Medical Regulatory & Telehealth Advisor",
+        specialization: "Healthcare",
+        experience_years: 10,
+        languages: ["English", "Hindi", "Gujarati"],
+        rating: 4.9,
+        reviews_count: 142,
+        consultation_fee: 1000,
+        avatar_url: "https://images.unsplash.com/photo-1594824813590-78965a7dcfd6?auto=format&fit=crop&w=300&q=80",
+        skills: ["Clinical Protocols", "Telehealth Law", "Ayush & Pharma", "Diagnostics"],
+        availability_status: "available",
+        verified: true
+      },
+      {
+        id: "55555555-5555-5555-5555-555555555555",
+        full_name: "Rajesh Menon",
+        role: "expert",
+        headline: "SEBI Registered Investment Advisor & Wealth Strategist",
+        specialization: "Finance",
+        experience_years: 14,
+        languages: ["English", "Hindi", "Malayalam", "Tamil"],
+        rating: 4.7,
+        reviews_count: 118,
+        consultation_fee: 1800,
+        avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+        skills: ["Portfolio Structuring", "Mutual Funds", "Equities", "Risk Hedging"],
+        availability_status: "offline",
+        verified: true
+      },
+      {
+        id: "66666666-6666-6666-6666-666666666666",
+        full_name: "Meera Deshmukh",
+        role: "expert",
+        headline: "Startup Expansion & Business Strategist",
+        specialization: "Business",
+        experience_years: 11,
+        languages: ["English", "Hindi", "Marathi"],
+        rating: 4.8,
+        reviews_count: 88,
+        consultation_fee: 1600,
+        avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80",
+        skills: ["Go-to-Market", "Venture Structuring", "Pitch Decks", "Operations"],
+        availability_status: "available",
+        verified: true
+      }
+    ];
+
+    /* ========================================================
+       STATE
+       ======================================================== */
+    let allExperts = [];
+    let selectedDomain = "all";
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    async function initDirectory() {
+      await loadExpertsFromSupabase();
+      setupFilters();
+    }
+
+    /* ========================================================
+       LOAD DATA FROM SUPABASE
+       ======================================================== */
+    async function loadExpertsFromSupabase() {
+      const grid = document.getElementById("expertsGrid");
+      const countEl = document.getElementById("resultsCountText");
+
+      try {
+        let fetchedList = [];
+
+        if (supabase) {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("role", "expert");
+
+          if (!error && data && data.length > 0) {
+            fetchedList = data.map(item => ({
+              id: item.id,
+              full_name: item.full_name,
+              role: item.role || "expert",
+              headline: item.headline || item.specialization || "Verified Specialist",
+              specialization: item.specialization || "Legal",
+              experience_years: item.experience_years || 8,
+              languages: Array.isArray(item.languages) ? item.languages : ["English", "Hindi"],
+              rating: item.rating ? parseFloat(item.rating) : 4.9,
+              reviews_count: item.reviews_count || 120,
+              consultation_fee: item.consultation_fee ? parseFloat(item.consultation_fee) : 1200,
+              avatar_url: item.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+              skills: Array.isArray(item.skills) ? item.skills : ["Advisory", "Consultation"],
+              availability_status: item.availability_status || "available",
+              verified: true
+            }));
+          }
+        }
+
+        // Merge DB with seeds ensuring no duplicate IDs
+        const existingIds = new Set(fetchedList.map(e => e.id));
+        SEED_EXPERTS.forEach(seed => {
+          if (!existingIds.has(seed.id)) {
+            fetchedList.push(seed);
+          }
+        });
+
+        allExperts = fetchedList;
+        applyFilters();
+
+      } catch (err) {
+        console.error("loadExperts error:", err);
+        allExperts = SEED_EXPERTS;
+        applyFilters();
+      }
+    }
+
+    /* ========================================================
+       RENDER EXPERTS GRID
+       ======================================================== */
+    function renderExperts(list) {
+      const grid = document.getElementById("expertsGrid");
+      const countEl = document.getElementById("resultsCountText");
+      grid.innerHTML = "";
+
+      countEl.textContent = `Showing ${list.length} verified specialist${list.length === 1 ? "" : "s"}`;
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <div class="empty-title">No Experts Match Your Criteria</div>
+            <p class="empty-text">Try adjusting your search query, fee range, or selected domain filter.</p>
+            <button type="button" id="resetFiltersBtn" class="btn btn-secondary" style="display: inline-flex;">
+              Reset All Filters
+            </button>
+          </div>
+        `;
+        document.getElementById("resetFiltersBtn").addEventListener("click", resetAllFilters);
+        return;
+      }
+
+      list.forEach(exp => {
+        const card = document.createElement("article");
+        card.className = "expert-card";
+
+        const isOnline = exp.availability_status === "available";
+        const dotClass = isOnline ? "dot-online" : "dot-offline";
+        const langsStr = (exp.languages || []).join(", ");
+        const skillsHTML = (exp.skills || []).slice(0, 3).map(s => `<span class="skill-badge">${escapeHTML(s)}</span>`).join("");
+
+        const profileUrl = `expert-profile.html?expert=${encodeURIComponent(exp.id)}`;
+        const chatUrl = `chat.html?expert=${encodeURIComponent(exp.id)}`;
+
+        card.innerHTML = `
+          <div>
+            <!-- Top Profile & Badges -->
+            <div class="expert-card-top">
+              <div class="avatar-box">
+                <img src="${escapeHTML(exp.avatar_url)}" alt="${escapeHTML(exp.full_name)}" class="avatar-img" />
+                <div class="dot-status ${dotClass}" title="${isOnline ? 'Online & Available' : 'Currently Offline'}"></div>
+              </div>
+
+              <div class="expert-meta">
+                <div class="expert-name-title">
+                  <span class="expert-name">${escapeHTML(exp.full_name)}</span>
+                  <span class="badge-verif">✓ Verified</span>
+                </div>
+                <p class="expert-headline">${escapeHTML(exp.headline)}</p>
+                <div class="meta-badges-row">
+                  <span style="color: var(--gold); font-weight: 750;">★ ${exp.rating}</span>
+                  <span>(${exp.reviews_count})</span>
+                  <span>•</span>
+                  <span>📅 ${exp.experience_years}+ Yrs</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Languages & Skills -->
+            <div style="margin-top: 14px;">
+              <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 6px;">
+                🌐 ${escapeHTML(langsStr)}
+              </div>
+              <div class="skills-wrap">
+                ${skillsHTML}
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Fee & Actions -->
+          <div class="card-footer-details">
+            <div class="fee-col">
+              <span>Consultation</span>
+              <strong>₹${exp.consultation_fee}</strong>
+            </div>
+
+            <div class="card-actions-row">
+              <a href="${profileUrl}" class="btn-profile-link" title="View credentials & background">
+                Profile
+              </a>
+              <a href="${chatUrl}" class="btn-chat-link" title="Start live chat consultation">
+                <span>💬</span> Chat
+              </a>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    /* ========================================================
+       FILTERING LOGIC
+       ======================================================== */
+    function applyFilters() {
+      const searchTerm = document.getElementById("expertSearchInput").value.toLowerCase().trim();
+      const minRating = parseFloat(document.getElementById("ratingFilter").value) || 0;
+      const feeRange = document.getElementById("feeFilter").value;
+      const langFilter = document.getElementById("languageFilter").value;
+      const availableOnly = document.getElementById("availableOnlyToggle").checked;
+
+      const filtered = allExperts.filter(exp => {
+        // 1. Search filter
+        if (searchTerm) {
+          const matchName = exp.full_name.toLowerCase().includes(searchTerm);
+          const matchHeadline = (exp.headline || "").toLowerCase().includes(searchTerm);
+          const matchSpecialization = (exp.specialization || "").toLowerCase().includes(searchTerm);
+          const matchSkills = (exp.skills || []).some(s => s.toLowerCase().includes(searchTerm));
+          if (!matchName && !matchHeadline && !matchSpecialization && !matchSkills) return false;
+        }
+
+        // 2. Domain Filter
+        if (selectedDomain !== "all") {
+          const spec = (exp.specialization || "").toLowerCase();
+          const dom = selectedDomain.toLowerCase();
+          if (!spec.includes(dom)) return false;
+        }
+
+        // 3. Rating filter
+        if (exp.rating < minRating) return false;
+
+        // 4. Fee filter
+        if (feeRange === "under1000" && exp.consultation_fee >= 1000) return false;
+        if (feeRange === "1000to2000" && (exp.consultation_fee < 1000 || exp.consultation_fee > 2000)) return false;
+        if (feeRange === "above2000" && exp.consultation_fee <= 2000) return false;
+
+        // 5. Language filter
+        if (langFilter !== "all") {
+          const hasLang = (exp.languages || []).some(l => l.toLowerCase() === langFilter.toLowerCase());
+          if (!hasLang) return false;
+        }
+
+        // 6. Availability filter
+        if (availableOnly && exp.availability_status !== "available") return false;
+
+        return true;
+      });
+
+      renderExperts(filtered);
+    }
+
+    function setupFilters() {
+      // Search
+      document.getElementById("expertSearchInput").addEventListener("input", applyFilters);
+
+      // Domain chips
+      const chipButtons = document.querySelectorAll(".chip-btn");
+      chipButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          chipButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedDomain = btn.dataset.domain;
+          applyFilters();
+        });
+      });
+
+      // Dropdowns & Checkbox
+      document.getElementById("ratingFilter").addEventListener("change", applyFilters);
+      document.getElementById("feeFilter").addEventListener("change", applyFilters);
+      document.getElementById("languageFilter").addEventListener("change", applyFilters);
+      document.getElementById("availableOnlyToggle").addEventListener("change", applyFilters);
+    }
+
+    function resetAllFilters() {
+      document.getElementById("expertSearchInput").value = "";
+      document.getElementById("ratingFilter").value = "0";
+      document.getElementById("feeFilter").value = "all";
+      document.getElementById("languageFilter").value = "all";
+      document.getElementById("availableOnlyToggle").checked = false;
+
+      const chipButtons = document.querySelectorAll(".chip-btn");
+      chipButtons.forEach(b => b.classList.remove("active"));
+      chipButtons[0].classList.add("active");
+      selectedDomain = "all";
+
+      applyFilters();
+      showToast("✓ Filters reset.");
+    }
+
+    /* ========================================================
+       HELPERS
+       ======================================================== */
+    function showToast(msg) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Start App
+    initDirectory();
+  </script>
+</body>
+</html>

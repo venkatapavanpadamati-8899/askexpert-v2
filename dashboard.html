@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AskExpert | Redirecting to Dashboard...</title>
+  <script type="module">
+    import { supabase } from "./assets/js/supabaseClient.js";
+
+    async function routeDashboard() {
+      try {
+        let role = sessionStorage.getItem("askexpert_user_role");
+        if (!role && supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            const { data: prof } = await supabase
+              .from("profiles")
+              .select("role")
+              .eq("id", session.user.id)
+              .maybeSingle();
+            if (prof?.role) role = prof.role;
+          }
+        }
+
+        if (role === "admin") {
+          window.location.replace("admin-dashboard.html");
+        } else if (role === "expert" || role === "professional") {
+          window.location.replace("professional-dashboard.html");
+        } else {
+          window.location.replace("user-dashboard.html");
+        }
+      } catch (e) {
+        window.location.replace("user-dashboard.html");
+      }
+    }
+
+    routeDashboard();
+  </script>
+</head>
+<body style="background: #030712; color: #ffffff; font-family: sans-serif; display: grid; place-items: center; height: 100vh;">
+  <p>Redirecting to your dashboard...</p>
+</body>
+</html>

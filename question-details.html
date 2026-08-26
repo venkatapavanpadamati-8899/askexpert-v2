@@ -1082,28 +1082,6 @@ Specifically, we have international client vendor contracts up for renewal. We n
     let selectedReplyFile = null;
     let realtimeChannel = null;
 
-    // Expert Directory for enriched credentials
-    const EXPERT_DIRECTORY = {
-      "Adv. Vikram Rao": {
-        name: "Adv. Vikram Rao",
-        role: "Senior Corporate & Regulatory Attorney (12+ Yrs Exp)",
-        avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-        rating: "4.9 (184 reviews)"
-      },
-      "CA Ananya Sharma": {
-        name: "CA Ananya Sharma",
-        role: "Chartered Accountant & Tax Consultant (9+ Yrs Exp)",
-        avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80",
-        rating: "5.0 (210 reviews)"
-      },
-      "Dr. Rahul Kumar": {
-        name: "Dr. Rahul Kumar",
-        role: "Patent Attorney & Tech Specialist (15+ Yrs Exp)",
-        avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-        rating: "4.8 (95 reviews)"
-      }
-    };
-
     /* ========================================================
        INITIALIZATION
        ======================================================== */
@@ -1208,34 +1186,22 @@ Specifically, we have international client vendor contracts up for renewal. We n
         if (supabase) {
           const { data, error } = await supabase
             .from("answers")
-            .select("*")
+            .select(`*, profiles(full_name, headline, specialization, avatar_url, rating)`)
             .eq("question_id", currentQuestionId)
             .order("created_at", { ascending: true });
 
-          if (!error && data && data.length > 0) {
-            fetchedAnswers = data;
+          if (!error && data) {
+            answersList = data;
           }
         }
 
-        // Fallback default answer if none in DB
-        if (fetchedAnswers.length === 0) {
-          fetchedAnswers = [
-            {
-              id: "ans-default-1",
-              question_id: currentQuestionId,
-              author_name: "Adv. Vikram Rao",
-              author_role: "expert",
-              author_headline: "Senior Corporate & Regulatory Attorney (12+ Yrs Exp)",
-              author_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-              content: `Here is the structured legal and compliance roadmap for your contract renewals:\n\n1. Statutory Filings & Deadlines: Ensure your Board Resolution approving vendor terms and annual statements is submitted prior to the upcoming quarter-end cutoff. Maintain certified digital copies of Form AOC-4 and MGT-7.\n\n2. IP & Indemnification: Specify that IP ownership remains strictly with the creator until full remuneration is cleared, with capped indemnification liabilities.\n\n3. Dispute Resolution: Insert a binding Arbitration clause under the Arbitration and Conciliation Act (seated in Mumbai or Delhi for neutrality).`,
-              helpful_count: 48,
-              created_at: new Date(Date.now() - 3600000).toISOString()
-            }
-          ];
+        countHeader.textContent = answersList.length;
+
+        if (answersList.length === 0) {
+          document.getElementById("answersContainer").innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--muted); font-size: 0.95rem;">No verified expert answers posted yet for this question.</div>`;
+          return;
         }
 
-        answersList = fetchedAnswers;
-        countHeader.textContent = answersList.length;
         renderAnswersUI(answersList);
 
       } catch (err) {
@@ -1252,11 +1218,11 @@ Specifically, we have international client vendor contracts up for renewal. We n
         card.className = "glass-card expert-card";
         card.id = `ans-${ans.id}`;
 
-        const expertProfile = EXPERT_DIRECTORY[ans.author_name] || {
-          name: ans.author_name || "Verified Expert",
-          role: ans.author_headline || "Verified Domain Consultant",
-          avatarUrl: ans.author_avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-          rating: "4.9 (Verified)"
+        const expertProfile = {
+          name: ans.profiles?.full_name || ans.author_name || "Verified Expert",
+          role: ans.profiles?.headline || ans.profiles?.specialization || ans.author_headline || "Verified Domain Consultant",
+          avatarUrl: ans.profiles?.avatar_url || ans.author_avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+          rating: ans.profiles?.rating ? `${parseFloat(ans.profiles.rating).toFixed(1)} (Verified)` : "5.0 (Verified)"
         };
 
         const timeStr = ans.created_at ? formatTimeAgo(ans.created_at) : "Recently";

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - User Dashboard. Manage your inquiries, track expert answers, active consultations, and wallet balance." />
+  <title>AskExpert | Client Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - USER DASHBOARD DESIGN SYSTEM
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --orange: #ff9d3c;
+      --gold: #ffb703;
+      --radius: 18px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    /* ========================================================
+       SIDEBAR NAVIGATION
+       ======================================================== */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(4, 10, 22, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 900;
+      box-shadow: 0 4px 14px rgba(0, 217, 255, 0.4);
+    }
+
+    .brand-text {
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-text span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 20px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(0, 153, 255, 0.2), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .nav-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* ========================================================
+       MAIN DASHBOARD SHELL
+       ======================================================== */
+    .dashboard-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Top Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 8px 16px;
+      width: min(380px, 100%);
+      transition: all 0.2s ease;
+    }
+
+    .search-wrap:focus-within {
+      border-color: var(--cyan);
+      background: rgba(0, 217, 255, 0.05);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13.5px;
+      outline: none;
+      width: 100%;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-ask-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 750;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .btn-ask-top:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .notif-badge-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff4757;
+      border: 2px solid #040a16;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px 5px 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 12.5px;
+      display: grid;
+      place-items: center;
+    }
+
+    .user-info-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--white);
+    }
+
+    .user-role-tag {
+      font-size: 10px;
+      color: var(--cyan);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========================================================
+       DASHBOARD CONTENT
+       ======================================================== */
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(0, 153, 255, 0.16), rgba(138, 92, 255, 0.12));
+      border: 1px solid rgba(0, 217, 255, 0.25);
+      border-radius: var(--radius);
+      padding: 26px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(0, 217, 255, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .welcome-desc {
+      font-size: 14px;
+      color: #bad3eb;
+      max-width: 580px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(0, 217, 255, 0.35);
+      transform: translateY(-3px);
+    }
+
+    .stat-icon-wrap {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .stat-icon-blue { background: rgba(0, 153, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 217, 255, 0.3); }
+    .stat-icon-green { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .stat-icon-purple { background: rgba(138, 92, 255, 0.15); color: var(--purple); border: 1px solid rgba(138, 92, 255, 0.3); }
+    .stat-icon-gold { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+
+    .stat-info span {
+      font-size: 12.5px;
+      font-weight: 650;
+      color: var(--muted);
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-info strong {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    /* Main Section Split */
+    .dashboard-split {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-all-link {
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--cyan);
+      transition: color 0.2s ease;
+    }
+
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Question List in Dashboard */
+    .my-questions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .q-dashboard-item {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .q-dashboard-item:hover {
+      background: rgba(0, 153, 255, 0.06);
+      border-color: rgba(0, 217, 255, 0.3);
+      transform: translateX(4px);
+    }
+
+    .q-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .q-category-tag {
+      font-size: 11px;
+      font-weight: 750;
+      color: var(--cyan);
+      background: rgba(0, 217, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .q-status-badge {
+      font-size: 11px;
+      font-weight: 750;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .status-answered { background: rgba(32, 216, 137, 0.15); color: var(--green); }
+    .status-open { background: rgba(0, 153, 255, 0.15); color: var(--cyan); }
+    .status-resolved { background: rgba(138, 92, 255, 0.15); color: var(--purple); }
+
+    .q-dashboard-title {
+      font-size: 14.5px;
+      font-weight: 750;
+      color: var(--white);
+      line-height: 1.4;
+    }
+
+    .q-item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Active Consultations & Followed Experts Widget */
+    .expert-widget-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .expert-widget-item {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .expert-widget-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+    }
+
+    .expert-widget-info {
+      flex: 1;
+      line-height: 1.3;
+    }
+
+    .expert-widget-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .expert-widget-role {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .btn-chat-mini {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 750;
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-chat-mini:hover {
+      background: var(--cyan);
+      color: #031120;
+    }
+
+    /* Wallet Widget */
+    .wallet-card {
+      background: linear-gradient(135deg, rgba(32, 216, 137, 0.12), rgba(0, 153, 255, 0.12));
+      border: 1px solid rgba(32, 216, 137, 0.3);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .wallet-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .wallet-balance {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Mobile toggle */
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/userDashboard-BKJ4iooz.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- ========================================================
+       1. SIDEBAR NAVIGATION
+       ======================================================== -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand-section">
+        <div class="brand-mark">A</div>
+        <div class="brand-text">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="user-dashboard.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Dashboard</span>
+          </div>
+        </a>
+
+        <a href="ask-question.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>➕</span>
+            <span>Ask Question</span>
+          </div>
+        </a>
+
+        <a href="questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>My Questions</span>
+          </div>
+          <span class="nav-badge" id="navQuestionsCount">0</span>
+        </a>
+
+        <a href="experts.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>Find Experts</span>
+          </div>
+        </a>
+
+        <a href="chat.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💬</span>
+            <span>Live Chat</span>
+          </div>
+          <span class="nav-badge" style="background: var(--green);" id="navActiveChatsCount">3</span>
+        </a>
+
+        <a href="notifications.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🔔</span>
+            <span>Notifications</span>
+          </div>
+          <span class="nav-badge" style="background: #ff4757;" id="navNotifCount">2</span>
+        </a>
+
+        <a href="payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments</span>
+          </div>
+        </a>
+
+        <a href="profile.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👤</span>
+            <span>Profile</span>
+          </div>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚙️</span>
+            <span>Settings</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="logoutBtn" class="btn-logout">
+        <span>🚪</span>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       2. MAIN DASHBOARD CONTENT AREA
+       ======================================================== -->
+  <div class="dashboard-layout">
+    
+    <!-- Top Header -->
+    <header class="topbar">
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input type="text" id="dashboardSearch" class="search-input" placeholder="Search questions, answers or experts..." />
+      </div>
+
+      <div class="top-actions">
+        <a href="ask-question.html" class="btn-ask-top">
+          <span>➕</span>
+          <span>Ask Question</span>
+        </a>
+
+        <a href="notifications.html" class="icon-btn" title="View Notifications">
+          <span>🔔</span>
+          <div class="notif-badge-dot"></div>
+        </a>
+
+        <a href="profile.html" class="user-pill" title="My Profile">
+          <div class="user-avatar" id="topUserAvatar">U</div>
+          <div class="user-info-text">
+            <span class="user-name" id="topUserName">Aditya Sharma</span>
+            <span class="user-role-tag">Client</span>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-body">
+
+      <!-- Welcome Banner -->
+      <section class="welcome-banner">
+        <div>
+          <h1 class="welcome-title">Welcome back, <span id="welcomeUserName">Aditya</span>! 👋</h1>
+          <p class="welcome-desc">Track your legal, tax, and engineering inquiries with verified specialists. Live consultations and advice are encrypted.</p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="ask-question.html" class="btn-ask-top">
+            <span>📝</span> Submit New Inquiry
+          </a>
+          <a href="experts.html" class="icon-btn" style="width: auto; padding: 0 16px; font-size: 13.5px; font-weight: 750;" title="Browse Directory">
+            <span>👥</span> Browse Experts
+          </a>
+        </div>
+      </section>
+
+      <!-- Stat Cards Row -->
+      <section class="stats-grid">
+        <!-- 1. Questions Asked -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-blue">❓</div>
+          <div class="stat-info">
+            <span>My Questions</span>
+            <strong id="statQuestions">0</strong>
+          </div>
+        </div>
+
+        <!-- 2. Answers Received -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-green">✨</div>
+          <div class="stat-info">
+            <span>Answers Received</span>
+            <strong id="statAnswers">0</strong>
+          </div>
+        </div>
+
+        <!-- 3. Active Consultations -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-purple">💬</div>
+          <div class="stat-info">
+            <span>Active Chats</span>
+            <strong id="statChats">3</strong>
+          </div>
+        </div>
+
+        <!-- 4. Wallet Balance -->
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-gold">💳</div>
+          <div class="stat-info">
+            <span>Wallet Balance</span>
+            <strong id="statWallet">₹4,500</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Split Grid: Recent Inquiries + Right Widgets -->
+      <div class="dashboard-split">
+        
+        <!-- Left: My Recent Questions -->
+        <section class="glass-card">
+          <div class="card-header-row">
+            <h2 class="card-title">
+              <span>📋</span> My Recent Inquiries
+            </h2>
+            <a href="questions.html" class="view-all-link">View All Questions →</a>
+          </div>
+
+          <div id="myQuestionsList" class="my-questions-list">
+            <!-- Loading placeholder -->
+            <div style="text-align: center; padding: 24px; color: var(--muted); font-size: 13px;">
+              Loading inquiries from Supabase...
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Consultations & Followed Experts -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <!-- Wallet Quick Card -->
+          <div class="wallet-card">
+            <div class="wallet-top">
+              <span style="font-size: 12.5px; font-weight: 750; color: #bad3eb; text-transform: uppercase;">Consultation Wallet</span>
+              <span>🔒 Encrypted</span>
+            </div>
+            <div class="wallet-balance" id="sideWalletBalance">₹4,500.00</div>
+            <div style="margin-top: 14px; display: flex; gap: 8px;">
+              <a href="payments.html" class="btn-ask-top" style="flex: 1; justify-content: center; font-size: 12.5px; padding: 7px 12px;">
+                <span>➕</span> Add Funds
+              </a>
+              <a href="payment-history.html" class="icon-btn" style="width: auto; padding: 0 12px; font-size: 12px;" title="Transaction History">
+                History
+              </a>
+            </div>
+          </div>
+
+          <!-- Active & Followed Experts Widget -->
+          <section class="glass-card">
+            <div class="card-header-row">
+              <h2 class="card-title">
+                <span>⭐</span> Followed Experts
+              </h2>
+              <a href="experts.html" class="view-all-link">Browse</a>
+            </div>
+
+            <div class="expert-widget-list" id="followedExpertsList">
+              <div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">Loading verified experts...</div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       USER DASHBOARD SUPABASE INTEGRATION SCRIPT
+       ======================================================= -->
+</body>
+</html>

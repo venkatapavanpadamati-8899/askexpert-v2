@@ -1033,6 +1033,8 @@
        INIT
        ======================================================== */
     window.addEventListener("DOMContentLoaded", async () => {
+      const isAuth = await verifyAdminAccess();
+      if (!isAuth) return;
       renderEdgeFunctionsTable();
       renderAuditLogsTable();
       setupAuditFilterTabs();
@@ -1041,6 +1043,38 @@
       startAutoRefresh();
       setupRealtimeSubscriptions();
     });
+
+    async function verifyAdminAccess() {
+      try {
+        if (!supabase) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+        window.location.replace("admin-login.html");
+        return false;
+      }
+    }
 
     /* ========================================================
        RENDER EDGE FUNCTIONS TABLE

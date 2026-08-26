@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="AskExpert - Create your account and connect with experts."
+  >
+
+  <title>AskExpert | Register</title>
+
+  <style>
+    /* =========================================================
+       ASKEXPERT REGISTER PAGE
+       Standalone HTML + CSS + JavaScript
+       No Firebase
+       No Supabase
+       Frontend only
+       ========================================================= */
+
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #120b2e;
+
+      --card: rgba(10, 20, 40, 0.82);
+      --card-soft: rgba(255, 255, 255, 0.045);
+
+      --border: rgba(255, 255, 255, 0.10);
+      --border-hover: rgba(0, 217, 255, 0.45);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+
+      --cyan: #00d9ff;
+      --blue: #4d8dff;
+      --purple: #754cff;
+
+      --green: #28e28a;
+      --yellow: #ffd21f;
+      --red: #ff6475;
+
+      --radius: 24px;
+    }
+
+    /* =========================================================
+       RESET
+       ========================================================= */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(0, 217, 255, 0.10),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 90% 20%,
+          rgba(117, 76, 255, 0.11),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(0, 217, 255, 0.06),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          var(--bg-1),
+          var(--bg-2),
+          var(--bg-3)
+        );
+
+      overflow-x: hidden;
+
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* =========================================================
+       BACKGROUND EFFECTS
+       ========================================================= */
+
+    .background-effects {
+      position: fixed;
+      inset: 0;
+
+      overflow: hidden;
+
+      pointer-events: none;
+
+      z-index: 0;
+    }
+
+    .glow {
+      position: absolute;
+
+      border-radius: 50%;
+
+      filter: blur(120px);
+
+      pointer-events: none;
+
+      opacity: 0.16;
+    }
+
+    .glow-one {
+      width: 430px;
+      height: 430px;
+
+      left: -150px;
+      top: -120px;
+
+      background: var(--cyan);
+
+      animation:
+        floatGlowOne 10s ease-in-out infinite;
+    }
+
+    .glow-two {
+      width: 500px;
+      height: 500px;
+
+      right: -180px;
+      bottom: -200px;
+
+      background: var(--purple);
+
+      animation:
+        floatGlowTwo 12s ease-in-out infinite;
+    }
+
+    .glow-three {
+      width: 260px;
+      height: 260px;
+
+      left: 50%;
+      top: 45%;
+
+      background: var(--blue);
+
+      opacity: 0.07;
+
+      animation:
+        pulseGlow 8s ease-in-out infinite;
+    }
+
+    @keyframes floatGlowOne {
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      50% {
+        transform: translate(55px, 35px);
+      }
+    }
+
+    @keyframes floatGlowTwo {
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      50% {
+        transform: translate(-50px, -40px);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.04;
+      }
+
+      50% {
+        transform: scale(1.35);
+        opacity: 0.09;
+      }
+    }
+
+    /* =========================================================
+       PAGE
+       ========================================================= */
+
+    .page {
+      position: relative;
+
+      z-index: 2;
+
+      width: 100%;
+
+      max-width: 1250px;
+
+      margin: 0 auto;
+
+      padding: 35px 20px 50px;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(500px, 1.15fr);
+
+      gap: 28px;
+
+      align-items: stretch;
+    }
+
+    /* =========================================================
+       GLASS CARD
+       ========================================================= */
+
+    .glass-card {
+      position: relative;
+
+      background:
+        radial-gradient(
+          circle at 92% 8%,
+          rgba(117, 76, 255, 0.18),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 8% 88%,
+          rgba(0, 217, 255, 0.12),
+          transparent 28%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(19, 35, 62, 0.96),
+          rgba(7, 18, 38, 0.94) 52%,
+          rgba(13, 17, 48, 0.97)
+        );
+
+      border:
+        1px solid var(--border);
+
+      border-radius: var(--radius);
+
+      backdrop-filter:
+        blur(22px)
+        saturate(140%);
+
+      -webkit-backdrop-filter:
+        blur(22px)
+        saturate(140%);
+
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .glass-card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 360px;
+      height: 360px;
+
+      right: -190px;
+      top: -180px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(117, 76, 255, 0.20) 0%,
+          rgba(0, 217, 255, 0.06) 38%,
+          transparent 70%
+        );
+
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .form-panel {
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(117, 76, 255, 0.14),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 0% 100%,
+          rgba(0, 217, 255, 0.08),
+          transparent 30%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(16, 29, 51, 0.98),
+          rgba(7, 16, 33, 0.97) 55%,
+          rgba(12, 18, 42, 0.98)
+        );
+    }
+
+    .glass-card::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+      right: 0;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--cyan),
+          var(--purple),
+          transparent
+        );
+
+      opacity: 0.7;
+    }
+
+    /* =========================================================
+       LEFT INFORMATION PANEL
+       ========================================================= */
+
+    .info-panel {
+      min-height: 820px;
+
+      padding: 38px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+
+      align-items: center;
+
+      gap: 13px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      flex-shrink: 0;
+
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+
+      color: #03111d;
+
+      font-size: 14px;
+
+      font-weight: 950;
+
+      box-shadow:
+        0 12px 35px rgba(0, 217, 255, 0.20);
+
+      animation:
+        logoPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%,
+      100% {
+        box-shadow:
+          0 12px 35px rgba(0, 217, 255, 0.18);
+      }
+
+      50% {
+        box-shadow:
+          0 12px 42px rgba(117, 76, 255, 0.30);
+      }
+    }
+
+    .brand-name {
+      color: var(--white);
+
+      font-size: 20px;
+
+      font-weight: 900;
+    }
+
+    .brand-subtitle {
+      margin-top: 3px;
+
+      color: rgba(234, 246, 255, 0.52);
+
+      font-size: 11px;
+
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       HERO CONTENT
+       ========================================================= */
+
+    .info-content {
+      margin-top: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+
+      align-items: center;
+
+      width: fit-content;
+
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(0, 217, 255, 0.07);
+
+      border:
+        1px solid rgba(0, 217, 255, 0.18);
+
+      color:
+        rgba(234, 246, 255, 0.88);
+
+      font-size: 12px;
+
+      font-weight: 750;
+    }
+
+    .info-content h1 {
+      margin-top: 20px;
+
+      font-size:
+        clamp(38px, 4.5vw, 58px);
+
+      line-height: 1.03;
+
+      letter-spacing: -2.5px;
+
+      font-weight: 900;
+
+      color: var(--white);
+    }
+
+    .gradient-text {
+      color: transparent;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      background-size: 200% auto;
+
+      animation:
+        gradientText 5s linear infinite;
+    }
+
+    @keyframes gradientText {
+      0% {
+        background-position: 0% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    .info-description {
+      margin-top: 20px;
+
+      max-width: 560px;
+
+      color:
+        rgba(234, 246, 255, 0.68);
+
+      font-size: 15px;
+
+      line-height: 1.8;
+    }
+
+    /* =========================================================
+       IMAGE
+       ========================================================= */
+
+    .image-wrapper {
+      position: relative;
+
+      margin-top: 28px;
+    }
+
+    .image-wrapper::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 12px;
+
+      border:
+        1px solid rgba(0, 217, 255, 0.10);
+
+      border-radius: 20px;
+
+      pointer-events: none;
+    }
+
+    .info-image {
+      width: 100%;
+
+      height: 290px;
+
+      object-fit: cover;
+
+      border-radius: 20px;
+
+      display: block;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.28);
+
+      animation:
+        imageFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes imageFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-7px);
+      }
+    }
+
+    /* =========================================================
+       BENEFITS
+       ========================================================= */
+
+    .benefits {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap: 10px;
+
+      margin-top: 22px;
+    }
+
+    .benefit {
+      padding: 14px;
+
+      border-radius: 15px;
+
+      background:
+        rgba(255, 255, 255, 0.035);
+
+      border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .benefit:hover {
+      transform: translateY(-3px);
+
+      background:
+        rgba(0, 217, 255, 0.045);
+
+      border-color:
+        rgba(0, 217, 255, 0.18);
+    }
+
+    .benefit-icon {
+      font-size: 20px;
+    }
+
+    .benefit h3 {
+      margin-top: 8px;
+
+      font-size: 13px;
+
+      color: var(--white);
+    }
+
+    .benefit p {
+      margin-top: 4px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       FORM PANEL
+       ========================================================= */
+
+    .form-panel {
+      padding: 38px;
+
+      min-height: 820px;
+    }
+
+    .form-header {
+      margin-bottom: 25px;
+    }
+
+    .form-header h2 {
+      font-size: 30px;
+
+      color: var(--white);
+
+      font-weight: 900;
+
+      letter-spacing: -0.8px;
+    }
+
+    .form-header p {
+      margin-top: 7px;
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+       PROGRESS
+       ========================================================= */
+
+    .progress-wrapper {
+      margin-bottom: 25px;
+    }
+
+    .progress-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      color:
+        rgba(234, 246, 255, 0.65);
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    .progress-percent {
+      color: var(--cyan);
+
+      font-size: 11px;
+
+      font-weight: 800;
+    }
+
+    .progress-track {
+      width: 100%;
+
+      height: 5px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255, 255, 255, 0.07);
+
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 20%;
+
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+
+      transition:
+        width 0.35s ease;
+    }
+
+    /* =========================================================
+       FORM
+       ========================================================= */
+
+    #registerForm {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 16px;
+    }
+
+    .field-group {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 7px;
+    }
+
+    .field-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 13px;
+    }
+
+    .field-label {
+      color:
+        rgba(234, 246, 255, 0.84);
+
+      font-size: 12px;
+
+      font-weight: 750;
+    }
+
+    .required {
+      color: var(--cyan);
+    }
+
+    .input-wrap {
+      position: relative;
+
+      width: 100%;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
+
+      border-radius: 13px;
+
+      background:
+        rgba(255, 255, 255, 0.04);
+
+      color: var(--white);
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .input,
+    .select {
+      height: 52px;
+
+      padding:
+        0 14px;
+
+      font-size: 13px;
+    }
+
+    .textarea {
+      min-height: 95px;
+
+      resize: vertical;
+
+      padding: 13px 14px;
+
+      font-size: 13px;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color:
+        rgba(255, 255, 255, 0.32);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color:
+        rgba(0, 217, 255, 0.65);
+
+      background:
+        rgba(0, 217, 255, 0.035);
+
+      box-shadow:
+        0 0 0 3px rgba(0, 217, 255, 0.06);
+    }
+
+    .select {
+      appearance: none;
+
+      cursor: pointer;
+
+      padding-right: 42px;
+    }
+
+    .select option {
+      background: #0b162a;
+
+      color: white;
+    }
+
+    .select-arrow {
+      position: absolute;
+
+      right: 15px;
+
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      pointer-events: none;
+
+      color: var(--muted);
+    }
+
+    /* =========================================================
+       PASSWORD
+       ========================================================= */
+
+    .password-input {
+      padding-right: 52px !important;
+    }
+
+    .password-toggle {
+      position: absolute;
+
+      top: 50%;
+      right: 7px;
+
+      transform:
+        translateY(-50%);
+
+      width: 38px;
+      height: 38px;
+
+      border: none;
+
+      border-radius: 9px;
+
+      background: transparent;
+
+      color:
+        rgba(255, 255, 255, 0.65);
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      color: var(--cyan);
+
+      background:
+        rgba(0, 217, 255, 0.08);
+    }
+
+    /* =========================================================
+       PHONE + OTP
+       ========================================================= */
+
+    .phone-row {
+      display: grid;
+
+      grid-template-columns:
+        115px 1fr;
+
+      gap: 8px;
+    }
+
+    .country-code {
+      height: 52px;
+
+      padding: 0 10px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.11);
+
+      border-radius: 13px;
+
+      background:
+        rgba(255, 255, 255, 0.04);
+
+      color: white;
+
+      outline: none;
+
+      cursor: pointer;
+    }
+
+    .country-code option {
+      background: #0b162a;
+
+      color: white;
+    }
+
+    .otp-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 120px;
+
+      gap: 8px;
+    }
+
+    .otp-button {
+      height: 52px;
+
+      border: 1px solid rgba(0, 217, 255, 0.28);
+
+      border-radius: 13px;
+
+      background:
+        rgba(0, 217, 255, 0.07);
+
+      color: var(--cyan);
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .otp-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+
+      background:
+        rgba(0, 217, 255, 0.12);
+
+      border-color:
+        rgba(0, 217, 255, 0.50);
+    }
+
+    .otp-button:disabled {
+      opacity: 0.45;
+
+      cursor: not-allowed;
+    }
+
+    .verify-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 100px;
+
+      gap: 8px;
+    }
+
+    .verify-button {
+      height: 52px;
+
+      border: 1px solid rgba(40, 226, 138, 0.25);
+
+      border-radius: 13px;
+
+      background:
+        rgba(40, 226, 138, 0.07);
+
+      color: var(--green);
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .verify-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+
+      background:
+        rgba(40, 226, 138, 0.12);
+    }
+
+    .verify-button:disabled {
+      opacity: 0.45;
+
+      cursor: not-allowed;
+    }
+
+    .demo-otp-box {
+      display: none;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 10px;
+
+      padding: 11px 15px;
+
+      border-radius: 12px;
+
+      background:
+        rgba(0, 217, 255, 0.08);
+
+      border:
+        1px dashed
+        rgba(0, 217, 255, 0.40);
+
+      box-shadow:
+        0 4px 20px rgba(0, 217, 255, 0.08);
+    }
+
+    .demo-otp-box.show {
+      display: flex;
+    }
+
+    .demo-otp-left {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .demo-otp-tag {
+      font-size: 11px;
+
+      font-weight: 700;
+
+      color: rgba(234, 246, 255, 0.75);
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.5px;
+    }
+
+    .demo-otp-code {
+      font-size: 18px;
+
+      font-weight: 900;
+
+      letter-spacing: 3.5px;
+
+      color: var(--cyan);
+
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    }
+
+    .demo-otp-fill-btn {
+      padding: 6px 12px;
+
+      border-radius: 8px;
+
+      background:
+        rgba(0, 217, 255, 0.15);
+
+      border:
+        1px solid
+        rgba(0, 217, 255, 0.35);
+
+      color: var(--cyan);
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+
+      white-space: nowrap;
+    }
+
+    .demo-otp-fill-btn:hover {
+      background:
+        rgba(0, 217, 255, 0.25);
+
+      border-color: var(--cyan);
+
+      transform: translateY(-1px);
+    }
+
+    .otp-status {
+      display: none;
+
+      padding: 8px 11px;
+
+      border-radius: 10px;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+    .otp-status.show {
+      display: block;
+    }
+
+    .otp-status.success {
+      color: #7ff0ae;
+
+      background:
+        rgba(40, 226, 138, 0.06);
+
+      border:
+        1px solid rgba(40, 226, 138, 0.15);
+    }
+
+    .otp-status.error {
+      color: #ff9da8;
+
+      background:
+        rgba(255, 100, 117, 0.06);
+
+      border:
+        1px solid rgba(255, 100, 117, 0.15);
+    }
+
+    /* =========================================================
+       ROLE SELECTION
+       ========================================================= */
+
+    .role-section {
+      margin-top: 2px;
+    }
+
+    .role-title {
+      margin-bottom: 9px;
+
+      color:
+        rgba(234, 246, 255, 0.84);
+
+      font-size: 12px;
+
+      font-weight: 750;
+    }
+
+    .role-options {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 10px;
+    }
+
+    .role-option {
+      position: relative;
+
+      cursor: pointer;
+    }
+
+    .role-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+    .role-card {
+      min-height: 100px;
+
+      padding: 14px;
+
+      border:
+        1px solid rgba(255, 255, 255, 0.09);
+
+      border-radius: 15px;
+
+      background:
+        rgba(255, 255, 255, 0.035);
+
+      transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .role-option:hover .role-card {
+      transform: translateY(-2px);
+
+      border-color:
+        rgba(0, 217, 255, 0.25);
+    }
+
+    .role-option input:checked + .role-card {
+      border-color:
+        rgba(0, 217, 255, 0.60);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0, 217, 255, 0.09),
+          rgba(117, 76, 255, 0.07)
+        );
+
+      box-shadow:
+        0 12px 30px rgba(0, 217, 255, 0.07);
+    }
+
+    .role-icon {
+      font-size: 24px;
+    }
+
+    .role-card h3 {
+      margin-top: 7px;
+
+      color: var(--white);
+
+      font-size: 13px;
+    }
+
+    .role-card p {
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.45;
+    }
+
+    .default-role {
+      display: inline-block;
+
+      margin-top: 6px;
+
+      padding: 3px 7px;
+
+      border-radius: 999px;
+
+      color: var(--cyan);
+
+      background:
+        rgba(0, 217, 255, 0.07);
+
+      font-size: 9px;
+
+      font-weight: 800;
+    }
+
+    .select-role {
+      display: inline-block;
+
+      margin-top: 6px;
+
+      color: var(--muted);
+
+      font-size: 9px;
+
+      font-weight: 800;
+    }
+
+    /* =========================================================
+       PROFESSIONAL VERIFICATION
+       ========================================================= */
+
+    .professional-section {
+      display: none;
+
+      padding: 18px;
+
+      border-radius: 17px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(117, 76, 255, 0.07),
+          rgba(0, 217, 255, 0.045)
+        );
+
+      border:
+        1px solid rgba(117, 76, 255, 0.20);
+
+      animation:
+        slideDown 0.35s ease;
+    }
+
+    .professional-section.show {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+    }
+
+    .verification-header {
+      display: flex;
+
+      gap: 10px;
+
+      align-items: flex-start;
+    }
+
+    .verification-icon {
+      width: 38px;
+      height: 38px;
+
+      flex-shrink: 0;
+
+      display: flex;
+
+      justify-content: center;
+      align-items: center;
+
+      border-radius: 11px;
+
+      background:
+        rgba(117, 76, 255, 0.12);
+
+      border:
+        1px solid rgba(117, 76, 255, 0.20);
+    }
+
+    .verification-header h3 {
+      color: var(--white);
+
+      font-size: 14px;
+    }
+
+    .verification-header p {
+      margin-top: 4px;
+
+      color: var(--muted);
+
+      font-size: 10px;
+
+      line-height: 1.5;
+    }
+
+    .verification-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 10px;
+
+      margin-top: 15px;
+    }
+
+    .file-upload {
+      position: relative;
+
+      min-height: 105px;
+
+      padding: 15px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+
+      border:
+        1px dashed rgba(255, 255, 255, 0.17);
+
+      border-radius: 13px;
+
+      background:
+        rgba(255, 255, 255, 0.025);
+
+      cursor: pointer;
+
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .file-upload:hover {
+      transform: translateY(-2px);
+
+      border-color:
+        rgba(0, 217, 255, 0.45);
+
+      background:
+        rgba(0, 217, 255, 0.035);
+    }
+
+    .file-upload input {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 23px;
+    }
+
+    .file-upload strong {
+      margin-top: 6px;
+
+      color: var(--white);
+
+      font-size: 11px;
+    }
+
+    .file-upload span {
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 9px;
+
+      line-height: 1.4;
+    }
+
+    .file-name {
+      max-width: 100%;
+
+      margin-top: 5px;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+
+      color: var(--cyan) !important;
+    }
+
+    .verification-note {
+      margin-top: 12px;
+
+      padding: 9px 10px;
+
+      border-radius: 10px;
+
+      color:
+        rgba(234, 246, 255, 0.55);
+
+      background:
+        rgba(255, 255, 255, 0.025);
+
+      font-size: 9px;
+
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       TERMS
+       ========================================================= */
+
+    .terms {
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 9px;
+
+      color:
+        rgba(234, 246, 255, 0.55);
+
+      font-size: 10px;
+
+      line-height: 1.5;
+    }
+
+    .terms input {
+      width: 16px;
+      height: 16px;
+
+      flex-shrink: 0;
+
+      margin-top: 1px;
+
+      accent-color: var(--cyan);
+
+      cursor: pointer;
+    }
+
+    .terms a {
+      color: var(--cyan);
+
+      text-decoration: none;
+    }
+
+    .terms a:hover {
+      text-decoration: underline;
+    }
+
+    /* =========================================================
+       STATUS
+       ========================================================= */
+
+    .form-status {
+      display: none;
+
+      padding: 10px 12px;
+
+      border-radius: 11px;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+
+      text-align: center;
+    }
+
+    .form-status.show {
+      display: block;
+    }
+
+    .form-status.error {
+      color: #ffabb3;
+
+      background:
+        rgba(255, 100, 117, 0.07);
+
+      border:
+        1px solid rgba(255, 100, 117, 0.15);
+    }
+
+    .form-status.success {
+      color: #85f3b1;
+
+      background:
+        rgba(40, 226, 138, 0.07);
+
+      border:
+        1px solid rgba(40, 226, 138, 0.15);
+    }
+
+    /* =========================================================
+       CREATE ACCOUNT
+       ========================================================= */
+
+    .create-button {
+      width: 100%;
+
+      height: 58px;
+
+      border: none;
+
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+
+      background-size: 250% 250%;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: 900;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 16px 40px rgba(0, 217, 255, 0.15);
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        opacity 0.25s ease;
+
+      animation:
+        buttonGradient 6s ease infinite;
+    }
+
+    @keyframes buttonGradient {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .create-button:hover:not(:disabled) {
+      transform: translateY(-3px);
+
+      box-shadow:
+        0 22px 50px rgba(0, 217, 255, 0.22);
+    }
+
+    .create-button:disabled {
+      opacity: 0.55;
+
+      cursor: not-allowed;
+
+      animation: none;
+    }
+
+    /* =========================================================
+       LOGIN LINK
+       ========================================================= */
+
+    .login-link {
+      text-align: center;
+
+      color:
+        rgba(234, 246, 255, 0.55);
+
+      font-size: 12px;
+    }
+
+    .login-link a {
+      color: var(--cyan);
+
+      font-weight: 800;
+
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* =========================================================
+       SPINNER
+       ========================================================= */
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+
+      display: inline-block;
+
+      border:
+        2px solid rgba(255, 255, 255, 0.30);
+
+      border-top-color: white;
+
+      border-radius: 50%;
+
+      animation:
+        spin 0.7s linear infinite;
+
+      vertical-align: -4px;
+
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1050px) {
+
+      .page {
+        grid-template-columns:
+          1fr;
+
+        max-width: 760px;
+      }
+
+      .info-panel {
+        min-height: auto;
+      }
+
+      .form-panel {
+        min-height: auto;
+      }
+
+      .info-image {
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 650px) {
+
+      .page {
+        padding:
+          15px 10px 30px;
+      }
+
+      .info-panel,
+      .form-panel {
+        padding: 24px;
+      }
+
+      .info-content h1 {
+        font-size: 40px;
+      }
+
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .verification-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      .glass-card {
+        border-radius: 19px;
+      }
+
+      .info-panel,
+      .form-panel {
+        padding: 19px;
+      }
+
+      .info-content h1 {
+        font-size: 34px;
+      }
+
+      .info-image {
+        height: 220px;
+      }
+
+      .benefits {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-row {
+        grid-template-columns: 90px 1fr;
+      }
+
+      .otp-row,
+      .verify-row {
+        grid-template-columns: 1fr;
+      }
+
+      .role-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =========================================================
+       ACCESSIBILITY
+       ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/register-C8Xxs0OC.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+
+<body>
+
+  <!-- =======================================================
+       BACKGROUND
+       ======================================================= -->
+
+  <div
+    class="background-effects"
+    aria-hidden="true"
+  >
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+    <div class="glow glow-three"></div>
+  </div>
+
+
+  <!-- =======================================================
+       PAGE
+       ======================================================= -->
+
+  <main class="page">
+
+    <!-- =====================================================
+         INFORMATION PANEL
+         ===================================================== -->
+
+    <section class="glass-card info-panel">
+
+      <div>
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+          <div class="brand-logo">
+            AE
+          </div>
+
+          <div>
+
+            <div class="brand-name">
+              AskExpert
+            </div>
+
+            <div class="brand-subtitle">
+              Learn • Ask • Connect • Grow
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- HERO -->
+
+        <div class="info-content">
+
+          <span class="badge">
+            ✨ Join the Expert Community
+          </span>
+
+          <h1>
+            Build your
+            <span class="gradient-text">
+              knowledge.
+            </span>
+            <br>
+            Share your expertise.
+          </h1>
+
+          <p class="info-description">
+            Create your AskExpert account and connect with
+            people, professionals, and verified experts.
+            Ask questions, discover answers, and grow
+            together.
+          </p>
+
+
+          <!-- IMAGE -->
+
+          <div class="image-wrapper">
+
+            <img
+              class="info-image"
+              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=85"
+              alt="Students and professionals collaborating"
+              loading="eager"
+            >
+
+          </div>
+
+
+          <!-- BENEFITS -->
+
+          <div class="benefits">
+
+            <article class="benefit">
+
+              <div class="benefit-icon">
+                🛡️
+              </div>
+
+              <h3>
+                Trusted Community
+              </h3>
+
+              <p>
+                Connect with people and verified professionals.
+              </p>
+
+            </article>
+
+
+            <article class="benefit">
+
+              <div class="benefit-icon">
+                💬
+              </div>
+
+              <h3>
+                Expert Conversations
+              </h3>
+
+              <p>
+                Ask questions and communicate with experts.
+              </p>
+
+            </article>
+
+
+            <article class="benefit">
+
+              <div class="benefit-icon">
+                🌎
+              </div>
+
+              <h3>
+                Two Languages
+              </h3>
+
+              <p>
+                Your interface can support multiple languages.
+              </p>
+
+            </article>
+
+
+            <article class="benefit">
+
+              <div class="benefit-icon">
+                🤖
+              </div>
+
+              <h3>
+                AI Assistance
+              </h3>
+
+              <p>
+                AI features can be connected later through the backend.
+              </p>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REGISTER FORM
+         ===================================================== -->
+
+    <section class="glass-card form-panel">
+
+      <div class="form-header">
+
+        <h2>
+          Create Account
+        </h2>
+
+        <p>
+          Register as a user or apply as a professional.
+          Your role can be connected to the backend later.
+        </p>
+
+      </div>
+
+
+      <!-- PROGRESS -->
+
+      <div class="progress-wrapper">
+
+        <div class="progress-top">
+
+          <span class="progress-label">
+            Registration Progress
+          </span>
+
+          <span
+            class="progress-percent"
+            id="progressPercent"
+          >
+            20%
+          </span>
+
+        </div>
+
+        <div class="progress-track">
+
+          <div
+            class="progress-bar"
+            id="progressBar"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM -->
+
+      <form
+        id="registerForm"
+        novalidate
+      >
+
+        <!-- NAME -->
+
+        <div class="field-group">
+
+          <label
+            class="field-label"
+            for="fullName"
+          >
+            Full Name
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="input"
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            maxlength="80"
+            required
+          >
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="field-group">
+
+          <label
+            class="field-label"
+            for="email"
+          >
+            Email Address
+            <span class="required">*</span>
+          </label>
+
+          <input
+            class="input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            maxlength="120"
+            required
+          >
+
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div class="field-group">
+
+          <label class="field-label">
+            Phone Number
+            <span class="required">*</span>
+          </label>
+
+          <div class="phone-row">
+
+            <select
+              class="country-code"
+              id="countryCode"
+              aria-label="Country code"
+            >
+              <option value="+91">
+                🇮🇳 +91
+              </option>
+
+              <option value="+1">
+                🇺🇸 +1
+              </option>
+
+              <option value="+44">
+                🇬🇧 +44
+              </option>
+
+              <option value="+61">
+                🇦🇺 +61
+              </option>
+
+              <option value="+971">
+                🇦🇪 +971
+              </option>
+            </select>
+
+            <input
+              class="input"
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Enter phone number"
+              autocomplete="tel"
+              maxlength="15"
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- OTP -->
+
+        <div class="field-group">
+
+          <label
+            class="field-label"
+            for="otp"
+          >
+            Verification OTP
+            <span class="required">*</span>
+          </label>
+
+          <div class="otp-row">
+
+            <input
+              class="input"
+              type="text"
+              id="otp"
+              name="otp"
+              placeholder="Enter 6-digit OTP"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+            >
+
+            <button
+              type="button"
+              class="otp-button"
+              id="sendOtpButton"
+            >
+              Send OTP
+            </button>
+
+            <button
+              type="button"
+              class="verify-button"
+              id="verifyOtpButton"
+              style="display: none;"
+            >
+              Verify OTP
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- DEMO OTP DISPLAY -->
+
+        <div
+          id="demoOtpBox"
+          class="demo-otp-box"
+          aria-live="polite"
+        >
+
+          <div class="demo-otp-left">
+
+            <span class="demo-otp-tag">
+              ⚡ Demo OTP:
+            </span>
+
+            <strong
+              id="demoOtpCode"
+              class="demo-otp-code"
+            >
+              ------
+            </strong>
+
+          </div>
+
+          <button
+            type="button"
+            id="autoFillOtpButton"
+            class="demo-otp-fill-btn"
+          >
+            Auto-fill OTP
+          </button>
+
+        </div>
+
+
+        <div
+          id="otpStatus"
+          class="otp-status"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="field-group">
+
+          <label
+            class="field-label"
+            for="password"
+          >
+            Password
+            <span class="required">*</span>
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              class="input password-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password (min 8 chars)"
+              autocomplete="new-password"
+              maxlength="128"
+              required
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="password"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="role-section">
+
+          <div class="role-title">
+            Choose Account Type
+          </div>
+
+          <div class="role-options">
+
+            <!-- USER -->
+
+            <label class="role-option">
+
+              <input
+                type="radio"
+                name="role"
+                value="user"
+                checked
+              >
+
+              <div class="role-card">
+
+                <div class="role-icon">
+                  👤
+                </div>
+
+                <h3>
+                  User
+                </h3>
+
+                <p>
+                  Ask questions and connect with verified experts.
+                </p>
+
+                <span class="default-role">
+                  ● Selected
+                </span>
+
+              </div>
+
+            </label>
+
+
+            <!-- PROFESSIONAL -->
+
+            <label class="role-option">
+
+              <input
+                type="radio"
+                name="role"
+                value="professional"
+              >
+
+              <div class="role-card">
+
+                <div class="role-icon">
+                  🎓
+                </div>
+
+                <h3>
+                  Professional
+                </h3>
+
+                <p>
+                  Become an expert and answer user questions.
+                </p>
+
+                <span class="select-role">
+                  ○ Select
+                </span>
+
+              </div>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROFESSIONAL VERIFICATION
+             ================================================= -->
+
+        <section
+          class="professional-section"
+          id="professionalSection"
+        >
+
+          <div class="verification-header">
+
+            <div class="verification-icon">
+              🛡️
+            </div>
+
+            <div>
+
+              <h3>
+                Professional Verification
+              </h3>
+
+              <p>
+                Professional applications require verification
+                before expert features can be enabled.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="verification-grid">
+
+            <!-- DEGREE -->
+
+            <label class="file-upload">
+
+              <input
+                type="file"
+                id="degreeFile"
+                accept=".pdf,.jpg,.jpeg,.png"
+              >
+
+              <div class="upload-icon">
+                🎓
+              </div>
+
+              <strong>
+                Degree Certificate
+              </strong>
+
+              <span>
+                PDF, JPG or PNG
+              </span>
+
+              <span
+                class="file-name"
+                id="degreeFileName"
+              ></span>
+
+            </label>
+
+
+            <!-- ID PROOF -->
+
+            <label class="file-upload">
+
+              <input
+                type="file"
+                id="idProofFile"
+                accept=".pdf,.jpg,.jpeg,.png"
+              >
+
+              <div class="upload-icon">
+                🪪
+              </div>
+
+              <strong>
+                ID Proof
+              </strong>
+
+              <span>
+                Upload required proof
+              </span>
+
+              <span
+                class="file-name"
+                id="idProofFileName"
+              ></span>
+
+            </label>
+
+
+            <!-- EXPERIENCE -->
+
+            <label class="file-upload">
+
+              <input
+                type="file"
+                id="experienceFile"
+                accept=".pdf,.jpg,.jpeg,.png"
+              >
+
+              <div class="upload-icon">
+                📄
+              </div>
+
+              <strong>
+                Experience Certificate
+              </strong>
+
+              <span>
+                Optional supporting document
+              </span>
+
+              <span
+                class="file-name"
+                id="experienceFileName"
+              ></span>
+
+            </label>
+
+
+            <!-- PROFESSIONAL LICENSE -->
+
+            <label class="file-upload">
+
+              <input
+                type="file"
+                id="licenseFile"
+                accept=".pdf,.jpg,.jpeg,.png"
+              >
+
+              <div class="upload-icon">
+                🏆
+              </div>
+
+              <strong>
+                Professional License
+              </strong>
+
+              <span>
+                Optional where applicable
+              </span>
+
+              <span
+                class="file-name"
+                id="licenseFileName"
+              ></span>
+
+            </label>
+
+          </div>
+
+
+          <div class="verification-note">
+            🔒 Verification documents should be securely handled by
+            the backend. This frontend currently only collects the
+            files for UI demonstration. Do not store sensitive identity
+            documents in localStorage.
+          </div>
+
+        </section>
+
+
+        <!-- TERMS -->
+
+        <label class="terms">
+
+          <input
+            type="checkbox"
+            id="terms"
+            required
+          >
+
+          <span>
+            I agree to the
+            <a href="javascript:alert('AskExpert Terms of Service: By using this platform, you agree to verified identity compliance, data protection standards, and encrypted consultation rules.');">
+              Terms of Service
+            </a>
+            and
+            <a href="javascript:alert('AskExpert Privacy Policy: We ensure full end-to-end encrypted messaging, anonymized phone/email consultations, and secure escrow handling.');">
+              Privacy Policy
+            </a>.
+          </span>
+
+        </label>
+
+
+        <!-- STATUS -->
+
+        <div
+          class="form-status"
+          id="formStatus"
+          role="alert"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+          type="submit"
+          class="create-button"
+          id="createButton"
+        >
+          Create Account
+        </button>
+
+
+        <!-- LOGIN -->
+
+        <div class="login-link">
+
+          Already have an account?
+
+          <a href="login.html">
+            Sign In
+          </a>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
+
+
+</body>
+</html>

@@ -640,6 +640,81 @@
       color: var(--muted);
       text-align: center;
     }
+  
+    /* Scalable Pagination & Badges */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 30px;
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+    }
+
+    .page-numbers-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: rgba(0, 217, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .page-btn.active {
+      background: var(--cyan);
+      color: #031120;
+      border-color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .badge-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255, 170, 0, 0.15);
+      border: 1px solid rgba(255, 170, 0, 0.35);
+      color: #ffaa00;
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+
+    .badge-cat-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(0, 217, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 217, 255, 0.2);
+    }
+
   </style>
 </head>
 <body>
@@ -677,37 +752,96 @@
       <p class="hero-desc">Connect with certified lawyers, chartered accountants, tech consultants, and doctors for encrypted 1-on-1 consultations.</p>
     </section>
 
-    <!-- Controls Panel: Search & Filters -->
+    <!-- Controls Panel: Search, Categories & Filters -->
     <section class="controls-panel">
       
       <!-- Search Row -->
       <div class="search-row">
         <div class="search-bar">
           <span>🔍</span>
-          <input type="text" id="expertSearchInput" class="search-input" placeholder="Search by expert name, qualification, or practice area..." />
+          <input type="text" id="expertSearchInput" class="search-input" placeholder="Search across 1,000+ experts by name, category, specialization, skills, or city..." />
         </div>
       </div>
 
-      <!-- Domain Filter Chips -->
+      <!-- Domain Filter Chips (Quick Categories) -->
       <div class="chips-row" id="domainChipsContainer">
-        <button type="button" class="chip-btn active" data-domain="all">All Domains</button>
-        <button type="button" class="chip-btn" data-domain="Legal">⚖️ Legal Advisor</button>
-        <button type="button" class="chip-btn" data-domain="Tax">📊 CA & Tax Consultant</button>
-        <button type="button" class="chip-btn" data-domain="Tech">💻 Tech & Software</button>
-        <button type="button" class="chip-btn" data-domain="Healthcare">🏥 Healthcare & Med</button>
-        <button type="button" class="chip-btn" data-domain="Finance">📈 Finance & Investment</button>
-        <button type="button" class="chip-btn" data-domain="Business">🏢 Business & Strategy</button>
+        <button type="button" class="chip-btn active" data-domain="all">All Categories</button>
+        <button type="button" class="chip-btn" data-domain="Agriculture & Farming">🌾 Agriculture</button>
+        <button type="button" class="chip-btn" data-domain="Technology & Software">💻 Technology</button>
+        <button type="button" class="chip-btn" data-domain="AI & Machine Learning">🤖 AI & ML</button>
+        <button type="button" class="chip-btn" data-domain="Law & Legal">⚖️ Law & Legal</button>
+        <button type="button" class="chip-btn" data-domain="Finance & Accounting">📊 Finance & CA</button>
+        <button type="button" class="chip-btn" data-domain="Medicine & Healthcare">🩺 Healthcare</button>
+        <button type="button" class="chip-btn" data-domain="Business & Startup">🚀 Startup & Business</button>
+        <button type="button" class="chip-btn" data-domain="Civil Engineering">🏗️ Civil Engineering</button>
+        <button type="button" class="chip-btn" data-domain="Education & Study Abroad">🎓 Study Abroad</button>
+        <button type="button" class="chip-btn" data-domain="Government & Civil Services">🏛️ Civil Services</button>
       </div>
 
       <!-- Dropdown Filter Controls -->
       <div class="filters-bar">
         <div class="filters-group">
+          
+          <!-- Extensible 40 Categories Dropdown -->
+          <select id="categoryFilter" class="filter-select" aria-label="Category filter" style="min-width: 210px;">
+            <option value="all">🌐 All Professional Categories (40+)</option>
+            <option value="Agriculture & Farming">🌾 Agriculture & Farming</option>
+            <option value="Technology & Software">💻 Technology & Software</option>
+            <option value="AI & Machine Learning">🤖 AI & Machine Learning</option>
+            <option value="Cybersecurity">🛡️ Cybersecurity</option>
+            <option value="Education & Teachers">📚 Education & Teachers</option>
+            <option value="Law & Legal">⚖️ Law & Legal</option>
+            <option value="Finance & Accounting">📊 Finance & Accounting</option>
+            <option value="Banking">🏦 Banking</option>
+            <option value="Taxation">💸 Taxation</option>
+            <option value="Business & Startup">🚀 Business & Startup</option>
+            <option value="Marketing">📢 Marketing</option>
+            <option value="Human Resources & Careers">👔 Human Resources & Careers</option>
+            <option value="Medicine & Healthcare">🩺 Medicine & Healthcare</option>
+            <option value="Mental Wellness">🧠 Mental Wellness</option>
+            <option value="Civil Engineering">🏗️ Civil Engineering</option>
+            <option value="Architecture">🏛️ Architecture</option>
+            <option value="Mechanical Engineering">⚙️ Mechanical Engineering</option>
+            <option value="Electrical Engineering">⚡ Electrical Engineering</option>
+            <option value="Electronics">🔌 Electronics</option>
+            <option value="Government & Civil Services">🏛️ Government & Civil Services</option>
+            <option value="District Administration / Collector">🎖️ District Administration / Collector</option>
+            <option value="Real Estate">🏠 Real Estate</option>
+            <option value="Insurance">📋 Insurance</option>
+            <option value="Investment & Wealth Management">📈 Investment & Wealth Management</option>
+            <option value="Science & Research">🔬 Science & Research</option>
+            <option value="Environment">🌿 Environment</option>
+            <option value="Construction">👷 Construction</option>
+            <option value="Automobile">🚘 Automobile</option>
+            <option value="Travel & Tourism">✈️ Travel & Tourism</option>
+            <option value="Food & Nutrition">🥗 Food & Nutrition</option>
+            <option value="Fitness & Sports">🏋️ Fitness & Sports</option>
+            <option value="Education & Study Abroad">🎓 Education & Study Abroad</option>
+            <option value="Digital Marketing">📈 Digital Marketing</option>
+            <option value="Design & UI/UX">🎨 Design & UI/UX</option>
+            <option value="Software Development">💻 Software Development</option>
+            <option value="Cloud & DevOps">☁️ Cloud & DevOps</option>
+            <option value="Data Science">📊 Data Science</option>
+            <option value="HR & Recruitment">👥 HR & Recruitment</option>
+            <option value="Legal Compliance">📜 Legal Compliance</option>
+            <option value="Other Professional Services">🛠️ Other Professional Services</option>
+          </select>
+
           <!-- Rating Filter -->
           <select id="ratingFilter" class="filter-select" aria-label="Rating filter">
             <option value="0">⭐ All Ratings</option>
             <option value="4.8">4.8+ Stars</option>
             <option value="4.5">4.5+ Stars</option>
             <option value="4.0">4.0+ Stars</option>
+          </select>
+
+          <!-- Sort Filter -->
+          <select id="sortFilter" class="filter-select" aria-label="Sort filter">
+            <option value="rating_desc">⭐ Highest Rating First</option>
+            <option value="exp_desc">📅 Most Experienced First</option>
+            <option value="fee_asc">💰 Fee: Low to High</option>
+            <option value="fee_desc">💰 Fee: High to Low</option>
+            <option value="newest">🆕 Newest First</option>
           </select>
 
           <!-- Fee Filter -->
@@ -723,10 +857,11 @@
             <option value="all">🌐 All Languages</option>
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
+            <option value="Telugu">Telugu</option>
+            <option value="Tamil">Tamil</option>
             <option value="Marathi">Marathi</option>
             <option value="Gujarati">Gujarati</option>
             <option value="Kannada">Kannada</option>
-            <option value="Tamil">Tamil</option>
           </select>
 
           <!-- Availability Filter -->
@@ -737,7 +872,7 @@
         </div>
 
         <div class="results-count-text" id="resultsCountText">
-          Loading experts...
+          Loading experts directory...
         </div>
       </div>
 
@@ -768,18 +903,10 @@
         <div class="skeleton-line"></div>
         <div class="skeleton-line" style="width: 75%;"></div>
       </div>
-      <div class="skeleton-card">
-        <div style="display: flex; gap: 14px; margin-bottom: 14px;">
-          <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.08); border-radius: 18px;"></div>
-          <div style="flex: 1;">
-            <div class="skeleton-line" style="width: 60%;"></div>
-            <div class="skeleton-line" style="width: 90%;"></div>
-          </div>
-        </div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line" style="width: 75%;"></div>
-      </div>
     </section>
+
+    <!-- Scalable Pagination Bar -->
+    <div id="paginationBar" class="pagination-bar" style="display: none;"></div>
 
   </main>
 
@@ -801,191 +928,134 @@
     import { supabase } from "./assets/js/supabaseClient.js";
 
     /* ========================================================
-       SEED / DEFAULT EXPERTS DIRECTORY
-       ======================================================== */
-    const SEED_EXPERTS = [
-      {
-        id: "11111111-1111-1111-1111-111111111111",
-        full_name: "Adv. Vikram Rao",
-        role: "expert",
-        headline: "Senior Corporate & Regulatory Attorney",
-        specialization: "Legal",
-        experience_years: 12,
-        languages: ["English", "Hindi", "Marathi"],
-        rating: 4.9,
-        reviews_count: 184,
-        consultation_fee: 1200,
-        avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-        skills: ["Corporate Law", "Contract Negotiation", "Arbitration", "MCA Filings"],
-        availability_status: "available",
-        verified: true
-      },
-      {
-        id: "22222222-2222-2222-2222-222222222222",
-        full_name: "CA Ananya Sharma",
-        role: "expert",
-        headline: "Chartered Accountant & Tax Consultant",
-        specialization: "Tax",
-        experience_years: 9,
-        languages: ["English", "Hindi", "Gujarati"],
-        rating: 5.0,
-        reviews_count: 210,
-        consultation_fee: 1500,
-        avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
-        skills: ["GST Audit", "Corporate Tax", "Transfer Pricing", "TDS Returns"],
-        availability_status: "available",
-        verified: true
-      },
-      {
-        id: "33333333-3333-3333-3333-333333333333",
-        full_name: "Dr. Rahul Kumar",
-        role: "expert",
-        headline: "Patent Attorney & IP Specialist",
-        specialization: "Tech",
-        experience_years: 15,
-        languages: ["English", "Hindi", "Kannada"],
-        rating: 4.8,
-        reviews_count: 95,
-        consultation_fee: 2000,
-        avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-        skills: ["Patent Prosecution", "Prior Art Searches", "IP Licensing", "Tech Transfer"],
-        availability_status: "available",
-        verified: true
-      },
-      {
-        id: "44444444-4444-4444-4444-444444444444",
-        full_name: "Dr. Priya Patel",
-        role: "expert",
-        headline: "Medical Regulatory & Telehealth Advisor",
-        specialization: "Healthcare",
-        experience_years: 10,
-        languages: ["English", "Hindi", "Gujarati"],
-        rating: 4.9,
-        reviews_count: 142,
-        consultation_fee: 1000,
-        avatar_url: "https://images.unsplash.com/photo-1594824813590-78965a7dcfd6?auto=format&fit=crop&w=300&q=80",
-        skills: ["Clinical Protocols", "Telehealth Law", "Ayush & Pharma", "Diagnostics"],
-        availability_status: "available",
-        verified: true
-      },
-      {
-        id: "55555555-5555-5555-5555-555555555555",
-        full_name: "Rajesh Menon",
-        role: "expert",
-        headline: "SEBI Registered Investment Advisor & Wealth Strategist",
-        specialization: "Finance",
-        experience_years: 14,
-        languages: ["English", "Hindi", "Malayalam", "Tamil"],
-        rating: 4.7,
-        reviews_count: 118,
-        consultation_fee: 1800,
-        avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
-        skills: ["Portfolio Structuring", "Mutual Funds", "Equities", "Risk Hedging"],
-        availability_status: "offline",
-        verified: true
-      },
-      {
-        id: "66666666-6666-6666-6666-666666666666",
-        full_name: "Meera Deshmukh",
-        role: "expert",
-        headline: "Startup Expansion & Business Strategist",
-        specialization: "Business",
-        experience_years: 11,
-        languages: ["English", "Hindi", "Marathi"],
-        rating: 4.8,
-        reviews_count: 88,
-        consultation_fee: 1600,
-        avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80",
-        skills: ["Go-to-Market", "Venture Structuring", "Pitch Decks", "Operations"],
-        availability_status: "available",
-        verified: true
-      }
-    ];
-
-    /* ========================================================
        STATE
        ======================================================== */
-    let allExperts = [];
     let selectedDomain = "all";
+    let currentPage = 1;
+    const pageSize = 12;
+    let totalExpertsCount = 0;
+    let searchDebounceTimer = null;
 
-    /* ========================================================
-       INIT
-       ======================================================== */
     async function initDirectory() {
-      await loadExpertsFromSupabase();
       setupFilters();
+      await loadExpertsFromSupabase();
     }
 
-    /* ========================================================
-       LOAD DATA FROM SUPABASE
-       ======================================================== */
+    function normalizeExpertData(item) {
+      return {
+        id: item.id,
+        full_name: item.full_name || "Verified Expert",
+        role: item.role || "expert",
+        headline: item.headline || item.specialization || "Verified Specialist",
+        specialization: item.specialization || item.category || "Consultant",
+        category: item.category || item.specialization || "General",
+        experience_years: item.experience_years || 5,
+        languages: Array.isArray(item.languages) ? item.languages : ["English"],
+        rating: item.rating ? parseFloat(item.rating) : 5.0,
+        reviews_count: item.reviews_count || 0,
+        consultation_fee: item.consultation_fee ? parseFloat(item.consultation_fee) : 1000,
+        avatar_url: item.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+        skills: Array.isArray(item.skills) ? item.skills : ["Advisory", "Consultation"],
+        availability_status: item.availability_status || "available",
+        account_status: item.account_status || "active",
+        verified: true,
+        is_demo: false,
+        location: item.location || "India"
+      };
+    }
+
     async function loadExpertsFromSupabase() {
       const grid = document.getElementById("expertsGrid");
       const countEl = document.getElementById("resultsCountText");
 
+      const searchTerm = document.getElementById("expertSearchInput").value.trim();
+      const categoryFilter = document.getElementById("categoryFilter").value;
+      const ratingFilter = parseFloat(document.getElementById("ratingFilter").value) || 0;
+      const feeFilter = document.getElementById("feeFilter").value;
+      const languageFilter = document.getElementById("languageFilter").value;
+      const availableOnly = document.getElementById("availableOnlyToggle").checked;
+      const sortFilter = document.getElementById("sortFilter").value;
+
+      const effectiveCategory = categoryFilter !== "all" ? categoryFilter : (selectedDomain !== "all" ? selectedDomain : null);
+
       try {
-        let fetchedList = [];
+        let expertsList = [];
+        let totalCount = 0;
 
         if (supabase) {
-          const { data, error } = await supabase
+          let query = supabase
             .from("profiles")
-            .select("*")
-            .eq("role", "expert");
+            .select("*", { count: "exact" })
+            .eq("role", "expert")
+            .eq("is_verified", true);
 
-          if (!error && data && data.length > 0) {
-            fetchedList = data.map(item => ({
-              id: item.id,
-              full_name: item.full_name,
-              role: item.role || "expert",
-              headline: item.headline || item.specialization || "Verified Specialist",
-              specialization: item.specialization || "Legal",
-              experience_years: item.experience_years || 8,
-              languages: Array.isArray(item.languages) ? item.languages : ["English", "Hindi"],
-              rating: item.rating ? parseFloat(item.rating) : 4.9,
-              reviews_count: item.reviews_count || 120,
-              consultation_fee: item.consultation_fee ? parseFloat(item.consultation_fee) : 1200,
-              avatar_url: item.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-              skills: Array.isArray(item.skills) ? item.skills : ["Advisory", "Consultation"],
-              availability_status: item.availability_status || "available",
-              verified: true
-            }));
+          if (effectiveCategory) {
+            query = query.or(`category.ilike.%${effectiveCategory}%,specialization.ilike.%${effectiveCategory}%`);
+          }
+
+          if (searchTerm) {
+            query = query.or(`full_name.ilike.%${searchTerm}%,headline.ilike.%${searchTerm}%,specialization.ilike.%${searchTerm}%,category.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%`);
+          }
+
+          if (ratingFilter > 0) {
+            query = query.gte("rating", ratingFilter);
+          }
+
+          if (availableOnly) {
+            query = query.eq("availability_status", "available");
+          }
+
+          if (feeFilter === "under1000") query = query.lt("consultation_fee", 1000);
+          else if (feeFilter === "1000to2000") query = query.gte("consultation_fee", 1000).lte("consultation_fee", 2000);
+          else if (feeFilter === "above2000") query = query.gt("consultation_fee", 2000);
+
+          if (sortFilter === "rating_desc") query = query.order("rating", { ascending: false });
+          else if (sortFilter === "exp_desc") query = query.order("experience_years", { ascending: false });
+          else if (sortFilter === "fee_asc") query = query.order("consultation_fee", { ascending: true });
+          else if (sortFilter === "fee_desc") query = query.order("consultation_fee", { ascending: false });
+          else if (sortFilter === "newest") query = query.order("created_at", { ascending: false });
+          else query = query.order("rating", { ascending: false });
+
+          // DB-side Range Pagination
+          const from = (currentPage - 1) * pageSize;
+          const to = from + pageSize - 1;
+          query = query.range(from, to);
+
+          const { data, count, error } = await query;
+
+          if (error) {
+            console.error("Supabase query error:", error);
+          } else if (data) {
+            expertsList = data.map(normalizeExpertData);
+            totalCount = count !== null ? count : data.length;
           }
         }
 
-        // Merge DB with seeds ensuring no duplicate IDs
-        const existingIds = new Set(fetchedList.map(e => e.id));
-        SEED_EXPERTS.forEach(seed => {
-          if (!existingIds.has(seed.id)) {
-            fetchedList.push(seed);
-          }
-        });
-
-        allExperts = fetchedList;
-        applyFilters();
+        totalExpertsCount = totalCount;
+        renderExperts(expertsList, totalCount);
+        renderPagination(totalCount);
 
       } catch (err) {
         console.error("loadExperts error:", err);
-        allExperts = SEED_EXPERTS;
-        applyFilters();
+        renderExperts([], 0);
+        renderPagination(0);
       }
     }
 
-    /* ========================================================
-       RENDER EXPERTS GRID
-       ======================================================== */
-    function renderExperts(list) {
+    function renderExperts(list, totalCount) {
       const grid = document.getElementById("expertsGrid");
       const countEl = document.getElementById("resultsCountText");
       grid.innerHTML = "";
 
-      countEl.textContent = `Showing ${list.length} verified specialist${list.length === 1 ? "" : "s"}`;
+      const formattedTotal = totalCount ? totalCount.toLocaleString() : "0";
+      countEl.innerHTML = `<strong>${formattedTotal}</strong> Experts Available`;
 
       if (list.length === 0) {
         grid.innerHTML = `
           <div class="empty-state">
             <div class="empty-icon">🔍</div>
-            <div class="empty-title">No Experts Match Your Criteria</div>
-            <p class="empty-text">Try adjusting your search query, fee range, or selected domain filter.</p>
+            <div class="empty-title">No verified experts available</div>
+            <p class="empty-text">There are currently no verified experts matching your selection in the database. Please try resetting filters or check back later.</p>
             <button type="button" id="resetFiltersBtn" class="btn btn-secondary" style="display: inline-flex;">
               Reset All Filters
             </button>
@@ -1007,6 +1077,9 @@
         const profileUrl = `expert-profile.html?expert=${encodeURIComponent(exp.id)}`;
         const chatUrl = `chat.html?expert=${encodeURIComponent(exp.id)}`;
 
+        const demoBadge = exp.is_demo ? `<span class="badge-demo">DEMO</span>` : '';
+        const catBadge = exp.category ? `<span class="badge-cat-tag">${escapeHTML(exp.category)}</span>` : '';
+
         card.innerHTML = `
           <div>
             <!-- Top Profile & Badges -->
@@ -1020,6 +1093,10 @@
                 <div class="expert-name-title">
                   <span class="expert-name">${escapeHTML(exp.full_name)}</span>
                   <span class="badge-verif">✓ Verified</span>
+                  ${demoBadge}
+                </div>
+                <div style="margin-top: 2px; margin-bottom: 2px;">
+                  ${catBadge}
                 </div>
                 <p class="expert-headline">${escapeHTML(exp.headline)}</p>
                 <div class="meta-badges-row">
@@ -1034,7 +1111,7 @@
             <!-- Languages & Skills -->
             <div style="margin-top: 14px;">
               <div style="font-size: 11.5px; color: var(--muted); margin-bottom: 6px;">
-                🌐 ${escapeHTML(langsStr)}
+                🌐 ${escapeHTML(langsStr)} ${exp.location ? ' • 📍 ' + escapeHTML(exp.location) : ''}
               </div>
               <div class="skills-wrap">
                 ${skillsHTML}
@@ -1054,7 +1131,7 @@
                 Profile
               </a>
               <a href="${chatUrl}" class="btn-chat-link" title="Start live chat consultation">
-                <span>💬</span> Chat
+                <span>💬</span> Consult
               </a>
             </div>
           </div>
@@ -1064,81 +1141,147 @@
       });
     }
 
-    /* ========================================================
-       FILTERING LOGIC
-       ======================================================== */
-    function applyFilters() {
-      const searchTerm = document.getElementById("expertSearchInput").value.toLowerCase().trim();
-      const minRating = parseFloat(document.getElementById("ratingFilter").value) || 0;
-      const feeRange = document.getElementById("feeFilter").value;
-      const langFilter = document.getElementById("languageFilter").value;
-      const availableOnly = document.getElementById("availableOnlyToggle").checked;
+    function renderPagination(totalCount) {
+      const pagBar = document.getElementById("paginationBar");
+      if (!pagBar) return;
 
-      const filtered = allExperts.filter(exp => {
-        // 1. Search filter
-        if (searchTerm) {
-          const matchName = exp.full_name.toLowerCase().includes(searchTerm);
-          const matchHeadline = (exp.headline || "").toLowerCase().includes(searchTerm);
-          const matchSpecialization = (exp.specialization || "").toLowerCase().includes(searchTerm);
-          const matchSkills = (exp.skills || []).some(s => s.toLowerCase().includes(searchTerm));
-          if (!matchName && !matchHeadline && !matchSpecialization && !matchSkills) return false;
-        }
+      const totalPages = Math.ceil(totalCount / pageSize);
+      if (totalPages <= 1) {
+        pagBar.style.display = "none";
+        return;
+      }
 
-        // 2. Domain Filter
-        if (selectedDomain !== "all") {
-          const spec = (exp.specialization || "").toLowerCase();
-          const dom = selectedDomain.toLowerCase();
-          if (!spec.includes(dom)) return false;
-        }
+      pagBar.style.display = "flex";
 
-        // 3. Rating filter
-        if (exp.rating < minRating) return false;
+      const startItem = (currentPage - 1) * pageSize + 1;
+      const endItem = Math.min(currentPage * pageSize, totalCount);
 
-        // 4. Fee filter
-        if (feeRange === "under1000" && exp.consultation_fee >= 1000) return false;
-        if (feeRange === "1000to2000" && (exp.consultation_fee < 1000 || exp.consultation_fee > 2000)) return false;
-        if (feeRange === "above2000" && exp.consultation_fee <= 2000) return false;
+      let pagesHTML = '';
+      const maxButtons = 5;
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+      if (endPage - startPage < maxButtons - 1) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
 
-        // 5. Language filter
-        if (langFilter !== "all") {
-          const hasLang = (exp.languages || []).some(l => l.toLowerCase() === langFilter.toLowerCase());
-          if (!hasLang) return false;
-        }
+      if (startPage > 1) {
+        pagesHTML += `<button class="page-btn" data-page="1">1</button>`;
+        if (startPage > 2) pagesHTML += `<span style="color:var(--muted);">...</span>`;
+      }
 
-        // 6. Availability filter
-        if (availableOnly && exp.availability_status !== "available") return false;
+      for (let p = startPage; p <= endPage; p++) {
+        const activeClass = p === currentPage ? 'active' : '';
+        pagesHTML += `<button class="page-btn ${activeClass}" data-page="${p}">${p}</button>`;
+      }
 
-        return true;
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) pagesHTML += `<span style="color:var(--muted);">...</span>`;
+        pagesHTML += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+      }
+
+      pagBar.innerHTML = `
+        <div style="font-size: 13px; color: var(--muted);">
+          Showing <strong>${startItem.toLocaleString()}–${endItem.toLocaleString()}</strong> of <strong>${totalCount.toLocaleString()}</strong> experts
+        </div>
+
+        <div class="page-numbers-group">
+          <button class="page-btn" id="prevPageBtn" ${currentPage === 1 ? 'disabled' : ''}>‹ Prev</button>
+          ${pagesHTML}
+          <button class="page-btn" id="nextPageBtn" ${currentPage === totalPages ? 'disabled' : ''}>Next ›</button>
+        </div>
+      `;
+
+      const prevBtn = document.getElementById("prevPageBtn");
+      const nextBtn = document.getElementById("nextPageBtn");
+
+      if (prevBtn && currentPage > 1) {
+        prevBtn.addEventListener("click", () => goToPage(currentPage - 1));
+      }
+      if (nextBtn && currentPage < totalPages) {
+        nextBtn.addEventListener("click", () => goToPage(currentPage + 1));
+      }
+
+      pagBar.querySelectorAll(".page-btn[data-page]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const p = parseInt(e.target.dataset.page, 10);
+          if (p && p !== currentPage) goToPage(p);
+        });
       });
+    }
 
-      renderExperts(filtered);
+    function goToPage(page) {
+      currentPage = page;
+      loadExpertsFromSupabase();
+      window.scrollTo({ top: 260, behavior: 'smooth' });
     }
 
     function setupFilters() {
-      // Search
-      document.getElementById("expertSearchInput").addEventListener("input", applyFilters);
+      const searchInput = document.getElementById("expertSearchInput");
+      if (searchInput) {
+        searchInput.addEventListener("input", () => {
+          clearTimeout(searchDebounceTimer);
+          searchDebounceTimer = setTimeout(() => {
+            currentPage = 1;
+            loadExpertsFromSupabase();
+          }, 300);
+        });
+      }
 
-      // Domain chips
       const chipButtons = document.querySelectorAll(".chip-btn");
       chipButtons.forEach(btn => {
         btn.addEventListener("click", () => {
           chipButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedDomain = btn.dataset.domain;
-          applyFilters();
+          
+          const catDropdown = document.getElementById("categoryFilter");
+          if (catDropdown) {
+            catDropdown.value = selectedDomain;
+            if (!catDropdown.value) catDropdown.value = "all";
+          }
+          
+          currentPage = 1;
+          loadExpertsFromSupabase();
         });
       });
 
-      // Dropdowns & Checkbox
-      document.getElementById("ratingFilter").addEventListener("change", applyFilters);
-      document.getElementById("feeFilter").addEventListener("change", applyFilters);
-      document.getElementById("languageFilter").addEventListener("change", applyFilters);
-      document.getElementById("availableOnlyToggle").addEventListener("change", applyFilters);
+      const catDropdown = document.getElementById("categoryFilter");
+      if (catDropdown) {
+        catDropdown.addEventListener("change", (e) => {
+          const val = e.target.value;
+          selectedDomain = val;
+          chipButtons.forEach(b => b.classList.toggle("active", b.dataset.domain === val));
+          if (val === "all") chipButtons[0].classList.add("active");
+
+          currentPage = 1;
+          loadExpertsFromSupabase();
+        });
+      }
+
+      ["ratingFilter", "feeFilter", "languageFilter", "sortFilter"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("change", () => {
+            currentPage = 1;
+            loadExpertsFromSupabase();
+          });
+        }
+      });
+
+      const availToggle = document.getElementById("availableOnlyToggle");
+      if (availToggle) {
+        availToggle.addEventListener("change", () => {
+          currentPage = 1;
+          loadExpertsFromSupabase();
+        });
+      }
     }
 
     function resetAllFilters() {
       document.getElementById("expertSearchInput").value = "";
+      document.getElementById("categoryFilter").value = "all";
       document.getElementById("ratingFilter").value = "0";
+      document.getElementById("sortFilter").value = "rating_desc";
       document.getElementById("feeFilter").value = "all";
       document.getElementById("languageFilter").value = "all";
       document.getElementById("availableOnlyToggle").checked = false;
@@ -1148,15 +1291,14 @@
       chipButtons[0].classList.add("active");
       selectedDomain = "all";
 
-      applyFilters();
-      showToast("✓ Filters reset.");
+      currentPage = 1;
+      loadExpertsFromSupabase();
+      showToast("✓ All filters reset.");
     }
 
-    /* ========================================================
-       HELPERS
-       ======================================================== */
     function showToast(msg) {
       const toast = document.getElementById("toastPill");
+      if (!toast) return;
       toast.textContent = msg;
       toast.classList.add("show");
       setTimeout(() => {
@@ -1171,7 +1313,6 @@
       return div.innerHTML;
     }
 
-    // Start App
     initDirectory();
   </script>
 </body>

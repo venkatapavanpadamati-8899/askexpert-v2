@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Detailed question thread with verified expert answers and interactive voice assistance." />
+  <title>AskExpert | Question Details</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.82);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.10);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #4d8dff;
+      --purple: #754cff;
+      --green: #00c853;
+      --orange: #ff6a00;
+      --gold: #ffb703;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 217, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(117, 76, 255, 0.14), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1080px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.85);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: #ffffff;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-back:hover {
+      background: rgba(0, 217, 255, 0.12);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateX(-2px);
+    }
+
+    /* ========================================================
+       PAGE SHELL & BREADCRUMB
+       ======================================================== */
+    .page-shell {
+      padding: 32px 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--cyan);
+    }
+
+    .breadcrumb span.current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ========================================================
+       GLASS PANEL CARD STYLES
+       ======================================================== */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.5), rgba(117, 76, 255, 0.5), transparent);
+    }
+
+    /* ========================================================
+       1. QUESTION SECTION
+       ======================================================== */
+    .question-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-status {
+      background: rgba(0, 200, 83, 0.15);
+      border: 1px solid rgba(0, 200, 83, 0.35);
+      color: #00e676;
+    }
+
+    .badge-category {
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+    }
+
+    .badge-lang {
+      background: rgba(117, 76, 255, 0.14);
+      border: 1px solid rgba(117, 76, 255, 0.3);
+      color: #b39ddb;
+    }
+
+    .question-title {
+      font-size: clamp(24px, 3.5vw, 32px);
+      font-weight: 850;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 18px;
+      letter-spacing: -0.5px;
+    }
+
+    .question-desc {
+      font-size: 15.5px;
+      color: #d1dce7;
+      line-height: 1.75;
+      margin-bottom: 24px;
+      white-space: pre-line;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .author-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #020d18;
+      display: grid;
+      place-items: center;
+      font-weight: 850;
+      font-size: 16px;
+      box-shadow: 0 4px 14px rgba(0, 217, 255, 0.25);
+    }
+
+    .author-meta strong {
+      display: block;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .author-meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Attachments Area */
+    .attachments-section {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: var(--card-inner);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+    }
+
+    .attachments-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .attachments-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .attachment-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: rgba(0, 217, 255, 0.06);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .attachment-pill:hover {
+      background: rgba(0, 217, 255, 0.14);
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================================
+       SECTION DIVIDERS
+       ======================================================== */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 10px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    }
+
+    .divider-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ========================================================
+       2. EXPERT ANSWER SECTION
+       ======================================================== */
+    .expert-card {
+      border: 1px solid rgba(0, 217, 255, 0.25);
+      background: linear-gradient(145deg, rgba(16, 28, 52, 0.9), rgba(10, 20, 38, 0.95));
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 217, 255, 0.1);
+    }
+
+    .expert-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .expert-profile-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .expert-avatar-box {
+      position: relative;
+    }
+
+    .expert-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 2px solid var(--cyan);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+    }
+
+    .verified-dot {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #00c853;
+      border: 2px solid #07152d;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .expert-details h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 200, 83, 0.2));
+      border: 1px solid rgba(0, 217, 255, 0.4);
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .expert-title {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .expert-rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .time-stamp {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Answer Content Styling */
+    .answer-body {
+      font-size: 15.5px;
+      color: #e2eaf4;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .answer-body p {
+      margin-bottom: 14px;
+    }
+
+    .answer-body strong {
+      color: #ffffff;
+    }
+
+    .answer-body ul {
+      margin: 12px 0 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .protip-box {
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(0, 217, 255, 0.07);
+      border-left: 4px solid var(--cyan);
+      margin: 18px 0;
+      font-size: 14px;
+      color: #d8f1ff;
+    }
+
+    /* ========================================================
+       VOICE / AUDIO PLAYER BOX
+       ======================================================== */
+    .audio-player-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(0, 217, 255, 0.25);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin: 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .audio-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-audio-play {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border: none;
+      color: #03101e;
+      font-size: 16px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 217, 255, 0.35);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-audio-play:hover {
+      transform: scale(1.08);
+      filter: brightness(1.1);
+    }
+
+    .audio-meta strong {
+      display: block;
+      font-size: 13.5px;
+      color: #ffffff;
+    }
+
+    .audio-meta span {
+      display: block;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    /* Soundwave Equalizer Animation */
+    .soundwaves {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 24px;
+    }
+
+    .soundwave-bar {
+      width: 3px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--cyan);
+      transition: height 0.2s;
+    }
+
+    .audio-player-box.playing .soundwave-bar:nth-child(1) { animation: wave 0.8s infinite ease-in-out; }
+    .audio-player-box.playing .soundwave-bar:nth-child(2) { animation: wave 0.9s infinite ease-in-out 0.1s; }
+    .audio-player-box.playing .soundwave-bar:nth-child(3) { animation: wave 0.7s infinite ease-in-out 0.2s; }
+    .audio-player-box.playing .soundwave-bar:nth-child(4) { animation: wave 1.1s infinite ease-in-out 0.15s; }
+    .audio-player-box.playing .soundwave-bar:nth-child(5) { animation: wave 0.8s infinite ease-in-out 0.3s; }
+    .audio-player-box.playing .soundwave-bar:nth-child(6) { animation: wave 1.0s infinite ease-in-out 0.25s; }
+
+    @keyframes wave {
+      0%, 100% { height: 6px; }
+      50% { height: 22px; }
+    }
+
+    .audio-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .speed-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 4px 10px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Action Buttons in Expert Card */
+    .expert-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-chat-expert {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border: none;
+      color: #03101e;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 217, 255, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-chat-expert:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 217, 255, 0.45);
+      filter: brightness(1.06);
+    }
+
+    .action-sub-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-reaction {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reaction:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ========================================================
+       3. ADD YOUR FOLLOW-UP SECTION
+       ======================================================== */
+    .followup-card {
+      background: rgba(14, 24, 45, 0.88);
+      border: 1px solid rgba(117, 76, 255, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .followup-header {
+      margin-bottom: 18px;
+    }
+
+    .followup-header h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .followup-header p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .followup-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      outline: none;
+      resize: vertical;
+      font-size: 14.5px;
+      transition: all 0.2s;
+    }
+
+    .followup-textarea:focus {
+      border-color: var(--cyan);
+      background: rgba(0, 217, 255, 0.04);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
+    }
+
+    .followup-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .followup-left-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-voice-followup {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: var(--orange);
+      border: none;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(255, 106, 0, 0.3);
+    }
+
+    .btn-voice-followup:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-voice-followup.listening {
+      animation: pulseMic 1.2s infinite alternate;
+      background: #ff3300;
+    }
+
+    @keyframes pulseMic {
+      0% { box-shadow: 0 0 0 0 rgba(255, 51, 0, 0.7); }
+      100% { box-shadow: 0 0 0 10px rgba(255, 51, 0, 0); }
+    }
+
+    .btn-send-followup {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 26px;
+      border-radius: 10px;
+      background: var(--green);
+      border: none;
+      color: #ffffff;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 18px rgba(0, 200, 83, 0.35);
+    }
+
+    .btn-send-followup:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+    }
+
+    /* Live Thread List */
+    .thread-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .thread-message {
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-size: 14px;
+      animation: msgPop 0.3s ease-out;
+    }
+
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .thread-message.user-msg {
+      background: rgba(0, 217, 255, 0.08);
+      border: 1px solid rgba(0, 217, 255, 0.25);
+      align-self: flex-start;
+      width: 100%;
+    }
+
+    .thread-message.expert-reply {
+      background: rgba(117, 76, 255, 0.1);
+      border: 1px solid rgba(117, 76, 255, 0.3);
+      width: 100%;
+    }
+
+    .thread-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .thread-header strong {
+      color: #ffffff;
+    }
+
+    /* Toast Notification */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .glass-card {
+        padding: 22px 18px;
+      }
+      .question-title {
+        font-size: 22px;
+      }
+      .meta-bar, .expert-actions, .followup-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-chat-expert, .btn-send-followup, .btn-voice-followup {
+        width: 100%;
+        justify-content: center;
+      }
+      .audio-player-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/questionDetails-BAq9TpBR.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">AE</span>
+        <span>AskExpert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="questions.html" style="color: var(--cyan);">Questions</a>
+        <a href="experts.html">Experts</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="questions.html" class="btn-nav-back">
+          <span>←</span>
+          <span>Back to Questions</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Question Details Content -->
+  <main class="container page-shell">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="questions.html">Questions</a>
+      <span>›</span>
+      <span id="breadcrumbCategory">Legal</span>
+      <span>›</span>
+      <span class="current">Question Details</span>
+    </nav>
+
+    <!-- ========================================================
+         QUESTION OVERVIEW CARD
+         ======================================================== -->
+    <section class="glass-card">
+      
+      <!-- Badges -->
+      <div class="question-badges">
+        <span id="qStatusBadge" class="badge badge-status">✓ Answered</span>
+        <span id="qCategoryBadge" class="badge badge-category">⚖️ Legal Advisor / Lawyer</span>
+        <span id="qLanguageBadge" class="badge badge-lang">🌐 English</span>
+      </div>
+
+      <!-- Question Title -->
+      <h1 id="qTitle" class="question-title">
+        Need help with compliance renewal & contract terms under Indian Law
+      </h1>
+
+      <!-- Question Description -->
+      <div id="qDescription" class="question-desc">
+I am preparing our company's annual statutory compliance renewal and need guidance on the required filings, documentation checklist, and upcoming regulatory deadlines under Indian corporate law. 
+
+Specifically, we have international client vendor contracts up for renewal. We need to ensure that the intellectual property indemnity, dispute resolution via domestic arbitration, and tax withholding clauses comply with current MCA & RBI directives to prevent penalties or service disruptions.
+      </div>
+
+      <!-- Meta Bar -->
+      <div class="meta-bar">
+        <div class="author-info">
+          <div id="qAuthorAvatar" class="avatar">AS</div>
+          <div class="author-meta">
+            <strong id="qAuthorName">Aditya Sharma</strong>
+            <span id="qDateTime">Asked on May 24, 2026 at 10:45 AM</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; font-size: 13px; color: var(--muted);">
+          <span>👁️ 142 Views</span>
+          <span>💬 1 Answer</span>
+        </div>
+      </div>
+
+      <!-- Attachments Section -->
+      <div class="attachments-section">
+        <div class="attachments-title">
+          <span>📎</span>
+          <span>Attached Documents (2 Files)</span>
+        </div>
+        <div class="attachments-grid">
+          <a href="#" class="attachment-pill" onclick="downloadAttachment(event, 'Compliance_Checklist_2026.pdf')">
+            <span>📄</span>
+            <span>Compliance_Checklist_2026.pdf</span>
+            <span style="font-size: 11px; color: var(--muted);">(1.4 MB)</span>
+          </a>
+          <a href="#" class="attachment-pill" onclick="downloadAttachment(event, 'Vendor_Agreement_Draft.docx')">
+            <span>📝</span>
+            <span>Vendor_Agreement_Draft.docx</span>
+            <span style="font-size: 11px; color: var(--muted);">(850 KB)</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================
+         SECTION DIVIDER: EXPERT ANSWERS
+         ======================================================== -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-title">
+        <span>✨</span>
+        <span>Verified Expert Answers (<span id="answersCountHeader">0</span>)</span>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+
+    <!-- ========================================================
+         DYNAMIC EXPERT ANSWERS CONTAINER
+         ======================================================== -->
+    <div id="answersContainer" style="display: flex; flex-direction: column; gap: 24px;">
+      <!-- Skeletons shown during load -->
+      <article class="glass-card" style="padding: 24px; animation: pulse 1.5s infinite ease-in-out;">
+        <div style="height: 18px; width: 40%; background: rgba(255,255,255,0.08); border-radius: 6px; margin-bottom: 12px;"></div>
+        <div style="height: 14px; width: 90%; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 8px;"></div>
+        <div style="height: 14px; width: 75%; background: rgba(255,255,255,0.05); border-radius: 6px;"></div>
+      </article>
+    </div>
+
+
+    <!-- ========================================================
+         SECTION DIVIDER: FOLLOW-UP
+         ======================================================== -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-title">
+        <span>💬</span>
+        <span>Post a Reply or Follow-up</span>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+
+    <!-- ========================================================
+         3. ADD YOUR FOLLOW-UP / REPLY CARD
+         ======================================================== -->
+    <section class="glass-card followup-card">
+      <div class="followup-header">
+        <h3>
+          <span>Ask Follow-up or Add Answer</span>
+        </h3>
+        <p>Need more clarification or want to add an expert perspective? Reply directly in this thread.</p>
+      </div>
+
+      <form id="followupForm">
+        <textarea
+          id="followupTextarea"
+          class="followup-textarea"
+          placeholder="Type your follow-up inquiry, clarification, or expert answer here..."
+          required
+        ></textarea>
+
+        <!-- Attachment Preview -->
+        <div id="replyAttachPreview" style="display:none; margin: 10px 0; padding: 8px 14px; background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 10px; font-size: 12px; align-items: center; justify-content: space-between;">
+          <span id="replyAttachName">📄 Attachment</span>
+          <button type="button" id="removeReplyAttachBtn" style="background: none; border: none; color: var(--muted); cursor: pointer;">✕</button>
+        </div>
+
+        <input type="file" id="replyFileInput" style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt" />
+
+        <div class="followup-controls">
+          <div class="followup-left-buttons">
+            <button type="button" id="followupVoiceBtn" class="btn-voice-followup" title="Dictate with voice">
+              <span id="followupVoiceIcon">🎤</span>
+              <span id="followupVoiceText">Voice Input</span>
+            </button>
+            <button type="button" id="aiRefineBtn" class="btn-reaction" style="background: rgba(117, 76, 255, 0.15); border-color: rgba(117, 76, 255, 0.3);" title="Improve grammar & clarity">
+              <span>🤖</span>
+              <span>AI Refine</span>
+            </button>
+            <button type="button" id="attachReplyFileBtn" class="btn-reaction" style="background: rgba(255, 255, 255, 0.05);" title="Attach document or image">
+              <span>📎</span>
+              <span>Attach</span>
+            </button>
+          </div>
+
+          <button type="submit" id="sendFollowupBtn" class="btn-send-followup">
+            <span>✈</span>
+            <span>Submit Reply</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Dynamic Follow-up Thread List -->
+      <div id="threadList" class="thread-list"></div>
+
+    </section>
+
+  </main>
+
+  <!-- Interactive Toast Notification -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE QUESTION DETAILS & REALTIME SCRIPT
+       ======================================================= -->
+</body>
+</html>

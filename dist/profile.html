@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - User Profile. Manage your account settings, avatar, consultation languages, and personal bio." />
+  <title>AskExpert | My Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - USER PROFILE STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --orange: #ff9d3c;
+      --gold: #ffb703;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1080px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.88);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand span:last-child {
+      color: var(--cyan);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+      background: rgba(0, 153, 255, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ========================================================
+       PAGE SHELL
+       ======================================================== */
+    .page-shell {
+      padding: 30px 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--cyan);
+    }
+
+    .breadcrumb span.current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ========================================================
+       HERO PROFILE CARD
+       ======================================================== */
+    .hero-profile-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-profile-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+    }
+
+    @media (max-width: 850px) {
+      .hero-profile-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+      }
+      .avatar-wrapper {
+        margin: 0 auto;
+      }
+      .hero-actions-col {
+        width: 100%;
+        justify-content: center;
+      }
+      .hero-tags-row {
+        justify-content: center;
+      }
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      object-fit: cover;
+      border: 3px solid rgba(0, 217, 255, 0.35);
+      background: linear-gradient(135deg, #0f2038, #1a103c);
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .btn-change-avatar {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--cyan);
+      color: #031120;
+      border: 2px solid #07152d;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 217, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-change-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .hero-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .user-name-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 8px;
+      background: rgba(0, 217, 255, 0.14);
+      border: 1px solid rgba(0, 217, 255, 0.35);
+      color: var(--cyan);
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+
+    .hero-tags-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .hero-actions-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+    }
+
+    /* ========================================================
+       DETAILS GRID & CARDS
+       ======================================================== */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+    }
+
+    @media (max-width: 850px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-heading {
+      font-size: 17px;
+      font-weight: 850;
+      color: var(--white);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .info-fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .info-fields-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-box {
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-value {
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--white);
+    }
+
+    .bio-box {
+      grid-column: 1 / -1;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* Quick Links Card */
+    .quick-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quick-link-item {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .quick-link-item:hover {
+      background: rgba(0, 153, 255, 0.08);
+      border-color: rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+      transform: translateX(4px);
+    }
+
+    /* Security & Password Card */
+    .security-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .security-info strong {
+      display: block;
+      font-size: 13.5px;
+      color: var(--white);
+    }
+
+    .security-info span {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .btn-logout-full {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 14px;
+    }
+
+    .btn-logout-full:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Hidden File Input for Avatar */
+    #avatarFileInput {
+      display: none;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    footer.bottom-bar {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      padding: 20px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/profile-CigF_Hys.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="questions.html">Questions</a>
+        <a href="experts.html">Experts</a>
+        <a href="chat.html">Chat</a>
+        <a href="profile.html" class="active">Profile</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="edit-profile.html">
+          <span>✏️</span> Edit Profile
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container page-shell">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="user-dashboard.html">Dashboard</a>
+      <span>›</span>
+      <span class="current">My Profile</span>
+    </nav>
+
+    <!-- Hero Profile Card -->
+    <section class="hero-profile-card">
+      <div class="avatar-wrapper">
+        <img
+          id="profileAvatarImg"
+          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80"
+          alt="User Avatar"
+          class="avatar-img"
+        />
+        <button type="button" id="changeAvatarBtn" class="btn-change-avatar" title="Upload new profile picture">
+          📷
+        </button>
+        <input type="file" id="avatarFileInput" accept="image/*" />
+      </div>
+
+      <div class="hero-info-col">
+        <div class="user-name-title">
+          <span id="profileFullName">Aditya Sharma</span>
+          <span class="role-badge" id="profileRoleBadge">Client Member</span>
+        </div>
+        <div class="hero-tags-row">
+          <span id="profileEmailBadge">✉️ aditya.sharma@example.com</span>
+          <span>•</span>
+          <span id="profileCreatedDate">📅 Member since August 2026</span>
+          <span>•</span>
+          <span style="color: var(--green);">✅ Verified Account</span>
+        </div>
+      </div>
+
+      <div class="hero-actions-col">
+        <a href="edit-profile.html" class="btn btn-primary" style="justify-content: center; width: 100%;">
+          <span>✏️</span> Edit Profile
+        </a>
+        <a href="user-dashboard.html" class="btn btn-secondary" style="justify-content: center; width: 100%;">
+          <span>📊</span> Dashboard
+        </a>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <div class="profile-grid">
+      
+      <!-- Left Column: Detailed Information -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Account Details Card -->
+        <section class="glass-card">
+          <div class="card-heading">
+            <span>👤 Account & Contact Details</span>
+            <a href="edit-profile.html" style="font-size: 12.5px; color: var(--cyan); font-weight: 700;">Edit →</a>
+          </div>
+
+          <div class="info-fields-grid">
+            <div class="field-box">
+              <span class="field-label">Full Legal Name</span>
+              <span class="field-value" id="fieldFullName">Aditya Sharma</span>
+            </div>
+
+            <div class="field-box">
+              <span class="field-label">Email Address (Auth ID)</span>
+              <span class="field-value" id="fieldEmail">aditya.sharma@example.com</span>
+            </div>
+
+            <div class="field-box">
+              <span class="field-label">Phone Number</span>
+              <span class="field-value" id="fieldPhone">+91 98765 43210</span>
+            </div>
+
+            <div class="field-box">
+              <span class="field-label">Preferred Languages</span>
+              <span class="field-value" id="fieldLanguages">English, Hindi, Marathi</span>
+            </div>
+
+            <div class="field-box">
+              <span class="field-label">Account Role</span>
+              <span class="field-value" id="fieldRole">Client / Consumer</span>
+            </div>
+
+            <div class="field-box">
+              <span class="field-label">Verification Standing</span>
+              <span class="field-value" style="color: var(--green);">✅ KYC Verified</span>
+            </div>
+
+            <div class="bio-box">
+              <span class="field-label">Personal Bio / Notes</span>
+              <p class="field-value" id="fieldBio" style="font-weight: 400; color: #bad3eb; font-size: 13.5px;">
+                Technology founder and business executive seeking verified legal and statutory tax compliance advisory for enterprise contracts and regulatory renewals.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Security & Password Card -->
+        <section class="glass-card">
+          <div class="card-heading">
+            <span>🔒 Security & Authentication</span>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <strong>Account Password</strong>
+              <span>Protected via Supabase Auth</span>
+            </div>
+            <button type="button" id="resetPasswordBtn" class="btn btn-secondary" style="font-size: 12.5px; padding: 6px 14px;">
+              <span>🔑</span> Send Reset Link
+            </button>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <strong>Encrypted Consultation Channels</strong>
+              <span>End-to-end masked phone numbers & private media storage</span>
+            </div>
+            <span style="color: var(--green); font-size: 12px; font-weight: 750;">Active</span>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Quick Navigation & Logout -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Quick Hub Card -->
+        <section class="glass-card">
+          <h2 class="card-heading">
+            <span>⚡ Quick Access Hub</span>
+          </h2>
+
+          <div class="quick-links-list">
+            <a href="questions.html" class="quick-link-item">
+              <span>❓ My Questions</span>
+              <span>→</span>
+            </a>
+            <a href="chat.html" class="quick-link-item">
+              <span>💬 Live Chats</span>
+              <span>→</span>
+            </a>
+            <a href="experts.html" class="quick-link-item">
+              <span>👥 Find Experts</span>
+              <span>→</span>
+            </a>
+            <a href="payments.html" class="quick-link-item">
+              <span>💳 Wallet & Refills</span>
+              <span>→</span>
+            </a>
+            <a href="payment-history.html" class="quick-link-item">
+              <span>📜 Payment History</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          <button type="button" id="profileLogoutBtn" class="btn-logout-full">
+            <span>🚪</span> Sign Out of AskExpert
+          </button>
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- Footer -->
+  <footer class="bottom-bar">
+    <div class="container">
+      <p>© 2026 AskExpert Platform. Verified professional consultations.</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       SUPABASE USER PROFILE SCRIPT
+       ======================================================= -->
+</body>
+</html>

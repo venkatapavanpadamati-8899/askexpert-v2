@@ -51,11 +51,20 @@ serve(async (req: Request) => {
     // 3. Authoritative Expert Consultation Rate Lookup from Database
     const { data: expertProfile, error: expertError } = await supabaseClient
       .from("profiles")
-      .select("id, full_name, consultation_fee")
+      .select("id, full_name, consultation_fee, role, is_verified")
       .eq("id", expert_id)
+      .eq("role", "expert")
+      .eq("is_verified", true)
       .maybeSingle();
 
-    const baseFee = expertProfile?.consultation_fee ? parseFloat(String(expertProfile.consultation_fee)) : 1200.00;
+    if (expertError || !expertProfile) {
+      return new Response(JSON.stringify({ error: "Specified expert profile is unverified or invalid" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const baseFee = expertProfile.consultation_fee ? parseFloat(String(expertProfile.consultation_fee)) : 1000.00;
     const platformFee = 99.00; // Fixed encryption & SLA assurance fee
     const gstRate = 0.18;
     const gstAmount = Math.round((baseFee + platformFee) * gstRate * 100) / 100;

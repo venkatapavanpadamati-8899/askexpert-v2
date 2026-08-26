@@ -86,8 +86,10 @@ async function main() {
     log('1-REGISTER-LOAD', 'PASS', 'register.html loaded');
 
     // Fill role = user
-    const userTab = page.locator('[data-role="user"], #roleUser, input[value="user"]').first();
-    if (await userTab.count() > 0) await userTab.click();
+    await page.evaluate(() => {
+      const radio = document.querySelector('input[name="role"][value="user"], #roleUser');
+      if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+    });
 
     // Fill form fields
     await page.fill('#fullName, [name="fullName"], input[placeholder*="Full Name"]', TEST_NAME);
@@ -150,7 +152,7 @@ async function main() {
 
     // ── 2. VERIFY PROFILE CREATED IN SUPABASE ────────────────────────────
     console.log('\n── Step 2: Verify profile row in remote database ──');
-    await page.waitForTimeout(2000); // give trigger time
+    await page.waitForTimeout(3000); // give trigger time to process
 
     const profileCheck = await restGet(
       `/rest/v1/profiles?email=eq.${encodeURIComponent(TEST_EMAIL)}&select=id,full_name,email,role,username,phone`
@@ -164,8 +166,7 @@ async function main() {
       log('2-PROFILE-USERNAME',  p.username                 ? 'PASS' : 'FAIL', `username=${p.username}`);
       console.log('  Profile data:', JSON.stringify(p));
     } else {
-      log('2-PROFILE-EXISTS', 'FAIL',
-        `No profile found for ${TEST_EMAIL} — trigger may not have fired (status=${profileCheck.status})`);
+      log('2-PROFILE-EXISTS', 'FAIL', `No profile found for ${TEST_EMAIL}`);
     }
 
     // ── 3. LOGIN ──────────────────────────────────────────────────────────

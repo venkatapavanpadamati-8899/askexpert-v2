@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative Professional Verification & Credential Approval Center. Inspect identity proofs, degrees, and council licenses." />
+  <title>AskExpert | Professional Verification Queue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN PROFESSIONALS VERIFICATION STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #02050e;
+      --bg-2: #050d1e;
+      --bg-3: #0a1128;
+      --card-bg: rgba(10, 18, 36, 0.88);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #8499b5;
+      --cyan: #00d9ff;
+      --blue: #0088ff;
+      --purple: #7952ff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(121, 82, 255, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(121, 82, 255, 0.4);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Main Area */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Filters Card */
+    .filters-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.1));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: min(340px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Table */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .verif-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .verif-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .verif-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .verif-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .expert-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .expert-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(121, 82, 255, 0.2), rgba(0, 217, 255, 0.2));
+      border: 1px solid var(--cyan);
+      display: grid;
+      place-items: center;
+      font-size: 13.5px;
+      font-weight: 850;
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-pending { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .status-approved { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .status-rejected { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.3); }
+
+    .btn-review {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple), var(--blue), var(--cyan));
+      color: #030d1a;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-review:hover {
+      box-shadow: 0 4px 14px rgba(0, 217, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Review Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      place-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #0b172a;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      width: min(720px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: modalPop 0.25s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+    }
+
+    .doc-preview-box {
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-approve {
+      background: linear-gradient(135deg, var(--green), #10b981);
+      color: #031120;
+      box-shadow: 0 4px 14px rgba(32, 216, 137, 0.35);
+    }
+
+    .btn-approve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(32, 216, 137, 0.5);
+    }
+
+    .btn-reject {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+      color: var(--red);
+    }
+
+    .btn-reject:hover {
+      background: rgba(255, 71, 87, 0.25);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/adminProfessionals-PT8rdyAF.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+  <link rel="modulepreload" crossorigin href="/assets/aiCertificateVerifier-DAePCXfw.js">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count" id="sidebarBadgePending">37</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="admin-main-wrap">
+    
+    <header class="topbar">
+      <h1 class="page-title">
+        <span>🛡️</span> Professional Verification & KYC Audit Center
+      </h1>
+
+      <div style="font-size: 12px; color: var(--muted);">
+        Queue: <strong style="color: var(--gold);" id="pendingQueueHeader">37 Pending Applications</strong>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+      
+      <!-- Filter Tabs & Search -->
+      <div class="filters-card">
+        <div class="tabs-group">
+          <button type="button" class="tab-btn active" data-filter="all">All Applications</button>
+          <button type="button" class="tab-btn" data-filter="pending">⏳ Pending Review (37)</button>
+          <button type="button" class="tab-btn" data-filter="approved">✅ Approved (1,284)</button>
+          <button type="button" class="tab-btn" data-filter="rejected">❌ Rejected (19)</button>
+          <button type="button" class="tab-btn" data-filter="blocked">⛔ Blocked / Suspended (5)</button>
+          <button type="button" class="tab-btn" data-filter="user">👥 All Platform Users (3,842)</button>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="verifSearchInput" class="search-input" placeholder="Search by name, license # or specialization..." />
+        </div>
+      </div>
+
+      <!-- Verification Queue Table -->
+      <section class="glass-card">
+        <div class="table-wrap">
+          <table class="verif-table">
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Domain / Specialization</th>
+                <th>Council / License No.</th>
+                <th>Degree / Institution</th>
+                <th>Documents Uploaded</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="verifTableBody">
+              
+              <!-- App 1 (Pending) -->
+              <tr data-status="pending" id="row-app-1">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar">AI</div>
+                    <div>
+                      <strong style="color: var(--white);">Adv. Ananya Iyer</strong>
+                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#APP-90214</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Legal Advisor</strong><br><small style="color: var(--muted);">Corporate Compliance</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #bad3eb;">#D/2016/8192</span></td>
+                <td>LL.M Corporate Law<br><small style="color: var(--muted);">NLSIU Bangalore</small></td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--cyan);">🪪 Aadhaar • 🎓 LL.M • 📜 Bar License</span>
+                </td>
+                <td><span class="status-badge status-pending">⏳ Pending Audit</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-1" data-name="Adv. Ananya Iyer" data-email="ananya.iyer@legal.in" data-phone="+91 98223 34455" data-spec="Legal Advisor" data-license="Bar Council of Delhi #D/2016/8192" data-degree="LL.M Corporate Law (NLSIU Bangalore)" data-exp="9 Years" data-status="pending">
+                    Review Application
+                  </button>
+                </td>
+              </tr>
+
+              <!-- App 2 (Pending) -->
+              <tr data-status="pending" id="row-app-2">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar" style="background: rgba(0, 153, 255, 0.2); color: var(--cyan);">RJ</div>
+                    <div>
+                      <strong style="color: var(--white);">CA Rajesh Joshi</strong>
+                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#APP-90215</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Chartered Accountant</strong><br><small style="color: var(--muted);">GST & Transfer Pricing</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #bad3eb;">ICAI #FCA/2012/104</span></td>
+                <td>FCA, B.Com (Hons)<br><small style="color: var(--muted);">ICAI New Delhi</small></td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--cyan);">🪪 PAN • 🎓 FCA Cert • 📜 ICAI COP</span>
+                </td>
+                <td><span class="status-badge status-pending">⏳ Pending Audit</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-2" data-name="CA Rajesh Joshi" data-email="rajesh.joshi@taxadvisors.in" data-phone="+91 98450 12345" data-spec="Tax & CA" data-license="ICAI #FCA/2012/104" data-degree="Fellow Chartered Accountant (FCA)" data-exp="14 Years" data-status="pending">
+                    Review Application
+                  </button>
+                </td>
+              </tr>
+
+              <!-- App 3 (Approved Demo) -->
+              <tr data-status="approved" id="row-app-3">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar" style="background: rgba(32, 216, 137, 0.2); color: var(--green);">VR</div>
+                    <div>
+                      <strong style="color: var(--white);">Adv. Vikram Rao</strong>
+                      <span style="display: block; font-size: 11px; color: var(--green); font-family: monospace;">#APP-89100</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Legal Advisor</strong><br><small style="color: var(--muted);">Arbitration & Contracts</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #bad3eb;">#MH/2014/9842</span></td>
+                <td>B.A. LL.B, LL.M<br><small style="color: var(--muted);">NLSIU</small></td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--green);">✓ All Documents Verified</span>
+                </td>
+                <td><span class="status-badge status-approved">✓ Approved</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-3" data-name="Adv. Vikram Rao" data-email="vikram.rao@legal.in" data-phone="+91 98765 43210" data-spec="Legal Advisor" data-license="Bar Council of Maharashtra #MH/2014/9842" data-degree="B.A. LL.B (Hons), LL.M" data-exp="12 Years" data-status="approved">
+                    View Dossier
+                  </button>
+                </td>
+              </tr>
+
+              <!-- App 4 (Rejected Demo) -->
+              <tr data-status="rejected" id="row-app-4">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar" style="background: rgba(255, 71, 87, 0.2); color: var(--red);">SK</div>
+                    <div>
+                      <strong style="color: var(--white);">Suresh Kumar</strong>
+                      <span style="display: block; font-size: 11px; color: var(--red); font-family: monospace;">#APP-88401</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Tax Practitioner</strong><br><small style="color: var(--muted);">Income Tax Returns</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #bad3eb;">ICAI #INVALID/902</span></td>
+                <td>B.Com General<br><small style="color: var(--muted);">Unrecognized Board</small></td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--red);">⚠️ Sample / Unverified Documents</span>
+                </td>
+                <td><span class="status-badge status-rejected">✕ Rejected</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-4" data-name="Suresh Kumar" data-email="suresh.k@taxdemo.in" data-phone="+91 98111 22334" data-spec="Taxation" data-license="Unrecognized #INVALID/902" data-degree="B.Com General (Sample Upload)" data-exp="2 Years" data-status="rejected">
+                    View Dossier
+                  </button>
+                </td>
+              </tr>
+
+              <!-- App 5 (Blocked Demo) -->
+              <tr data-status="blocked" id="row-app-5">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar" style="background: rgba(138, 92, 255, 0.2); color: var(--purple);">TB</div>
+                    <div>
+                      <strong style="color: var(--white);">Tech Bot Account #901</strong>
+                      <span style="display: block; font-size: 11px; color: var(--red); font-family: monospace;">#USR-90219</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Spam Suspended</strong><br><small style="color: var(--muted);">Policy Violation</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #ff4757;">BLOCKED BY ADMIN</span></td>
+                <td>-</td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--red);">⛔ Suspended for Spam Activity</span>
+                </td>
+                <td><span class="status-badge status-rejected" style="background: rgba(255,71,87,0.2); color: var(--red);">⛔ Blocked</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-5" data-name="Tech Bot Account #901" data-email="spambot901@temp.com" data-phone="+91 90000 00000" data-spec="Suspended User" data-license="BLOCKED" data-degree="None" data-exp="0 Years" data-status="blocked">
+                    View & Unblock
+                  </button>
+                </td>
+              </tr>
+
+              <!-- App 6 (Client User Demo) -->
+              <tr data-status="user" id="row-app-6">
+                <td>
+                  <div class="expert-cell">
+                    <div class="expert-avatar" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan);">PS</div>
+                    <div>
+                      <strong style="color: var(--white);">Priya Sharma</strong>
+                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-40192</span>
+                    </div>
+                  </div>
+                </td>
+                <td><strong style="color: var(--white);">Client User</strong><br><small style="color: var(--muted);">Legal Advice Seeker</small></td>
+                <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #bad3eb;">CLIENT / USER</span></td>
+                <td>-</td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--green);">✓ Active Platform Client</span>
+                </td>
+                <td><span class="status-badge status-approved" style="background: rgba(0,217,255,0.15); color: var(--cyan);">👤 Client User</span></td>
+                <td>
+                  <button type="button" class="btn-review" data-id="app-6" data-name="Priya Sharma" data-email="priya.sharma@gmail.com" data-phone="+91 98333 44455" data-spec="Client User" data-license="N/A" data-degree="N/A" data-exp="N/A" data-status="user">
+                    Manage User
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Master Admin Compliance & Audit Activity Log -->
+      <section class="glass-card" style="margin-top: 24px; padding: 20px;">
+        <h3 style="font-size: 16px; font-weight: 850; color: var(--white); display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+          <span>📜</span> Master Admin Compliance & Audit Activity Log
+        </h3>
+        <div id="adminActivityTimeline" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+            <div>
+              <strong style="color: var(--cyan);">📌 Admin Action:</strong>
+              <span style="color: var(--white); margin-left: 6px;">Approved Adv. Vikram Rao (#MH/2014/9842) - Granted Verified Specialist Badge</span>
+            </div>
+            <small style="color: var(--muted); font-family: monospace;">Today, 08:20 AM</small>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+            <div>
+              <strong style="color: var(--gold);">🤖 AI Audit Advisory:</strong>
+              <span style="color: var(--white); margin-left: 6px;">Analyzed Adv. Ananya Iyer credentials (Score: 98% Genuine - Govt Seal Verified)</span>
+            </div>
+            <small style="color: var(--muted); font-family: monospace;">Today, 08:15 AM</small>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+            <div>
+              <strong style="color: #c084fc;">📩 Manual Appeal Received:</strong>
+              <span style="color: var(--white); margin-left: 6px;">Received manual verification request from Dr. Ramesh Verma</span>
+            </div>
+            <small style="color: var(--muted); font-family: monospace;">Today, 07:45 AM</small>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px;">
+            <div>
+              <strong style="color: var(--red);">⛔ Admin Safety Block:</strong>
+              <span style="color: var(--white); margin-left: 6px;">Blocked account #USR-90219 for spam policy violation</span>
+            </div>
+            <small style="color: var(--muted); font-family: monospace;">Yesterday, 06:30 PM</small>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Review Modal -->
+  <div id="reviewModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 850; color: var(--white);" id="modalApplicantName">Applicant Dossier</h2>
+          <span style="font-size: 12px; color: var(--cyan);" id="modalLicenseNo">Bar Council #MH/2014/9842</span>
+        </div>
+        <button type="button" id="closeReviewModalBtn" style="background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Applicant Details Summary -->
+      <div class="review-grid">
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Primary Email</span>
+          <strong style="color: var(--white);" id="modalEmail">ananya.iyer@legal.in</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Mobile Contact</span>
+          <strong style="color: var(--white);" id="modalPhone">+91 98223 34455</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Domain Specialization</span>
+          <strong style="color: var(--cyan);" id="modalSpec">Legal Advisor</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Experience</span>
+          <strong style="color: var(--white);" id="modalExp">9 Years</strong>
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <span style="color: var(--muted); display: block; font-size: 11px;">Highest Degree & Institution</span>
+          <strong style="color: var(--white);" id="modalDegree">LL.M Corporate Law (NLSIU Bangalore)</strong>
+        </div>
+      </div>
+
+      <!-- Document & Registration Format Validation Box -->
+      <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>📑</span> Document Format & Registration Syntax Status
+          </strong>
+          <span id="modalAiScoreBadge" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-size: 12px;">FORMAT VALIDATED</span>
+        </div>
+        <div id="modalAiConfidenceLabel" style="font-size: 12px; color: var(--cyan); font-weight: 700; margin-top: 4px;">
+          Document Format & Registration Syntax Validated (Pending Council Verification Audit)
+        </div>
+        <div id="modalAiBadges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+          <span style="font-size: 11px; background: rgba(0, 217, 255, 0.12); color: var(--cyan); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(0, 217, 255, 0.3);">✓ Document File Structure Validated</span>
+          <span style="font-size: 11px; background: rgba(0, 217, 255, 0.12); color: var(--cyan); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(0, 217, 255, 0.3);">✓ Registration Number Syntax Matched</span>
+          <span style="font-size: 11px; background: rgba(255, 183, 3, 0.15); color: var(--gold); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255, 183, 3, 0.3);">⏳ Statutory Board Audit Required</span>
+        </div>
+      </div>
+
+      <!-- Applicant Manual Appeal Alert Box -->
+      <div id="modalAppealAlertBox" style="background: rgba(121, 82, 255, 0.1); border: 1px dashed var(--purple); border-radius: 12px; padding: 14px; margin-top: 14px;">
+        <strong style="color: #c084fc; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+          <span>📩</span> APPLICANT MANUAL APPEAL MESSAGE TO ADMIN
+        </strong>
+        <p id="modalAppealMessageText" style="font-size: 12.5px; color: var(--white); font-weight: 600; margin-top: 4px;">
+          "My uploaded B.Tech & Bar Council degrees are 100% genuine government verified documents. An upload error occurred, please manually inspect and approve my application."
+        </p>
+      </div>
+
+      <!-- Private Document Inspection Box -->
+      <h3 style="font-size: 14.5px; font-weight: 800; color: var(--white); margin-top: 14px;">
+        <span>🔒</span> Encrypted Verification Documents (Private Storage)
+      </h3>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="doc-preview-box">
+          <div>
+            <strong style="font-size: 13px; color: var(--white); display: block;">🪪 Government Identity Proof (Aadhaar / Passport)</strong>
+            <small style="color: var(--muted);">Encrypted UIDAI proof document</small>
+          </div>
+          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing protected identity document via secure authenticated token.')">Inspect File</button>
+        </div>
+
+        <div class="doc-preview-box">
+          <div>
+            <strong style="font-size: 13px; color: var(--white); display: block;">🎓 Certified Degree Certificate</strong>
+            <small style="color: var(--muted);">Post-graduate degree certificate copy</small>
+          </div>
+          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing certified degree certificate via secure authenticated token.')">Inspect File</button>
+        </div>
+
+        <div class="doc-preview-box">
+          <div>
+            <strong style="font-size: 13px; color: var(--white); display: block;">📜 Council License Certificate (COP)</strong>
+            <small style="color: var(--muted);">Active practice certificate verification</small>
+          </div>
+          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing state council license via secure authenticated token.')">Inspect File</button>
+        </div>
+      </div>
+
+      <!-- Mandatory Certificate Verification Audit Checklist -->
+      <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 12px; padding: 14px; margin-top: 14px;">
+        <strong style="color: var(--cyan); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+          <span>📋</span> Mandatory Certificate Verification Audit Checklist (Required before Approval)
+        </strong>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
+          <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
+            <input type="checkbox" id="chkIdentityVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
+            <span>Identity Proof (Aadhaar / Passport) Inspected & Verified</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
+            <input type="checkbox" id="chkDegreeVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
+            <span>Educational Degree & University Qualification Inspected & Verified</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
+            <input type="checkbox" id="chkCouncilVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
+            <span>State Council / Bar / ICAI License Registration Inspected & Verified</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Decision Actions -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="btnRequestResubmit" class="btn btn-secondary" style="color: var(--gold); border-color: rgba(255, 183, 3, 0.3); font-size: 12px;">
+            <span>🔄</span> Request Resubmission
+          </button>
+          <button type="button" id="btnBlockUser" class="btn btn-secondary" style="color: var(--red); border-color: rgba(255, 71, 87, 0.3); font-size: 12px;">
+            <span>⛔</span> Block / Suspend Account
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" id="btnTriggerReject" class="btn btn-reject" style="font-size: 12px;">
+            <span>✕</span> Reject Application
+          </button>
+          <button type="button" id="btnTriggerApprove" class="btn btn-approve" style="font-size: 12px;">
+            <span>✓</span> Approve & Grant Verified Badge
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Reason Modal -->
+  <div id="rejectReasonModal" class="modal-backdrop">
+    <div class="modal-card" style="width: min(460px, 100%);">
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">Specify Rejection Reason</h3>
+      <p style="font-size: 13px; color: #bad3eb;">
+        Please state why this application was rejected. The professional will receive this feedback to guide resubmission.
+      </p>
+
+      <textarea id="rejectionReasonText" style="width: 100%; height: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 13px;" placeholder="e.g. Council certificate registration date is blurred; please upload a clear scanned PDF copy."></textarea>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
+        <button type="button" id="cancelRejectBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirmRejectBtn" class="btn btn-reject">Submit Rejection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN PROFESSIONALS SCRIPT
+       ======================================================= -->
+</body>
+</html>

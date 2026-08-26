@@ -954,11 +954,45 @@
     /* ========================================================
        INIT
        ======================================================== */
-    function initAdminReports() {
+    async function initAdminReports() {
+      const isAuth = await verifyAdminAccess();
+      if (!isAuth) return;
       setupFilters();
       setupSearch();
       setupCaseModal();
       setupLogout();
+    }
+
+    async function verifyAdminAccess() {
+      try {
+        if (!supabase) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+        window.location.replace("admin-login.html");
+        return false;
+      }
     }
 
     /* ========================================================
@@ -1169,7 +1203,6 @@
     function setupLogout() {
       document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
         showToast("Ending admin session...");
-        sessionStorage.removeItem("askexpert_admin_auth");
         try {
           if (supabase) await supabase.auth.signOut();
         } catch (e) {}

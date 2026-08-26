@@ -701,13 +701,13 @@
 
     function resolveTargetUrl(type, relatedId) {
       if (type === "answer" || type === "question") {
-        return `question-details.html?id=${encodeURIComponent(relatedId || "q-101")}`;
+        return relatedId ? `question-details.html?id=${encodeURIComponent(relatedId)}` : "user-dashboard.html";
       }
       if (type === "chat") {
-        return `chat.html?expert=${encodeURIComponent(relatedId || "11111111-1111-1111-1111-111111111111")}`;
+        return relatedId ? `chat.html?expert=${encodeURIComponent(relatedId)}` : "experts.html";
       }
       if (type === "expert") {
-        return `expert-profile.html?expert=${encodeURIComponent(relatedId || "11111111-1111-1111-1111-111111111111")}`;
+        return relatedId ? `expert-profile.html?expert=${encodeURIComponent(relatedId)}` : "experts.html";
       }
       if (type === "payment") {
         return "payments.html";

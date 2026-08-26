@@ -459,7 +459,7 @@
        ======================================================== */
     let selectedRating = 5;
     let currentUserId = null;
-    let expertId = "11111111-1111-1111-1111-111111111111";
+    let expertId = null;
     let sessionId = null;
 
     const RATING_DESCRIPTIONS = {
@@ -496,36 +496,49 @@
 
     async function parseUrlParamsAndLoadExpert() {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("expert")) expertId = params.get("expert");
+      expertId = params.get("expert") || params.get("id");
       if (params.get("session")) sessionId = params.get("session");
 
-      // Set Profile Link
+      if (!expertId || !supabase) {
+        renderInvalidReviewTarget("No verified expert specified for review.");
+        return;
+      }
+
       const profBtn = document.getElementById("viewExpertProfileBtn");
       if (profBtn) profBtn.href = `expert-profile.html?expert=${encodeURIComponent(expertId)}`;
 
-      // Fetch expert details if from database
-      if (supabase && expertId && !expertId.startsWith("1111")) {
-        try {
-          const { data: prof } = await supabase
-            .from("profiles")
-            .select("full_name, headline, specialization, avatar_url")
-            .eq("id", expertId)
-            .maybeSingle();
+      try {
+        const { data: prof, error } = await supabase
+          .from("profiles")
+          .select("id, full_name, headline, specialization, avatar_url, role, is_verified")
+          .eq("id", expertId)
+          .eq("role", "expert")
+          .eq("is_verified", true)
+          .maybeSingle();
 
-          if (prof) {
-            const nameEl = document.getElementById("expertNameEl");
-            const roleEl = document.getElementById("expertRoleEl");
-            const avatarEl = document.getElementById("expertAvatarEl");
-            if (nameEl && prof.full_name) nameEl.textContent = prof.full_name;
-            if (roleEl && (prof.headline || prof.specialization)) roleEl.textContent = prof.headline || prof.specialization;
-            if (avatarEl && prof.full_name) {
-              avatarEl.textContent = prof.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-            }
-          }
-        } catch (e) {
-          console.warn("Expert profile fetch:", e);
+        if (error || !prof) {
+          renderInvalidReviewTarget("The expert profile is unverified or no longer available.");
+          return;
         }
+
+        const nameEl = document.getElementById("expertNameEl");
+        const roleEl = document.getElementById("expertRoleEl");
+        const avatarEl = document.getElementById("expertAvatarEl");
+        if (nameEl && prof.full_name) nameEl.textContent = prof.full_name;
+        if (roleEl && (prof.headline || prof.specialization)) roleEl.textContent = prof.headline || prof.specialization;
+        if (avatarEl && prof.avatar_url) avatarEl.src = prof.avatar_url;
+      } catch (err) {
+        console.warn("Error loading expert profile for review:", err);
       }
+    }
+
+    function renderInvalidReviewTarget(msg) {
+      const submitBtn = document.getElementById("submitReviewBtn");
+      if (submitBtn) submitBtn.disabled = true;
+      const nameEl = document.getElementById("expertNameEl");
+      if (nameEl) nameEl.textContent = "Expert Not Specified";
+      const roleEl = document.getElementById("expertRoleEl");
+      if (roleEl) roleEl.textContent = msg;
     }
 
     function setupStarRating() {

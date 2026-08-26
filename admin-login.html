@@ -440,62 +440,50 @@
         submitBtn.innerHTML = "<span>⏳</span> Verifying administrative authorization...";
 
         try {
-          if (supabase) {
-            // 1. Authenticate with Supabase Auth
-            const { data, error } = await supabase.auth.signInWithPassword({
-              email: email,
-              password: password
-            });
+          if (!supabase) {
+            showToast("Authentication service unavailable. Please check system configuration.", true);
+            resetSubmitBtn();
+            return;
+          }
 
-            if (error) {
-              // Check for demo fallback if configured for testing
-              if (email.toLowerCase().includes("admin") && password.length >= 6) {
-                sessionStorage.setItem("askexpert_admin_auth", "true");
-                showToast("✓ Administrative clearance granted. Redirecting...");
-                setTimeout(() => window.location.href = "admin-dashboard.html", 800);
-                return;
-              }
-              showToast(`Authentication failed: ${error.message}`, true);
-              resetSubmitBtn();
-              return;
-            }
+          // 1. Authenticate with Supabase Auth
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
 
-            // 2. Role verification from user metadata or profiles table
-            const user = data.user;
-            const meta = user.user_metadata || {};
-            let role = meta.role;
+          if (error || !data?.user) {
+            showToast(`Authentication failed: ${error?.message || "Invalid credentials"}`, true);
+            resetSubmitBtn();
+            return;
+          }
 
-            if (!role) {
-              const { data: prof } = await supabase
-                .from("profiles")
-                .select("role")
-                .eq("id", user.id)
-                .maybeSingle();
-              if (prof) role = prof.role;
-            }
+          // 2. Query public.profiles database table for authoritative role
+          const user = data.user;
+          const { data: prof, error: profError } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .maybeSingle();
 
-            if (role === "admin" || email.toLowerCase().includes("admin")) {
-              sessionStorage.setItem("askexpert_admin_auth", "true");
-              showToast("✓ Clearance verified. Launching Admin Control Center...");
-              setTimeout(() => {
-                window.location.href = "admin-dashboard.html";
-              }, 800);
-            } else {
-              // Unauthorized user attempting admin portal
-              await supabase.auth.signOut();
-              showToast("⛔ Access Denied: This account lacks administrative privileges.", true);
-              resetSubmitBtn();
-            }
+          if (profError || !prof) {
+            await supabase.auth.signOut();
+            showToast("Access Denied: Administrative profile record not found.", true);
+            resetSubmitBtn();
+            return;
+          }
+
+          // 3. Strict verification: role must be exactly 'admin'
+          if (prof.role === "admin") {
+            showToast("✓ Clearance verified. Launching Admin Control Center...");
+            setTimeout(() => {
+              window.location.href = "admin-dashboard.html";
+            }, 800);
           } else {
-            // Local fallback simulation
-            if (email.toLowerCase().includes("admin")) {
-              sessionStorage.setItem("askexpert_admin_auth", "true");
-              showToast("✓ Local admin simulation verified. Redirecting...");
-              setTimeout(() => window.location.href = "admin-dashboard.html", 800);
-            } else {
-              showToast("Access Denied: Invalid administrator identity.", true);
-              resetSubmitBtn();
-            }
+            // Non-admin user attempting to access admin portal
+            await supabase.auth.signOut();
+            showToast("⛔ Access Denied: This account lacks administrative privileges.", true);
+            resetSubmitBtn();
           }
         } catch (err) {
           console.error("Admin auth error:", err);

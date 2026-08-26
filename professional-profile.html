@@ -562,7 +562,7 @@
         <a href="professional-profile.html" class="active">Practice Profile</a>
       </nav>
       <div class="nav-actions">
-        <a id="navPublicPreviewBtn" class="btn btn-secondary" href="expert-profile.html?expert=11111111-1111-1111-1111-111111111111" target="_blank">
+        <a id="navPublicPreviewBtn" class="btn btn-secondary" href="expert-profile.html" target="_blank">
           <span>👁️</span> Public Preview
         </a>
       </div>
@@ -770,26 +770,15 @@
     /* ========================================================
        STATE
        ======================================================== */
-    let currentExpertId = "11111111-1111-1111-1111-111111111111";
-    let expertData = {
-      full_name: "Adv. Vikram Rao",
-      headline: "Senior Corporate & Regulatory Attorney",
-      specialization: "Legal",
-      consultation_fee: 1200,
-      degree: "B.A. LL.B (Hons), LL.M (Corporate Law - NLSIU)",
-      experience_years: 12,
-      languages: ["English", "Hindi", "Marathi"],
-      skills: ["Corporate Law", "Contract Negotiation", "Commercial Arbitration", "MCA & ROC Compliance", "IP Indemnity"],
-      bio: "Admitted to the Bar Council in 2014 with extensive specialization in Indian corporate law, cross-border technology licensing agreements, arbitration proceedings, and statutory MCA regulatory filings. Regularly advises early-stage startups and enterprise vendors on mitigating liability risks and managing compliance audits.",
-      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-      availability_status: "available"
-    };
+    let currentExpertId = null;
+    let expertData = {};
 
     /* ========================================================
        INIT
        ======================================================== */
     async function initProfileManagement() {
-      await loadAuthUser();
+      const isAuth = await loadAuthUser();
+      if (!isAuth) return;
       await loadExpertFromSupabase();
       setupAvailabilitySwitcher();
       setupAvatarUpload();
@@ -803,23 +792,27 @@
           const { data: { session } } = await supabase.auth.getSession();
           if (session && session.user) {
             currentExpertId = session.user.id;
+            const publicUrl = `expert-profile.html?expert=${encodeURIComponent(currentExpertId)}`;
+            const btnPublic = document.getElementById("btnPublicProfile");
+            const navPublic = document.getElementById("navPublicPreviewBtn");
+            if (btnPublic) btnPublic.href = publicUrl;
+            if (navPublic) navPublic.href = publicUrl;
+            return true;
           }
         }
       } catch (err) {
         console.warn("Auth check warning:", err);
       }
-
-      // Update Public Profile preview links
-      const publicUrl = `expert-profile.html?expert=${encodeURIComponent(currentExpertId)}`;
-      document.getElementById("btnPublicProfile").href = publicUrl;
-      document.getElementById("navPublicPreviewBtn").href = publicUrl;
+      showToast("Please sign in as a verified expert to access your practice profile.");
+      setTimeout(() => { window.location.href = "login.html"; }, 1000);
+      return false;
     }
 
     /* ========================================================
        LOAD DATA FROM SUPABASE
        ======================================================== */
     async function loadExpertFromSupabase() {
-      if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
+      if (supabase && currentExpertId) {
         try {
           const { data: dbProfile, error } = await supabase
             .from("profiles")
@@ -828,7 +821,7 @@
             .maybeSingle();
 
           if (!error && dbProfile) {
-            expertData = { ...expertData, ...dbProfile };
+            expertData = dbProfile;
           }
         } catch (err) {
           console.warn("DB profile load warning:", err);

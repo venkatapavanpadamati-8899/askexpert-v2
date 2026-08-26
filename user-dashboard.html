@@ -911,35 +911,7 @@
             </div>
 
             <div class="expert-widget-list" id="followedExpertsList">
-              <!-- Expert 1 -->
-              <div class="expert-widget-item">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Adv. Vikram Rao" class="expert-widget-avatar" />
-                <div class="expert-widget-info">
-                  <div class="expert-widget-name">Adv. Vikram Rao</div>
-                  <div class="expert-widget-role">Corporate Law • ★ 4.9</div>
-                </div>
-                <a href="chat.html?expert=11111111-1111-1111-1111-111111111111" class="btn-chat-mini">Chat</a>
-              </div>
-
-              <!-- Expert 2 -->
-              <div class="expert-widget-item">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" alt="CA Ananya Sharma" class="expert-widget-avatar" />
-                <div class="expert-widget-info">
-                  <div class="expert-widget-name">CA Ananya Sharma</div>
-                  <div class="expert-widget-role">Taxation & GST • ★ 5.0</div>
-                </div>
-                <a href="chat.html?expert=22222222-2222-2222-2222-222222222222" class="btn-chat-mini">Chat</a>
-              </div>
-
-              <!-- Expert 3 -->
-              <div class="expert-widget-item">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Dr. Rahul Kumar" class="expert-widget-avatar" />
-                <div class="expert-widget-info">
-                  <div class="expert-widget-name">Dr. Rahul Kumar</div>
-                  <div class="expert-widget-role">Patent Attorney • ★ 4.8</div>
-                </div>
-                <a href="chat.html?expert=33333333-3333-3333-3333-333333333333" class="btn-chat-mini">Chat</a>
-              </div>
+              <div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">Loading verified experts...</div>
             </div>
           </section>
 
@@ -974,8 +946,56 @@
       await loadAuthUser();
       await loadDashboardStats();
       await loadUserQuestions();
+      await loadVerifiedExpertsSidebar();
       setupSearch();
       setupLogout();
+    }
+
+    async function loadVerifiedExpertsSidebar() {
+      const container = document.getElementById("followedExpertsList");
+      if (!container) return;
+
+      if (!supabase) {
+        container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">Database unavailable</div>`;
+        return;
+      }
+
+      try {
+        const { data: experts, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("role", "expert")
+          .eq("is_verified", true)
+          .limit(3);
+
+        if (error || !experts || experts.length === 0) {
+          container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No verified experts available</div>`;
+          return;
+        }
+
+        container.innerHTML = "";
+        experts.forEach(exp => {
+          const name = exp.full_name || "Verified Expert";
+          const role = exp.headline || exp.specialization || "Specialist";
+          const rating = exp.rating ? parseFloat(exp.rating).toFixed(1) : "5.0";
+          const avatar = exp.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80";
+
+          const item = document.createElement("div");
+          item.className = "expert-widget-item";
+          item.innerHTML = `
+            <img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}" class="expert-widget-avatar" />
+            <div class="expert-widget-info">
+              <div class="expert-widget-name">${escapeHTML(name)}</div>
+              <div class="expert-widget-role">${escapeHTML(role)} • ★ ${rating}</div>
+            </div>
+            <a href="chat.html?expert=${encodeURIComponent(exp.id)}" class="btn-chat-mini">Chat</a>
+          `;
+          container.appendChild(item);
+        });
+      } catch (err) {
+        console.warn("loadVerifiedExpertsSidebar error:", err);
+        container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No verified experts available</div>`;
+      }
     }
 
     /* ========================================================

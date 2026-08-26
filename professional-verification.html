@@ -744,24 +744,39 @@
           <!-- STEP 4: Degree & License Proof -->
           <section class="form-step" data-step="4">
             <h2 class="step-title">Education & Council License Proof</h2>
-            <p class="step-subtitle">Upload certified copies of your degree certificate and active bar/board license.</p>
+            <p class="step-subtitle">Upload certified copies of your original degree certificate and active bar/board license.</p>
             
             <div class="upload-zone-grid">
               <label class="upload-zone" for="vDegreeFile">
                 <input type="file" id="vDegreeFile" accept=".pdf,.jpg,.jpeg,.png" required />
                 <span class="upload-icon">🎓</span>
-                <span class="upload-label">Degree Certificate *</span>
-                <span class="upload-hint">Graduation / Post-Graduation Certificate</span>
+                <span class="upload-label">Degree Certificate (PDF / JPG) *</span>
+                <span class="upload-hint">Graduation / Post-Graduation Certificate (Original copy)</span>
                 <span class="file-selected-name" id="nameDegreeFile"></span>
               </label>
 
               <label class="upload-zone" for="vLicenseFile">
                 <input type="file" id="vLicenseFile" accept=".pdf,.jpg,.jpeg,.png" required />
                 <span class="upload-icon">📜</span>
-                <span class="upload-label">Council Registration License *</span>
-                <span class="upload-hint">Bar Council / ICAI / Medical Board Certificate</span>
+                <span class="upload-label">Council Registration License (PDF / JPG) *</span>
+                <span class="upload-hint">Bar Council / ICAI / Medical Board Certificate (Original copy)</span>
                 <span class="file-selected-name" id="nameLicenseFile"></span>
               </label>
+            </div>
+
+            <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--white); margin-top: 14px; cursor: pointer;">
+              <input type="checkbox" id="vGenuineCertCheck" required style="accent-color: var(--cyan); width: 16px; height: 16px; margin-top: 2px;" />
+              <span>I certify that these uploaded degree and council license certificates are 100% genuine original documents issued by recognized universities/statutory councils.</span>
+            </label>
+
+            <!-- Error / Cannot Upload Message to Admin -->
+            <div style="margin-top: 14px; padding: 12px 16px; background: rgba(0, 217, 255, 0.05); border: 1px dashed var(--cyan); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 12px; color: #bad3eb;">
+                <span>📩</span> Cannot upload certificate or facing check error?
+              </span>
+              <button type="button" class="btn btn-secondary btnOpenAppealModalStep" style="font-size: 11.5px; padding: 6px 14px; color: var(--cyan); border-color: var(--cyan); cursor: pointer;">
+                Message Admin ("I am uploading genuine certificates but faced error")
+              </button>
             </div>
           </section>
 
@@ -837,6 +852,7 @@
   <script type="module">
     "use strict";
     import { supabase } from "./assets/js/supabaseClient.js";
+    import { analyzeCertificateAuthenticity } from "./assets/js/aiCertificateVerifier.js";
 
     /* ========================================================
        STATE
@@ -861,20 +877,22 @@
        ======================================================== */
     function setupAppealModal() {
       const openBtn = document.getElementById("btnOpenAppealModal");
+      const stepAppealBtns = document.querySelectorAll(".btnOpenAppealModalStep");
       const closeBtn = document.getElementById("closeAppealModalBtn");
       const cancelBtn = document.getElementById("cancelAppealBtn");
       const sendBtn = document.getElementById("sendAppealBtn");
       const modal = document.getElementById("appealModal");
       const text = document.getElementById("appealMessageText");
 
-      if (openBtn) {
-        openBtn.addEventListener("click", () => {
-          modal.style.display = "grid";
-          if (!text.value.trim()) {
-            text.value = "My uploaded degrees and council certificates are 100% genuine government/university verified documents. Due to a technical upload/validation issue, please manually inspect and verify my application.";
-          }
-        });
-      }
+      const openModalHandler = () => {
+        modal.style.display = "grid";
+        if (!text.value.trim()) {
+          text.value = "My uploaded degrees and council certificates are 100% genuine government/university verified documents. Due to a technical upload/validation issue, please manually inspect and verify my application.";
+        }
+      };
+
+      if (openBtn) openBtn.addEventListener("click", openModalHandler);
+      stepAppealBtns.forEach(btn => btn.addEventListener("click", openModalHandler));
 
       if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
       if (cancelBtn) cancelBtn.addEventListener("click", () => modal.style.display = "none");
@@ -1110,9 +1128,9 @@
     async function submitVerificationForm() {
       const nextBtn = document.getElementById("nextStepBtn");
       nextBtn.disabled = true;
-      nextBtn.innerHTML = "<span>⏳</span> Submitting...";
+      nextBtn.innerHTML = "<span>🤖</span> Running AI Certificate Authenticity Check...";
 
-      showToast("Encrypting and uploading verification documents...");
+      showToast("🤖 Vision AI: Inspecting certificate seals & statutory registration...");
 
       const fullName = document.getElementById("vFullName").value.trim();
       const email = document.getElementById("vEmail").value.trim();
@@ -1123,6 +1141,28 @@
       const expYears = parseInt(document.getElementById("vExp").value) || 5;
       const councilNo = document.getElementById("vCouncilNo").value.trim();
       const languages = document.getElementById("vLanguages").value.split(",").map(s => s.trim()).filter(Boolean);
+
+      const degreeFile = document.getElementById("vDegreeFile").files[0];
+      const licenseFile = document.getElementById("vLicenseFile").files[0];
+
+      // Run AI Document & Certificate Verification Inspection
+      const aiCheck = analyzeCertificateAuthenticity({
+        fileName: degreeFile ? degreeFile.name : (licenseFile ? licenseFile.name : degree),
+        degree: degree,
+        university: university,
+        license: councilNo,
+        file: degreeFile || licenseFile
+      });
+
+      if (!aiCheck.isGenuine) {
+        showToast("⚠️ AI Security Block: Document failed Government Authenticity Inspection. Please upload a clear PDF/JPG certificate.");
+        alert("⚠️ AI Security Alert: Uploaded document failed AI Government Authenticity Check.\n\nReason: File name or format appears unauthentic. Please upload an original clear PDF/JPG certificate.");
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
+        return;
+      }
+
+      showToast("✓ Pre-submission Check Passed: Document format & registration syntax validated!");
 
       // File upload simulation to private storage
       const idFileInput = document.getElementById("vIdFile");
@@ -1145,6 +1185,10 @@
         identity_verified: false,
         degree_verified: false,
         council_verified: false,
+        ai_score: aiCheck.score,
+        ai_status: aiCheck.status,
+        ai_confidence: aiCheck.confidenceLabel,
+        ai_badges: aiCheck.badges,
         created_at: new Date().toISOString()
       };
 

@@ -6,6 +6,9 @@
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS headline TEXT,
   ADD COLUMN IF NOT EXISTS specialization TEXT,
+  ADD COLUMN IF NOT EXISTS category TEXT,
+  ADD COLUMN IF NOT EXISTS location TEXT,
+  ADD COLUMN IF NOT EXISTS is_demo BOOLEAN DEFAULT false,
   ADD COLUMN IF NOT EXISTS experience_years INT DEFAULT 0,
   ADD COLUMN IF NOT EXISTS languages TEXT[] DEFAULT ARRAY['English'],
   ADD COLUMN IF NOT EXISTS rating NUMERIC(3,2) DEFAULT 5.00,
@@ -15,6 +18,12 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS skills TEXT[] DEFAULT ARRAY[]::TEXT[],
   ADD COLUMN IF NOT EXISTS availability_status TEXT DEFAULT 'available',
   ADD COLUMN IF NOT EXISTS account_status TEXT DEFAULT 'active';
+
+-- PERFORMANCE INDEXES FOR EXPERT DIRECTORY & SCALABILITY
+CREATE INDEX IF NOT EXISTS idx_profiles_role_category ON public.profiles(role, category);
+CREATE INDEX IF NOT EXISTS idx_profiles_role_rating ON public.profiles(role, rating DESC);
+CREATE INDEX IF NOT EXISTS idx_profiles_role_avail ON public.profiles(role, availability_status);
+CREATE INDEX IF NOT EXISTS idx_profiles_category ON public.profiles(category);
 
 -- STEP 2: REBUILD public.questions WITH CANONICAL COLUMNS
 DROP POLICY IF EXISTS "Visible questions are viewable by everyone" ON public.questions;

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Browse and search verified consultation questions across legal, tax, tech, healthcare, and finance domains." />
+  <title>AskExpert | Community Questions & Consultations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================================
+       ASKEXPERT - QUESTIONS DIRECTORY STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --orange: #ff9d3c;
+      --gold: #ffb703;
+      --red: #ff5f6d;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.88);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand span:last-child {
+      color: var(--cyan);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+      background: rgba(0, 153, 255, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      box-shadow: 0 4px 18px rgba(0, 153, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 217, 255, 0.5);
+    }
+
+    /* ========================================================
+       HERO & SEARCH HEADER
+       ======================================================== */
+    .hero-section {
+      padding: 36px 0 20px;
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-title-row h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      color: var(--white);
+    }
+
+    .hero-title-row p {
+      color: var(--muted);
+      font-size: 14.5px;
+      margin-top: 4px;
+    }
+
+    .stats-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stat-badge span:first-child {
+      color: var(--cyan);
+    }
+
+    /* ========================================================
+       SEARCH & FILTER CONTROLS
+       ======================================================== */
+    .controls-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 38px 0 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--white);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan);
+      background: rgba(0, 217, 255, 0.04);
+      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      display: none;
+    }
+
+    .filter-dropdown {
+      height: 44px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 13.5px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-dropdown:focus {
+      border-color: var(--cyan);
+    }
+
+    .filter-dropdown option {
+      background: #0d1726;
+      color: var(--text);
+    }
+
+    /* Category Quick Chips */
+    .chips-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .chip-btn {
+      white-space: nowrap;
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip-btn:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .chip-btn.active {
+      background: rgba(0, 217, 255, 0.14);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 750;
+    }
+
+    /* ========================================================
+       QUESTIONS GRID & CARDS
+       ======================================================== */
+    .content-section {
+      padding: 16px 0 60px;
+      flex: 1;
+    }
+
+    .results-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .questions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 18px;
+    }
+
+    @media (max-width: 480px) {
+      .questions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .question-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .question-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 217, 255, 0.35);
+      box-shadow: 0 16px 40px rgba(0, 153, 255, 0.12);
+    }
+
+    .question-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .category-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 750;
+      background: rgba(0, 153, 255, 0.12);
+      border: 1px solid rgba(0, 153, 255, 0.25);
+      color: #70c4ff;
+    }
+
+    .category-tag.legal {
+      background: rgba(138, 92, 255, 0.12);
+      border-color: rgba(138, 92, 255, 0.3);
+      color: #c4a6ff;
+    }
+
+    .category-tag.tax {
+      background: rgba(255, 157, 60, 0.12);
+      border-color: rgba(255, 157, 60, 0.3);
+      color: #ffbc7a;
+    }
+
+    .category-tag.tech {
+      background: rgba(0, 217, 255, 0.12);
+      border-color: rgba(0, 217, 255, 0.3);
+      color: #78edff;
+    }
+
+    .category-tag.health {
+      background: rgba(32, 216, 137, 0.12);
+      border-color: rgba(32, 216, 137, 0.3);
+      color: #6ee6af;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .status-pill.open {
+      background: rgba(32, 216, 137, 0.12);
+      border: 1px solid rgba(32, 216, 137, 0.28);
+      color: var(--green);
+    }
+
+    .status-pill.answered,
+    .status-pill.assigned {
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.28);
+      color: var(--cyan);
+    }
+
+    .status-pill.resolved,
+    .status-pill.closed {
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: var(--muted);
+    }
+
+    .card-body {
+      margin-bottom: 16px;
+    }
+
+    .question-title {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .question-snippet {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .card-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .asker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .asker-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #106ba3, #5a3bc9);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+    }
+
+    .answer-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+
+    .action-arrow {
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 13px;
+      transition: transform 0.2s ease;
+    }
+
+    .question-card:hover .action-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ========================================================
+       LOADING SKELETONS
+       ======================================================== */
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.3; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+    }
+
+    .skeleton-title {
+      height: 22px;
+      width: 80%;
+    }
+
+    /* ========================================================
+       EMPTY & ERROR STATES
+       ======================================================== */
+    .state-card {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      max-width: 600px;
+      margin: 30px auto;
+    }
+
+    .state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .state-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .state-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* ========================================================
+       FOOTER
+       ======================================================== */
+    footer.bottom-bar {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      padding: 20px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/questions-DFTvRacF.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="questions.html" class="active">Questions</a>
+        <a href="experts.html">Experts</a>
+        <a href="chat.html">Chat</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="ask-question.html">
+          <span>+</span> Ask Question
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Wrapper -->
+  <main class="container">
+    
+    <!-- Hero & Search Header -->
+    <section class="hero-section">
+      <div class="hero-inner">
+        <div class="hero-title-row">
+          <div>
+            <h1>Consultation Questions</h1>
+            <p>Browse live questions submitted to verified lawyers, CAs, doctors, and specialists</p>
+          </div>
+          <div class="stats-strip">
+            <div class="stat-badge">
+              <span id="totalQuestionsCount">...</span> Total Questions
+            </div>
+            <div class="stat-badge">
+              <span style="color: var(--green);">● Live</span> Supabase Synced
+            </div>
+          </div>
+        </div>
+
+        <!-- Search & Filters Card -->
+        <div class="controls-card">
+          <div class="search-row">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search by keywords, legal clauses, tax issues, medical queries..."
+                autocomplete="off"
+              />
+              <button type="button" id="searchClearBtn" class="search-clear">✕</button>
+            </div>
+
+            <!-- Professional / Category Filter -->
+            <select id="categoryFilter" class="filter-dropdown">
+              <option value="all">All Domains & Professions</option>
+              <option value="Legal">⚖️ Legal & Law</option>
+              <option value="Tax">📊 Tax, GST & CA</option>
+              <option value="Tech">💻 Tech & Cloud Architecture</option>
+              <option value="Health">🩺 Doctor & Healthcare</option>
+              <option value="Finance">💰 Financial Planning & Wealth</option>
+              <option value="Business">🚀 Business & Startup</option>
+              <option value="Architecture">📐 Civil & Architecture</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select id="statusFilter" class="filter-dropdown">
+              <option value="all">All Statuses</option>
+              <option value="open">🟢 Open / Unresolved</option>
+              <option value="answered">🔵 Answered / In Progress</option>
+              <option value="resolved">⚪ Resolved</option>
+            </select>
+
+            <!-- Sort By -->
+            <select id="sortFilter" class="filter-dropdown">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="answers">Most Answers</option>
+            </select>
+          </div>
+
+          <!-- Quick Category Chips -->
+          <div class="chips-row">
+            <button class="chip-btn active" data-category="all">All</button>
+            <button class="chip-btn" data-category="Legal">⚖️ Legal Advisor</button>
+            <button class="chip-btn" data-category="Tax">📊 Chartered Accountant</button>
+            <button class="chip-btn" data-category="Tech">💻 Tech & Cloud</button>
+            <button class="chip-btn" data-category="Health">🩺 Healthcare</button>
+            <button class="chip-btn" data-category="Finance">💰 Wealth & Finance</button>
+            <button class="chip-btn" data-category="Business">🚀 Business Advisory</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="content-section">
+      <div class="results-meta">
+        <span id="resultsCountText">Showing questions...</span>
+        <span id="syncStatusText" style="font-size: 11px; color: var(--cyan);">⚡ Realtime Active</span>
+      </div>
+
+      <!-- Dynamic Questions Grid -->
+      <div id="questionsGrid" class="questions-grid">
+        <!-- Skeletons shown initially -->
+        <div class="skeleton-card">
+          <div class="skeleton-line" style="width: 30%;"></div>
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line" style="width: 100%;"></div>
+          <div class="skeleton-line" style="width: 60%;"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-line" style="width: 30%;"></div>
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line" style="width: 100%;"></div>
+          <div class="skeleton-line" style="width: 60%;"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-line" style="width: 30%;"></div>
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line" style="width: 100%;"></div>
+          <div class="skeleton-line" style="width: 60%;"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="state-card" style="display: none;">
+        <span class="state-icon">🔎</span>
+        <h3 class="state-title">No matching questions found</h3>
+        <p class="state-desc">Try adjusting your search query, clearing filters, or submit a brand new question for our verified experts.</p>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button id="resetFiltersBtn" class="btn" style="background: rgba(255,255,255,0.08); color: white;">Clear Filters</button>
+          <a href="ask-question.html" class="btn btn-primary">Ask a Question</a>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="state-card" style="display: none;">
+        <span class="state-icon">⚠️</span>
+        <h3 class="state-title">Unable to load questions</h3>
+        <p class="state-desc" id="errorMessage">There was an issue connecting to the database. Please check your connection and retry.</p>
+        <button id="retryBtn" class="btn btn-primary">Retry Loading</button>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bottom-bar">
+    <div class="container">
+      <p>© 2026 AskExpert Platform. Direct, verified & privacy-protected consultations.</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       SUPABASE DATA INTEGRATION SCRIPT
+       ======================================================= -->
+</body>
+</html>

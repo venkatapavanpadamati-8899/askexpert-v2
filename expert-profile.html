@@ -833,124 +833,85 @@
     import { supabase } from "./assets/js/supabaseClient.js";
 
     /* ========================================================
-       EXPERT DIRECTORY (SEED / FALLBACK PROFILES)
-       ======================================================== */
-    const EXPERT_DIRECTORY = {
-      "11111111-1111-1111-1111-111111111111": {
-        id: "11111111-1111-1111-1111-111111111111",
-        name: "Adv. Vikram Rao",
-        role: "Senior Corporate & Regulatory Attorney",
-        avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-        rating: "4.9",
-        reviewsCount: 184,
-        experience: "12+ Yrs Experience",
-        languages: "English, Hindi, Marathi",
-        fee: "₹1,200",
-        domain: "Legal & Regulatory Law",
-        bio: "Admitted to the Bar Council in 2014 with extensive specialization in Indian corporate law, cross-border technology licensing agreements, arbitration proceedings, and statutory MCA regulatory filings. Regularly advises early-stage startups and enterprise vendors on mitigating liability risks and managing compliance audits.",
-        skills: ["Corporate Law", "Contract Negotiation", "Commercial Arbitration", "MCA & ROC Compliance", "IP Indemnity", "FEMA Regulations"],
-        degree: "B.A. LL.B (Hons), LL.M (Corporate Law - NLSIU)",
-        councilReg: "Bar Council Registration: #MH/2014/9842"
-      },
-      "22222222-2222-2222-2222-222222222222": {
-        id: "22222222-2222-2222-2222-222222222222",
-        name: "CA Ananya Sharma",
-        role: "Chartered Accountant & Tax Consultant",
-        avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
-        rating: "5.0",
-        reviewsCount: 210,
-        experience: "9+ Yrs Experience",
-        languages: "English, Hindi, Gujarati",
-        fee: "₹1,500",
-        domain: "Taxation & Accounting",
-        bio: "Fellow Chartered Accountant (FCA) with 9+ years of experience specializing in GST audit appeals, transfer pricing documentation, international tax withholding, and startup valuation advisory under Indian Income Tax Act.",
-        skills: ["GST Reconciliation", "ITR Filings", "Corporate Tax Audit", "Transfer Pricing", "TDS/TCS Returns", "Financial Modeling"],
-        degree: "FCA, B.Com (Hons), Certified Forensic Auditor (ICAI)",
-        councilReg: "ICAI Registration: #ACA/2018/43110"
-      },
-      "33333333-3333-3333-3333-333333333333": {
-        id: "33333333-3333-3333-3333-333333333333",
-        name: "Dr. Rahul Kumar",
-        role: "Patent Attorney & Tech Law Specialist",
-        avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-        rating: "4.8",
-        reviewsCount: 95,
-        experience: "15+ Yrs Experience",
-        languages: "English, Hindi, Kannada",
-        fee: "₹2,000",
-        domain: "Intellectual Property & Patents",
-        bio: "Registered Patent Agent and IP Attorney with over 15 years helping hardware and software companies conduct prior art novelty searches, provisional patent drafting, and international PCT filings.",
-        skills: ["Patent Prosecution", "Prior Art Searches", "Freedom to Operate", "IP Licensing", "Trade Secrets", "Tech Transfer"],
-        degree: "Ph.D. Tech Law, M.Sc, Registered Patent Agent",
-        councilReg: "Indian Patent Office Reg: #IN/PA/3281"
-      }
-    };
-
-    /* ========================================================
-       LOAD PROFILE DATA FROM SUPABASE
-       ======================================================== */
+   LOAD PROFILE DATA FROM SUPABASE
+   ======================================================== */
     async function initProfile() {
       const urlParams = new URLSearchParams(window.location.search);
-      const queryParam = urlParams.get("expert") || urlParams.get("id") || "11111111-1111-1111-1111-111111111111";
+      const queryParam = urlParams.get("expert") || urlParams.get("id");
 
-      let expertData = null;
-
-      // 1. Check if queryParam matches directory by ID or name
-      if (EXPERT_DIRECTORY[queryParam]) {
-        expertData = EXPERT_DIRECTORY[queryParam];
-      } else {
-        const found = Object.values(EXPERT_DIRECTORY).find(
-          e => e.name.toLowerCase() === queryParam.toLowerCase() || e.id === queryParam
-        );
-        if (found) expertData = found;
+      if (!queryParam) {
+        renderInvalidProfileUI("No expert profile ID provided.");
+        return;
       }
 
-      // 2. Query Supabase profiles table
-      if (supabase) {
-        try {
-          const { data: dbProfile, error: pErr } = await supabase
-            .from("profiles")
-            .select("*")
-            .or(`id.eq.${queryParam},full_name.ilike.%${queryParam}%`)
-            .maybeSingle();
+      if (!supabase) {
+        renderInvalidProfileUI("Database connection unavailable.");
+        return;
+      }
 
-          if (!pErr && dbProfile) {
-            // Also check verification table
-            const { data: dbVerif } = await supabase
-              .from("professional_verifications")
-              .select("*")
-              .eq("expert_id", dbProfile.id)
-              .maybeSingle();
+      try {
+        // Query strictly for verified expert profile
+        const { data: dbProfile, error: pErr } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", queryParam)
+          .eq("role", "expert")
+          .eq("is_verified", true)
+          .maybeSingle();
 
-            expertData = {
-              id: dbProfile.id,
-              name: dbProfile.full_name,
-              role: dbProfile.headline || dbProfile.specialization || (expertData ? expertData.role : "Verified Specialist"),
-              avatarUrl: dbProfile.avatar_url || (expertData ? expertData.avatarUrl : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"),
-              rating: dbProfile.rating || "4.9",
-              reviewsCount: dbProfile.reviews_count || 150,
-              experience: (dbProfile.experience_years ? `${dbProfile.experience_years}+ Yrs Experience` : (expertData ? expertData.experience : "8+ Yrs Experience")),
-              languages: Array.isArray(dbProfile.languages) ? dbProfile.languages.join(", ") : (expertData ? expertData.languages : "English, Hindi"),
-              fee: dbProfile.consultation_fee ? `₹${dbProfile.consultation_fee}` : (expertData ? expertData.fee : "₹1,200"),
-              domain: dbProfile.specialization || (expertData ? expertData.domain : "Professional Law"),
-              bio: dbProfile.bio || (expertData ? expertData.bio : "Verified platform consultant."),
-              skills: Array.isArray(dbProfile.skills) ? dbProfile.skills : (expertData ? expertData.skills : ["Consultation", "Advisory"]),
-              degree: dbVerif ? dbVerif.degree_qualification : (expertData ? expertData.degree : "Verified Degree"),
-              councilReg: dbVerif ? `Registration: #${dbVerif.council_registration_no}` : (expertData ? expertData.councilReg : "Verified Professional Council")
-            };
-          }
-        } catch (err) {
-          console.warn("Supabase profile load warning:", err);
+        if (pErr || !dbProfile) {
+          renderInvalidProfileUI("The requested expert profile is not verified or does not exist.");
+          return;
         }
-      }
 
-      if (!expertData) {
-        expertData = EXPERT_DIRECTORY["11111111-1111-1111-1111-111111111111"];
-      }
+        // Fetch credentials from verifications table
+        const { data: dbVerif } = await supabase
+          .from("professional_verifications")
+          .select("*")
+          .eq("expert_id", dbProfile.id)
+          .maybeSingle();
 
-      renderProfile(expertData);
-      loadExpertAnswers(expertData);
-      loadExpertReviews(expertData);
+        const expertData = {
+          id: dbProfile.id,
+          name: dbProfile.full_name || "Verified Expert",
+          role: dbProfile.headline || dbProfile.specialization || "Verified Specialist",
+          avatarUrl: dbProfile.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+          rating: dbProfile.rating ? parseFloat(dbProfile.rating).toFixed(1) : "5.0",
+          reviewsCount: dbProfile.reviews_count || 0,
+          experience: dbProfile.experience_years ? `${dbProfile.experience_years}+ Yrs Experience` : "5+ Yrs Experience",
+          languages: Array.isArray(dbProfile.languages) ? dbProfile.languages.join(", ") : "English",
+          fee: dbProfile.consultation_fee ? `₹${dbProfile.consultation_fee}` : "₹1,000",
+          domain: dbProfile.specialization || "Professional Services",
+          bio: dbProfile.bio || "Verified professional consultant on AskExpert platform.",
+          skills: Array.isArray(dbProfile.skills) ? dbProfile.skills : ["Advisory", "Consultation"],
+          degree: dbVerif ? dbVerif.degree_qualification : "Verified Degree & Qualification",
+          councilReg: dbVerif && dbVerif.council_registration_no ? `Council Reg: #${dbVerif.council_registration_no}` : "Verified License"
+        };
+
+        renderProfile(expertData);
+        loadExpertAnswers(expertData);
+        loadExpertReviews(expertData);
+
+      } catch (err) {
+        console.error("Profile load error:", err);
+        renderInvalidProfileUI("Error retrieving expert profile data.");
+      }
+    }
+
+    function renderInvalidProfileUI(msg) {
+      const container = document.querySelector(".profile-container") || document.querySelector("main");
+      if (container) {
+        container.innerHTML = `
+          <div style="text-align: center; margin: 4rem auto; max-width: 600px; padding: 3rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚠️</div>
+            <h2 style="color: #ef4444; font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700;">Expert Profile Unavailable</h2>
+            <p style="color: var(--text-muted, #94a3b8); margin-bottom: 2rem; font-size: 1rem; line-height: 1.6;">${msg}</p>
+            <a href="experts.html" class="btn btn-primary" style="padding: 0.85rem 2rem; text-decoration: none; font-weight: 600;">
+              Browse Verified Experts Directory
+            </a>
+          </div>
+        `;
+      }
     }
 
     /* ========================================================
@@ -979,23 +940,11 @@
         }
 
         if (reviews.length === 0) {
-          // Curated verified review fallback
-          reviews = [
-            {
-              id: "rev-1",
-              user_name: "Aditya Sharma",
-              rating: 5,
-              comment: "Exceptional legal advice regarding vendor indemnity caps and arbitration clauses. Saved our startup significant exposure.",
-              created_at: new Date(Date.now() - 3600000 * 24).toISOString()
-            },
-            {
-              id: "rev-2",
-              user_name: "Ravi Kumar",
-              rating: 5,
-              comment: "Very prompt and thorough counsel. Explained the MCA compliance checklist with clarity.",
-              created_at: new Date(Date.now() - 3600000 * 72).toISOString()
-            }
-          ];
+          feed.innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--muted); font-size: 0.95rem;">No verified client reviews submitted yet for this expert.</div>`;
+          if (countEl) countEl.textContent = "0";
+          if (ratingValEl) ratingValEl.textContent = exp.rating || "5.0";
+          if (reviewsLabel) reviewsLabel.textContent = "0 Verified Reviews";
+          return;
         }
 
         countEl.textContent = reviews.length;

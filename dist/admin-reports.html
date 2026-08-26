@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative Disputes, Safety & Compliance Reports Center. Investigate user flags, payment disputes, and moderation reports." />
+  <title>AskExpert | Disputes & Safety Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN REPORTS & DISPUTES STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #02050e;
+      --bg-2: #050d1e;
+      --bg-3: #0a1128;
+      --card-bg: rgba(10, 18, 36, 0.88);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #8499b5;
+      --cyan: #00d9ff;
+      --blue: #0088ff;
+      --purple: #7952ff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 71, 87, 0.12), transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(121, 82, 255, 0.08), transparent 40%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(255, 71, 87, 0.2), rgba(121, 82, 255, 0.08));
+      border: 1px solid rgba(255, 71, 87, 0.35);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* Main Area */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 71, 87, 0.35);
+    }
+
+    .metric-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      font-weight: 750;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-val {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    /* Filter Card */
+    .filters-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tabs-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 750;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 71, 87, 0.15);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      width: min(340px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Table */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .reports-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .reports-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .reports-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .reports-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .priority-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .priority-critical { background: rgba(255, 71, 87, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .priority-high { background: rgba(255, 183, 3, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+    .priority-medium { background: rgba(0, 153, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 153, 255, 0.3); }
+
+    .status-badge {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-open { background: rgba(255, 71, 87, 0.15); color: var(--red); border: 1px solid rgba(255, 71, 87, 0.3); }
+    .status-review { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .status-resolved { background: rgba(32, 216, 137, 0.15); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.3); }
+    .status-dismissed { background: rgba(148, 163, 184, 0.15); color: var(--muted); border: 1px solid var(--card-border); }
+
+    .btn-action {
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 750;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-action.action-inspect { color: var(--cyan); border-color: rgba(0, 217, 255, 0.3); }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      place-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #0b172a;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      width: min(640px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: modalPop 0.25s ease;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .report-details-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-resolve {
+      background: linear-gradient(135deg, var(--green), #10b981);
+      color: #031120;
+      box-shadow: 0 4px 14px rgba(32, 216, 137, 0.35);
+    }
+
+    .btn-resolve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(32, 216, 137, 0.5);
+    }
+
+    .btn-dismiss {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    /* Analytics Chart Bar */
+    .analytics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .analytics-bar-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/adminReports-DAour2OX.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count">37</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+          <span class="badge-count" style="background: var(--gold); color: #030a16;">6</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="admin-main-wrap">
+    
+    <header class="topbar">
+      <h1 class="page-title">
+        <span>🚨</span> Disputes, Compliance & Safety Center
+      </h1>
+
+      <div style="font-size: 12px; color: var(--muted);">
+        Urgent Escalations: <strong style="color: var(--red);">6 High-Priority Cases</strong>
+      </div>
+    </header>
+
+    <main class="dashboard-body">
+
+      <!-- Metrics Grid -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Open Cases</span>
+            <span>🚨</span>
+          </div>
+          <div class="metric-val" style="color: var(--red);">28</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Under Investigation</span>
+            <span>⏳</span>
+          </div>
+          <div class="metric-val" style="color: var(--gold);">14</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Resolved Cases</span>
+            <span>✅</span>
+          </div>
+          <div class="metric-val" style="color: var(--green);">182</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Payment Disputes</span>
+            <span>💳</span>
+          </div>
+          <div class="metric-val" style="color: var(--cyan);">4</div>
+        </div>
+      </section>
+
+      <!-- Filter Card -->
+      <div class="filters-card">
+        <div class="tabs-group">
+          <button type="button" class="tab-btn active" data-filter="all">All Reports</button>
+          <button type="button" class="tab-btn" data-filter="open">🚨 Open (28)</button>
+          <button type="button" class="tab-btn" data-filter="review">⏳ Under Review (14)</button>
+          <button type="button" class="tab-btn" data-filter="critical">⚠️ Critical Priority (6)</button>
+          <button type="button" class="tab-btn" data-filter="resolved">✅ Resolved (182)</button>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="reportSearchInput" class="search-input" placeholder="Search by case ID, user, reason..." />
+        </div>
+      </div>
+
+      <!-- Reports Table -->
+      <section class="glass-card">
+        <div class="table-wrap">
+          <table class="reports-table">
+            <thead>
+              <tr>
+                <th>Case ID & Priority</th>
+                <th>Reported Account</th>
+                <th>Reporter</th>
+                <th>Report Type & Reason</th>
+                <th>Linked Resource</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTableBody">
+              
+              <!-- Case 1 -->
+              <tr data-status="open" data-priority="critical" data-id="rep-1">
+                <td>
+                  <strong style="font-family: monospace; color: var(--cyan);">#REP-4019</strong><br>
+                  <span class="priority-badge priority-critical">🔴 Critical</span>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">Anonymous User</strong><br>
+                  <small style="color: var(--muted);">#USR-11840</small>
+                </td>
+                <td>
+                  <span>Compliance Bot</span><br>
+                  <small style="color: var(--muted);">Auto Flag</small>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">Statutory Violation</strong><br>
+                  <small style="color: var(--muted);">Solicitation of illegal FEMA outward remittance</small>
+                </td>
+                <td>
+                  <a href="question-details.html?id=q-103" target="_blank" style="font-size: 11.5px; color: var(--cyan); text-decoration: underline;">
+                    Question #q-103
+                  </a>
+                </td>
+                <td><span class="status-badge status-open">🚨 Open</span></td>
+                <td>Aug 22, 2026</td>
+                <td>
+                  <button type="button" class="btn-action action-inspect" data-id="rep-1" data-code="REP-4019" data-reported="Anonymous User (#USR-11840)" data-reporter="Compliance Bot" data-type="Statutory Violation" data-reason="Solicitation of illegal FEMA outward remittance" data-desc="Inquiry asked for unlicensed crypto tunneling to bypass RBI FEMA regulatory caps." data-link="question-details.html?id=q-103" data-status="Open">
+                    Investigate
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Case 2 -->
+              <tr data-status="review" data-priority="high" data-id="rep-2">
+                <td>
+                  <strong style="font-family: monospace; color: var(--cyan);">#REP-4018</strong><br>
+                  <span class="priority-badge priority-high">🟡 High</span>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">CA Rajesh Joshi</strong><br>
+                  <small style="color: var(--muted);">Expert #USR-10332</small>
+                </td>
+                <td>
+                  <span>Karan Verma</span><br>
+                  <small style="color: var(--muted);">Client #USR-10119</small>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">Payment Dispute / Session Issue</strong><br>
+                  <small style="color: var(--muted);">Professional was unavailable during scheduled call</small>
+                </td>
+                <td>
+                  <a href="chat.html" target="_blank" style="font-size: 11.5px; color: var(--cyan); text-decoration: underline;">
+                    Chat Thread #c-4819
+                  </a>
+                </td>
+                <td><span class="status-badge status-review">⏳ Under Review</span></td>
+                <td>Aug 21, 2026</td>
+                <td>
+                  <button type="button" class="btn-action action-inspect" data-id="rep-2" data-code="REP-4018" data-reported="CA Rajesh Joshi (#USR-10332)" data-reporter="Karan Verma (#USR-10119)" data-type="Payment Dispute" data-reason="Session No-Show" data-desc="Client booked 30m consultation for ₹2,000. Professional experienced connectivity outage." data-link="chat.html" data-status="Under Review">
+                    Investigate
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Case 3 (Resolved) -->
+              <tr data-status="resolved" data-priority="medium" data-id="rep-3">
+                <td>
+                  <strong style="font-family: monospace; color: var(--muted);">#REP-4010</strong><br>
+                  <span class="priority-badge priority-medium">🔵 Medium</span>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">Rohan Kapoor</strong><br>
+                  <small style="color: var(--muted);">User #USR-10884</small>
+                </td>
+                <td>
+                  <span>Pooja Hegde</span><br>
+                  <small style="color: var(--muted);">User #USR-10481</small>
+                </td>
+                <td>
+                  <strong style="color: var(--white);">Spam Content</strong><br>
+                  <small style="color: var(--muted);">Promotional affiliate link posted in answer thread</small>
+                </td>
+                <td>
+                  <span style="font-size: 11.5px; color: var(--muted);">Question #q-98</span>
+                </td>
+                <td><span class="status-badge status-resolved">✓ Resolved</span></td>
+                <td>Aug 18, 2026</td>
+                <td>
+                  <button type="button" class="btn-action action-inspect" data-id="rep-3" data-code="REP-4010" data-reported="Rohan Kapoor" data-reporter="Pooja Hegde" data-type="Spam" data-reason="Promotional link" data-desc="Affiliate links purged. Account suspended." data-link="" data-status="Resolved">
+                    Inspect
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Analytics Breakdown Section -->
+      <section class="glass-card">
+        <h3 style="font-size: 16px; font-weight: 850; color: var(--white); margin-bottom: 4px;">
+          <span>📈</span> Compliance & Risk Distribution
+        </h3>
+
+        <div class="analytics-row">
+          <div class="analytics-bar-card">
+            <div style="display: flex; justify-content: space-between; font-size: 12px;">
+              <span>Statutory Compliance & Legal</span>
+              <strong style="color: var(--red);">42%</strong>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 42%; background: var(--red);"></div></div>
+          </div>
+
+          <div class="analytics-bar-card">
+            <div style="display: flex; justify-content: space-between; font-size: 12px;">
+              <span>Payment & Refund Disputes</span>
+              <strong style="color: var(--gold);">28%</strong>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 28%; background: var(--gold);"></div></div>
+          </div>
+
+          <div class="analytics-bar-card">
+            <div style="display: flex; justify-content: space-between; font-size: 12px;">
+              <span>Spam / Community Safety</span>
+              <strong style="color: var(--cyan);">30%</strong>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 30%; background: var(--cyan);"></div></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Investigation Modal -->
+  <div id="investigateModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 850; color: var(--white);" id="modalCaseCode">Case Briefing</h2>
+          <span style="font-size: 12px; color: var(--gold);" id="modalCaseType">Category: Statutory Violation</span>
+        </div>
+        <button type="button" id="closeCaseModalBtn" style="background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="report-details-box">
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Reported Account</span>
+          <strong style="color: var(--white); display: block;" id="modalReported">Anonymous User</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Reporting Entity</span>
+          <strong style="color: var(--cyan); display: block;" id="modalReporter">Compliance Bot</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Report Reason</span>
+          <strong style="color: var(--white); display: block;" id="modalReason">Statutory Violation</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); font-size: 11px;">Current Case Status</span>
+          <strong style="color: var(--red); display: block;" id="modalStatus">Open</strong>
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <span style="color: var(--muted); font-size: 11px;">Incident Narrative / Description</span>
+          <p style="color: #bad3eb; font-size: 13px; margin-top: 4px; line-height: 1.5;" id="modalDesc"></p>
+        </div>
+
+        <!-- Linked Payment & Consultation Details -->
+        <div style="grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+          <div>
+            <span style="color: var(--muted);">Linked Transaction:</span>
+            <strong style="color: var(--cyan);" id="modalLinkedPayment">#TXN-849182 (₹1,500.00 • UPI)</strong>
+          </div>
+          <a href="chat.html" target="_blank" style="color: var(--green); text-decoration: underline; font-weight: 750;" id="modalLinkedChat">
+            💬 Inspect Consultation Chat →
+          </a>
+        </div>
+      </div>
+
+      <!-- Action Row -->
+      <div>
+        <label style="font-size: 11.5px; font-weight: 750; color: #bad3eb; display: block; margin-bottom: 4px;">
+          Compliance Resolution / Refund Notes:
+        </label>
+        <textarea id="resolutionNotesText" style="width: 100%; height: 70px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 10px; font-size: 13px;" placeholder="Document administrative findings and outcome..."></textarea>
+      </div>
+
+      <!-- Adjudication Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--card-border);">
+        <div style="display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
+          <button type="button" id="btnApproveRefund" class="btn" style="background: rgba(32, 216, 137, 0.2); border: 1px solid var(--green); color: var(--green); font-size: 12px;">
+            <span>↩️</span> Approve Full Refund
+          </button>
+          <button type="button" id="btnRejectRefund" class="btn" style="background: rgba(255, 71, 87, 0.15); border: 1px solid rgba(255, 71, 87, 0.35); color: var(--red); font-size: 12px;">
+            <span>✕</span> Reject Dispute (Uphold Specialist)
+          </button>
+          <button type="button" id="btnDismissCase" class="btn btn-dismiss" style="font-size: 12px;">
+            Dismiss Report
+          </button>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btnTakeCase" class="btn btn-secondary" style="color: var(--gold); border-color: rgba(255, 183, 3, 0.3); font-size: 12px;">
+            <span>⏳</span> Mark Under Review
+          </button>
+          <button type="button" id="btnResolveCase" class="btn btn-resolve" style="font-size: 12px;">
+            <span>✓</span> Resolve Case
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN REPORTS SCRIPT
+       ======================================================= -->
+</body>
+</html>

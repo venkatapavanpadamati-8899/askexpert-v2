@@ -1272,32 +1272,33 @@
        ======================================================== */
     async function verifyAdminAccess() {
       try {
-        if (!supabase) return;
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          const mockAuth = sessionStorage.getItem("askexpert_admin_auth");
-          if (!mockAuth) {
-            window.location.replace("admin-login.html");
-            return;
-          }
-        } else {
-          let role = session.user?.user_metadata?.role;
-          if (!role) {
-            const { data: prof } = await supabase
-              .from("profiles")
-              .select("role")
-              .eq("id", session.user.id)
-              .maybeSingle();
-            if (prof) role = prof.role;
-          }
-          if (role !== "admin" && !session.user.email?.toLowerCase().includes("admin")) {
-            await supabase.auth.signOut();
-            window.location.replace("admin-login.html");
-            return;
-          }
+        if (!supabase) {
+          window.location.replace("admin-login.html");
+          return false;
         }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        return true;
       } catch (err) {
-        console.warn("Admin check warning:", err);
+        console.error("Admin verification error:", err);
+        window.location.replace("admin-login.html");
+        return false;
       }
     }
 
@@ -1335,7 +1336,6 @@
     function setupLogout() {
       document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
         showToast("Ending secure administrative session...");
-        sessionStorage.removeItem("askexpert_admin_auth");
         try {
           if (supabase) await supabase.auth.signOut();
         } catch (e) {}

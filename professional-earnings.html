@@ -767,13 +767,14 @@
     /* ========================================================
        STATE
        ======================================================== */
-    let currentExpertId = "11111111-1111-1111-1111-111111111111";
+    let currentExpertId = null;
 
     /* ========================================================
        INIT
        ======================================================== */
     async function initEarnings() {
-      await loadAuthSession();
+      const isAuth = await loadAuthSession();
+      if (!isAuth) return;
       await loadLiveEarningsLedger();
       setupFilters();
       setupModal();
@@ -786,11 +787,14 @@
           const { data: { session } } = await supabase.auth.getSession();
           if (session && session.user) {
             currentExpertId = session.user.id;
+            return true;
           }
         }
       } catch (err) {
         console.warn("Auth session error:", err);
       }
+      window.location.href = "login.html";
+      return false;
     }
 
     /* ========================================================

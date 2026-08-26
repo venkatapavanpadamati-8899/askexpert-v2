@@ -1266,73 +1266,8 @@
       </div>
 
       <div id="conversationList">
-        <!-- Selected Active Expert -->
-        <div
-          class="conversation active"
-          data-name="Adv. Vikram Rao"
-          data-role="Senior Corporate & Regulatory Attorney"
-          data-license="Bar Council Reg: #MH/2014/9842"
-          data-quals="B.A. LL.B (Hons), LL.M (Corporate Law)"
-          data-avatar="VR"
-        >
-          <div class="avatar">
-            VR
-            <span class="online-dot"></span>
-          </div>
-          <div class="conversation-info">
-            <div class="conversation-top">
-              <span class="conversation-name">Adv. Vikram Rao <span class="verified-tick">✓</span></span>
-              <span class="conversation-time">Active</span>
-            </div>
-            <div class="conversation-message">
-              ✓ Consultation accepted. Ready to help with compliance.
-            </div>
-          </div>
-        </div>
-
-        <!-- Other Available Consultations -->
-        <div
-          class="conversation"
-          data-name="CA Ananya Sharma"
-          data-role="Chartered Accountant & Tax Consultant"
-          data-license="ICAI Reg: #ACA/2018/43110"
-          data-quals="FCA, B.Com, Certified Forensic Auditor"
-          data-avatar="AS"
-        >
-          <div class="avatar">
-            AS
-          </div>
-          <div class="conversation-info">
-            <div class="conversation-top">
-              <span class="conversation-name">CA Ananya Sharma <span class="verified-tick">✓</span></span>
-              <span class="conversation-time">Yesterday</span>
-            </div>
-            <div class="conversation-message">
-              GST advisory report verified and submitted.
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="conversation"
-          data-name="Dr. Rahul Kumar"
-          data-role="Patent Attorney & Intellectual Property Specialist"
-          data-license="Indian Patent Office Reg: #IN/PA/3281"
-          data-quals="Ph.D. Tech Law, M.Sc, Registered Patent Agent"
-          data-avatar="RK"
-        >
-          <div class="avatar">
-            RK
-          </div>
-          <div class="conversation-info">
-            <div class="conversation-top">
-              <span class="conversation-name">Dr. Rahul Kumar <span class="verified-tick">✓</span></span>
-              <span class="conversation-time">Mon</span>
-            </div>
-            <div class="conversation-message">
-              Prior art search documentation attached.
-            </div>
-          </div>
+        <div style="padding: 1.5rem; text-align: center; color: var(--text-muted, #94a3b8); font-size: 0.88rem;">
+          Select a verified expert from the directory to start a consultation.
         </div>
       </div>
     </aside>
@@ -1820,36 +1755,9 @@
     const confirmDisputeBtn = document.getElementById("confirmDisputeBtn");
 
     /* ========================================================
-       APPLICATION STATE & EXPERT DIRECTORY
-       ======================================================== */
-    const EXPERT_DIRECTORY = {
-      "Adv. Vikram Rao": {
-        id: "11111111-1111-1111-1111-111111111111",
-        name: "Adv. Vikram Rao",
-        role: "Senior Corporate & Regulatory Attorney",
-        license: "Bar Council Reg: #MH/2014/9842",
-        quals: "B.A. LL.B (Hons), LL.M (Corporate Law - NLSIU)",
-        avatar: "VR"
-      },
-      "CA Ananya Sharma": {
-        id: "22222222-2222-2222-2222-222222222222",
-        name: "CA Ananya Sharma",
-        role: "Chartered Accountant & Tax Consultant",
-        license: "ICAI Reg: #ACA/2018/43110",
-        quals: "FCA, B.Com, Certified Forensic Auditor",
-        avatar: "AS"
-      },
-      "Dr. Rahul Kumar": {
-        id: "33333333-3333-3333-3333-333333333333",
-        name: "Dr. Rahul Kumar",
-        role: "Patent Attorney & Intellectual Property Specialist",
-        license: "Indian Patent Office Reg: #IN/PA/3281",
-        quals: "Ph.D. Tech Law, M.Sc, Registered Patent Agent",
-        avatar: "RK"
-      }
-    };
-
-    let currentExpert = EXPERT_DIRECTORY["Adv. Vikram Rao"];
+   APPLICATION STATE & VERIFIED EXPERT INITIALIZATION
+   ======================================================== */
+    let currentExpert = null;
     let currentUserId = null;
     let currentUserRole = "user";
     let activeConversationId = null;
@@ -1860,8 +1768,10 @@
        ======================================================== */
     async function initApp() {
       await initCurrentUser();
-      initExpertFromURL();
-      await switchActiveConversation(currentExpert);
+      const exp = await initExpertFromURL();
+      if (exp) {
+        await switchActiveConversation(exp);
+      }
     }
 
     async function initCurrentUser() {
@@ -1888,31 +1798,80 @@
       currentUserRole = "user";
     }
 
-    function initExpertFromURL() {
+    async function initExpertFromURL() {
       const params = new URLSearchParams(window.location.search);
       const expertParam = params.get("expert") || params.get("id");
 
-      if (expertParam) {
-        // Match existing by ID or Name, or create temporary expert object
-        const matched = Object.values(EXPERT_DIRECTORY).find(
-          e => e.id === expertParam || e.name.toLowerCase() === expertParam.toLowerCase()
-        );
-
-        if (matched) {
-          currentExpert = matched;
-        } else {
-          currentExpert = {
-            id: expertParam.includes("-") ? expertParam : "11111111-1111-1111-1111-111111111111",
-            name: expertParam,
-            role: expertParam.toLowerCase().includes("tax") ? "Chartered Accountant & Tax Consultant" : "Senior Legal Advisor",
-            license: "Bar Council Reg: #MH/2014/9842",
-            quals: "B.A. LL.B (Hons), LL.M (Corporate Law)",
-            avatar: expertParam.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
-          };
-        }
+      if (!supabase) {
+        renderInvalidExpertState("Database connection unavailable.");
+        return null;
       }
 
+      let query = supabase
+        .from("profiles")
+        .select("*")
+        .eq("role", "expert")
+        .eq("is_verified", true);
+
+      if (expertParam) {
+        query = query.eq("id", expertParam);
+      }
+
+      const { data: dbExpert, error: expErr } = await query.limit(1).maybeSingle();
+
+      if (expErr || !dbExpert) {
+        renderInvalidExpertState("Invalid or unverified expert specified. Please select a verified expert from the Experts Directory.");
+        return null;
+      }
+
+      currentExpert = {
+        id: dbExpert.id,
+        name: dbExpert.full_name || "Verified Expert",
+        role: dbExpert.headline || dbExpert.specialization || "Verified Specialist",
+        license: dbExpert.license_number || "Verified Professional",
+        quals: dbExpert.qualifications || dbExpert.specialization || "Consultant",
+        avatar: (dbExpert.full_name || "EX").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
+      };
+
       applyExpertToUI(currentExpert);
+      enableChatInput();
+      return currentExpert;
+    }
+
+    function renderInvalidExpertState(msg) {
+      currentExpert = null;
+      document.getElementById("expertNameEl").textContent = "Expert Not Found";
+      document.getElementById("headerAvatarEl").textContent = "?";
+      document.getElementById("expertTitleStrip").textContent = "Unverified or Unavailable";
+      
+      const chatMessages = document.getElementById("chatMessages");
+      if (chatMessages) {
+        chatMessages.innerHTML = `
+          <div style="text-align: center; margin: 4rem auto; max-width: 500px; padding: 2.5rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 0.75rem;">Access Restricted</h3>
+            <p style="color: var(--text-muted, #94a3b8); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">${msg}</p>
+            <a href="experts.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary, #6366f1); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s;">
+              Browse Verified Experts Directory
+            </a>
+          </div>
+        `;
+      }
+      disableChatInput();
+    }
+
+    function disableChatInput() {
+      const msgInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      if (msgInput) { msgInput.disabled = true; msgInput.placeholder = "Consultation unavailable for unverified profile..."; }
+      if (sendButton) { sendButton.disabled = true; }
+    }
+
+    function enableChatInput() {
+      const msgInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      if (msgInput) { msgInput.disabled = false; msgInput.placeholder = "Type your confidential question..."; }
+      if (sendButton) { sendButton.disabled = false; }
     }
 
     function applyExpertToUI(exp) {
@@ -1934,21 +1893,42 @@
        CONVERSATION & SUPABASE REALTIME SYNC
        ======================================================== */
     async function switchActiveConversation(expert) {
+      if (!expert || !expert.id) {
+        renderInvalidExpertState("No valid expert specified.");
+        return;
+      }
+
       currentExpert = expert;
       applyExpertToUI(expert);
 
       if (!supabase) {
-        console.warn("Supabase client not connected. Running in offline/demo mode.");
+        renderInvalidExpertState("Database connection unavailable.");
         return;
       }
 
       try {
-        // 1. Find or create conversation in 'conversations' table
-        const { data: existingConv, error: findErr } = await supabase
+        // Strict DB verification: profile must exist, role must be expert, and is_verified must be true
+        const { data: dbExpert, error: expCheckErr } = await supabase
+          .from("profiles")
+          .select("id, full_name, headline, specialization, is_verified, role")
+          .eq("id", expert.id)
+          .eq("role", "expert")
+          .eq("is_verified", true)
+          .maybeSingle();
+
+        if (expCheckErr || !dbExpert) {
+          renderInvalidExpertState("The requested expert profile is not verified or no longer available.");
+          return;
+        }
+
+        const targetExpertId = dbExpert.id;
+
+        // Find or create conversation in 'conversations' table
+        const { data: existingConv } = await supabase
           .from("conversations")
           .select("id")
           .eq("user_id", currentUserId)
-          .eq("expert_id", expert.id)
+          .eq("expert_id", targetExpertId)
           .maybeSingle();
 
         if (existingConv && existingConv.id) {
@@ -1958,29 +1938,31 @@
             .from("conversations")
             .insert({
               user_id: currentUserId,
-              expert_id: expert.id,
+              expert_id: targetExpertId,
               status: "active"
             })
             .select("id")
             .single();
 
-          if (createErr) {
+          if (createErr || !newConv) {
             console.error("Error creating conversation:", createErr);
-            // Fallback generated ID if table creation needs permissions
-            activeConversationId = "00000000-0000-0000-0000-000000000000";
-          } else {
-            activeConversationId = newConv.id;
+            renderInvalidExpertState("Unable to initiate consultation session.");
+            return;
           }
+          activeConversationId = newConv.id;
         }
 
-        // 2. Load historical messages
+        enableChatInput();
+
+        // Load historical messages
         await loadMessages(activeConversationId);
 
-        // 3. Subscribe to Realtime Postgres Changes
+        // Subscribe to Realtime Postgres Changes
         subscribeToRealtime(activeConversationId);
 
       } catch (err) {
         console.error("switchActiveConversation error:", err);
+        renderInvalidExpertState("Error connecting to expert consultation service.");
       }
     }
 
@@ -2196,9 +2178,8 @@
         document.querySelectorAll(".conversation").forEach(c => c.classList.remove("active"));
         conv.classList.add("active");
 
-        const expertKey = conv.dataset.name;
-        const expertObj = EXPERT_DIRECTORY[expertKey] || {
-          id: "11111111-1111-1111-1111-111111111111",
+        const expertObj = {
+          id: conv.dataset.id || conv.getAttribute("data-id"),
           name: conv.dataset.name,
           role: conv.dataset.role || "Consultant",
           license: conv.dataset.license || "Verified Professional",

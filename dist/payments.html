@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Payments & Consultation Wallet. Secure UPI, Card, and Net Banking checkouts for verified legal, tax, and medical consultations." />
+  <title>AskExpert | Payments & Wallet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - PAYMENTS & CHECKOUT STYLES
+       ========================================================= */
+    :root {
+      --bg-1: #030712;
+      --bg-2: #07152d;
+      --bg-3: #0d122b;
+      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-inner: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(0, 217, 255, 0.35);
+
+      --white: #ffffff;
+      --text: #eaf6ff;
+      --muted: #94a3b8;
+      --cyan: #00d9ff;
+      --blue: #0099ff;
+      --purple: #8a5cff;
+      --green: #20d889;
+      --gold: #ffb703;
+      --red: #ff4757;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1120px, 94%);
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       TOP NAVBAR
+       ======================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(4, 10, 22, 0.88);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand span:last-child {
+      color: var(--cyan);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+      background: rgba(0, 153, 255, 0.12);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: #031120;
+      box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ========================================================
+       PAGE SHELL & LAYOUT
+       ======================================================== */
+    .page-shell {
+      padding: 30px 0 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--cyan);
+    }
+
+    .breadcrumb span.current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .payments-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .payments-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-heading {
+      font-size: 18px;
+      font-weight: 850;
+      color: var(--white);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ========================================================
+       WALLET HERO CARD
+       ======================================================== */
+    .wallet-hero {
+      background: linear-gradient(135deg, rgba(32, 216, 137, 0.14), rgba(0, 153, 255, 0.12));
+      border: 1px solid rgba(32, 216, 137, 0.3);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-hero::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(32, 216, 137, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .wallet-info-left span {
+      font-size: 12px;
+      font-weight: 750;
+      color: #bad3eb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wallet-amount {
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 900;
+      color: var(--green);
+      margin: 4px 0 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .quick-add-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .chip-add {
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip-add:hover {
+      background: rgba(32, 216, 137, 0.2);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ========================================================
+       CONSULTATION CHECKOUT CARD
+       ======================================================== */
+    .expert-select-box {
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .expert-select-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .expert-select-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid rgba(0, 217, 255, 0.3);
+    }
+
+    /* Payment Methods Grid */
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    @media (max-width: 500px) {
+      .payment-methods-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .method-card {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .method-card:hover {
+      background: rgba(0, 153, 255, 0.08);
+      border-color: rgba(0, 217, 255, 0.3);
+    }
+
+    .method-card.selected {
+      background: linear-gradient(135deg, rgba(0, 153, 255, 0.2), rgba(0, 217, 255, 0.08));
+      border-color: var(--cyan);
+      box-shadow: 0 0 14px rgba(0, 217, 255, 0.2);
+    }
+
+    .method-icon {
+      font-size: 20px;
+    }
+
+    .method-title {
+      font-size: 13px;
+      font-weight: 750;
+      color: var(--white);
+    }
+
+    .method-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Fee Breakdown */
+    .fee-breakdown-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #bad3eb;
+    }
+
+    .breakdown-row.total {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+      margin-top: 2px;
+      font-size: 15.5px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .breakdown-row.total strong {
+      color: var(--cyan);
+      font-size: 18px;
+    }
+
+    /* ========================================================
+       RECENT TRANSACTIONS TABLE
+       ======================================================== */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .txn-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .txn-table th {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .txn-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .st-successful { background: rgba(32, 216, 137, 0.15); color: var(--green); }
+    .st-pending { background: rgba(255, 183, 3, 0.15); color: var(--gold); }
+    .st-failed { background: rgba(255, 71, 87, 0.15); color: var(--red); }
+
+    /* ========================================================
+       MODAL STYLES (CHECKOUT SIMULATOR & INVOICE)
+       ======================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 200;
+      display: none;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .modal-card {
+      background: #09152b;
+      border: 1px solid var(--cyan);
+      border-radius: 20px;
+      width: min(480px, 100%);
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+      animation: modalZoom 0.25s ease;
+    }
+
+    @keyframes modalZoom {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    footer.bottom-bar {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      padding: 20px 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/payments-B4ucVVWx.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="topbar">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
+      </a>
+      <nav class="nav-links">
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="questions.html">Questions</a>
+        <a href="experts.html">Experts</a>
+        <a href="chat.html">Chat</a>
+        <a href="payments.html" class="active">Payments</a>
+        <a href="payment-history.html">History</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-secondary" href="payment-history.html">
+          <span>📜</span> History
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container page-shell">
+    
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="user-dashboard.html">Dashboard</a>
+      <span>›</span>
+      <span class="current">Payments & Wallet</span>
+    </nav>
+
+    <!-- Wallet Balance Hero -->
+    <section class="wallet-hero">
+      <div class="wallet-info-left">
+        <span>Available Consultation Wallet</span>
+        <div class="wallet-amount" id="walletDisplay">₹4,500.00</div>
+        <p style="font-size: 12.5px; color: #bad3eb;">Instant auto-debit for encrypted voice, video, and live chat sessions.</p>
+        
+        <div class="quick-add-group">
+          <button type="button" class="chip-add" data-add="500">+ ₹500</button>
+          <button type="button" class="chip-add" data-add="1000">+ ₹1,000</button>
+          <button type="button" class="chip-add" data-add="2000">+ ₹2,000</button>
+          <button type="button" class="chip-add" data-add="5000">+ ₹5,000</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; min-width: 200px;">
+        <button type="button" id="openTopupBtn" class="btn btn-primary" style="justify-content: center; width: 100%;">
+          <span>➕</span> Add Funds via UPI/Card
+        </button>
+        <a href="payment-history.html" class="btn btn-secondary" style="justify-content: center; width: 100%;">
+          <span>📄</span> Invoices & Receipts
+        </a>
+      </div>
+    </section>
+
+    <!-- Grid: Consultation Checkout & Summary -->
+    <div class="payments-grid">
+      
+      <!-- Left: Checkout Consultation Payment -->
+      <section class="glass-card">
+        <h2 class="card-heading">
+          <span>💳 Direct Consultation Checkout</span>
+          <span style="font-size: 11.5px; color: var(--cyan);">256-Bit SSL Encrypted</span>
+        </h2>
+
+        <!-- Selected Expert -->
+        <div class="expert-select-box">
+          <div class="expert-select-left">
+            <img id="checkoutAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Expert" class="expert-select-avatar" />
+            <div>
+              <strong id="checkoutExpertName" style="font-size: 14px; color: var(--white); display: block;">Adv. Vikram Rao</strong>
+              <span id="checkoutExpertRole" style="font-size: 12px; color: var(--muted);">Senior Corporate Attorney • 1-on-1 Advisory</span>
+            </div>
+          </div>
+          <span style="font-size: 12.5px; font-weight: 800; color: var(--green);" id="checkoutBaseRate">₹1,200</span>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <label style="font-size: 12.5px; font-weight: 750; color: #bad3eb; display: block; margin-bottom: 8px;">Select Payment Gateway:</label>
+        <div class="payment-methods-grid">
+          <!-- UPI -->
+          <div class="method-card selected" data-method="UPI">
+            <div class="method-icon">📱</div>
+            <div>
+              <div class="method-title">UPI Instant</div>
+              <div class="method-sub">GPay, PhonePe, Paytm, QR</div>
+            </div>
+          </div>
+
+          <!-- Cards -->
+          <div class="method-card" data-method="Card">
+            <div class="method-icon">💳</div>
+            <div>
+              <div class="method-title">Credit / Debit Card</div>
+              <div class="method-sub">Visa, Mastercard, RuPay</div>
+            </div>
+          </div>
+
+          <!-- NetBanking -->
+          <div class="method-card" data-method="NetBanking">
+            <div class="method-icon">🏦</div>
+            <div>
+              <div class="method-title">Net Banking</div>
+              <div class="method-sub">All Indian Major Banks</div>
+            </div>
+          </div>
+
+          <!-- Wallet -->
+          <div class="method-card" data-method="Wallet">
+            <div class="method-icon">💰</div>
+            <div>
+              <div class="method-title">Consultation Wallet</div>
+              <div class="method-sub">Balance: ₹4,500.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fee Breakdown -->
+        <div class="fee-breakdown-box">
+          <div class="breakdown-row">
+            <span>Expert Consultation Base Fee</span>
+            <span id="breakdownBase">₹1,200.00</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Secure Encryption & Compliance Fee</span>
+            <span>₹99.00</span>
+          </div>
+          <div class="breakdown-row">
+            <span>GST (18% Statutory Mandate)</span>
+            <span id="breakdownGst">₹233.82</span>
+          </div>
+          <div class="breakdown-row total">
+            <span>Total Payable Amount</span>
+            <strong id="breakdownTotal">₹1,532.82</strong>
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button type="button" id="payNowBtn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 15px;">
+          <span>🔒</span> Proceed to Secure Pay (<span id="payBtnAmount">₹1,532.82</span>)
+        </button>
+      </section>
+
+      <!-- Right: Security & Recent Transactions -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Trust & Security Card -->
+        <section class="glass-card">
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--white); margin-bottom: 12px;">
+            🛡️ Escrow & Refund Protection
+          </h3>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 12.5px; color: #bad3eb;">
+            <li>✓ Funds held safely in escrow until consultation starts.</li>
+            <li>✓ 100% Refund policy if expert is unavailable.</li>
+            <li>✓ GST compliant invoices generated automatically.</li>
+            <li>✓ Never stores card numbers or UPI PINs.</li>
+          </ul>
+        </section>
+
+        <!-- Recent Quick Ledger -->
+        <section class="glass-card">
+          <div class="card-heading" style="margin-bottom: 12px;">
+            <span style="font-size: 15px;">Recent Receipts</span>
+            <a href="payment-history.html" style="font-size: 12px; color: var(--cyan); font-weight: 700;">All →</a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;" id="miniRecentTxnList">
+            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; font-size: 12px; display: flex; justify-content: space-between;">
+              <span>Adv. Vikram Rao (Legal)</span>
+              <strong style="color: var(--green);">₹1,200.00</strong>
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; font-size: 12px; display: flex; justify-content: space-between;">
+              <span>Wallet Top-up (UPI)</span>
+              <strong style="color: var(--green);">+ ₹2,000.00</strong>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================
+       PAYMENT GATEWAY SIMULATOR MODAL
+       ======================================================== -->
+  <div id="checkoutModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button type="button" id="closeModalBtn" class="modal-close">✕</button>
+      
+      <!-- 1. Pending State -->
+      <div id="modalPendingState">
+        <div style="font-size: 40px; margin-bottom: 16px; animation: spin 1.5s infinite linear;">⏳</div>
+        <h3 style="font-size: 18px; font-weight: 850; color: var(--white); margin-bottom: 8px;">Processing Encrypted Payment...</h3>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Connecting to payment gateway bank gateway. Please do not close or refresh this window.</p>
+        <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+          <div style="width: 70%; height: 100%; background: var(--cyan); border-radius: 4px; animation: pulse 1s infinite alternate;"></div>
+        </div>
+      </div>
+
+      <!-- 2. Success State -->
+      <div id="modalSuccessState" style="display: none;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(32, 216, 137, 0.2); border: 2px solid var(--green); color: var(--green); display: grid; place-items: center; font-size: 28px; margin: 0 auto 16px;">✓</div>
+        <h3 style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Successful!</h3>
+        <p style="font-size: 13px; color: #bad3eb; margin-bottom: 16px;">
+          Transaction ID: <strong id="successTxnId" style="color: var(--cyan);">#TXN-84920</strong><br>
+          Your consultation session is now unlocked and confirmed.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" id="startConsultationBtn" class="btn btn-primary" style="justify-content: center; width: 100%;">
+            <span>💬</span> Start Consultation Chat
+          </button>
+          <a href="payment-history.html" class="btn btn-secondary" style="justify-content: center; width: 100%;">
+            <span>📄</span> View Tax Invoice
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. Failed State -->
+      <div id="modalFailedState" style="display: none;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 71, 87, 0.2); border: 2px solid var(--red); color: var(--red); display: grid; place-items: center; font-size: 28px; margin: 0 auto 16px;">✕</div>
+        <h3 style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Cancelled or Failed</h3>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Bank gateway timed out or transaction was cancelled by user. No amount was debited.</p>
+        <button type="button" id="retryPaymentBtn" class="btn btn-primary" style="justify-content: center; width: 100%;">
+          <span>🔄</span> Try Again
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- Footer -->
+  <footer class="bottom-bar">
+    <div class="container">
+      <p>© 2026 AskExpert Platform. Verified professional consultations & GST Invoicing.</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================
+       SUPABASE PAYMENTS SCRIPT
+       ======================================================= -->
+</body>
+</html>

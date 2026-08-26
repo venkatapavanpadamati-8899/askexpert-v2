@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="AskExpert - Ask your question and get expert answers." />
+  <title>AskExpert | Ask Your Question</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #0099ff;
+      --card-bg: rgba(28, 33, 41, 0.82);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: #3f454c;
+      --input-text: #ffffff;
+      --input-placeholder: #9ba3af;
+      --orange-btn: #ff6a00;
+      --orange-btn-hover: #ff7d1a;
+      --purple-btn: #931ec2;
+      --purple-btn-hover: #a52cd6;
+      --green-btn: #00b848;
+      --green-btn-hover: #00d152;
+      --text-white: #ffffff;
+      --text-muted: #d0d7de;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #0d1117;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(0, 153, 255, 0.12), transparent 60%),
+        linear-gradient(rgba(10, 14, 22, 0.88), rgba(8, 12, 20, 0.94)),
+        url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-white);
+      overflow-x: hidden;
+    }
+
+    /* ========================================================
+       TOP STATUS & HEADER BAR
+       ======================================================== */
+    .top-header {
+      background: var(--primary-blue);
+      color: #ffffff;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 153, 255, 0.35);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .header-link {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .header-link:hover {
+      opacity: 1;
+    }
+
+    /* ========================================================
+       MAIN CONTAINER & FLOATING CARD
+       ======================================================== */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 40px;
+    }
+
+    .question-card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 26px;
+      padding: 32px 24px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      animation: cardFadeIn 0.4s ease-out;
+    }
+
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 24px;
+      letter-spacing: -0.6px;
+    }
+
+    /* ========================================================
+       FORM FIELDS & CONTROLS
+       ======================================================== */
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f1f5f9;
+      letter-spacing: -0.2px;
+    }
+
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-select,
+    .custom-input,
+    .custom-textarea {
+      width: 100%;
+      background: var(--input-bg);
+      color: var(--input-text);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 13px;
+      font-size: 14.5px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .custom-select {
+      height: 48px;
+      padding: 0 40px 0 16px;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .select-chevron {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    .custom-textarea {
+      min-height: 145px;
+      padding: 14px 16px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .custom-input {
+      height: 48px;
+      padding: 0 16px;
+    }
+
+    .custom-textarea::placeholder,
+    .custom-input::placeholder {
+      color: var(--input-placeholder);
+      font-size: 14px;
+    }
+
+    .custom-select:focus,
+    .custom-textarea:focus,
+    .custom-input:focus {
+      border-color: rgba(0, 153, 255, 0.7);
+      background: #474e56;
+      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.18);
+    }
+
+    .custom-select option {
+      background: #252b33;
+      color: #ffffff;
+      padding: 10px;
+    }
+
+    /* ========================================================
+       ACTION BUTTONS
+       ======================================================== */
+    .button-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin: 16px 0 18px;
+    }
+
+    .btn-action {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-action:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .btn-action:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-action:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Voice Input Button */
+    .btn-voice {
+      background: var(--orange-btn);
+    }
+    .btn-voice.listening {
+      animation: micPulse 1.2s infinite alternate;
+      background: #ff3b00;
+    }
+
+    @keyframes micPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.6); }
+      100% { box-shadow: 0 0 0 12px rgba(255, 106, 0, 0); }
+    }
+
+    /* AI Fix Sentence Button */
+    .btn-ai-fix {
+      background: var(--purple-btn);
+    }
+
+    /* AI Identify Expert Button */
+    .btn-ai-expert {
+      background: var(--purple-btn);
+    }
+
+    /* Submit Question Button */
+    .btn-submit {
+      background: var(--green-btn);
+      height: 50px;
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 6px;
+      box-shadow: 0 6px 20px rgba(0, 184, 72, 0.3);
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--green-btn-hover);
+      box-shadow: 0 8px 25px rgba(0, 184, 72, 0.45);
+    }
+
+    /* ========================================================
+       FEEDBACK & STATUS NOTIFICATIONS
+       ======================================================== */
+    .feedback-pill {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .feedback-pill.show {
+      display: block;
+    }
+
+    .feedback-pill.info {
+      background: rgba(0, 153, 255, 0.15);
+      border: 1px solid rgba(0, 153, 255, 0.35);
+      color: #70c4ff;
+    }
+
+    .feedback-pill.success {
+      background: rgba(0, 184, 72, 0.15);
+      border: 1px solid rgba(0, 184, 72, 0.35);
+      color: #79f2a7;
+    }
+
+    .feedback-pill.warning {
+      background: rgba(255, 106, 0, 0.15);
+      border: 1px solid rgba(255, 106, 0, 0.35);
+      color: #ffaa6b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       BOTTOM BAR
+       ======================================================== */
+    .bottom-bar {
+      background: var(--primary-blue);
+      color: #ffffff;
+      padding: 12px 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+      box-shadow: 0 -4px 16px rgba(0, 153, 255, 0.25);
+    }
+
+    .bottom-bar-btn {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      gap: 2px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .bottom-dots {
+      font-size: 20px;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    /* Toast Notification Modal */
+    .toast-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      display: none;
+      place-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .toast-overlay.show {
+      display: grid;
+    }
+
+    .toast-card {
+      background: #1e2530;
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .toast-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(0, 184, 72, 0.15);
+      color: #00d959;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin: 0 auto 16px;
+      border: 1px solid rgba(0, 184, 72, 0.3);
+    }
+
+    .toast-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .toast-desc {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .toast-btn {
+      width: 100%;
+      height: 46px;
+      background: var(--primary-blue);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+
+    .toast-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    @media (max-width: 480px) {
+      .main-wrapper {
+        padding: 16px 10px 24px;
+      }
+      .question-card {
+        padding: 24px 16px;
+        border-radius: 22px;
+      }
+      .card-title {
+        font-size: 25px;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/askQuestion-COXVM9Pj.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CjmhKtb4.js">
+</head>
+<body>
+
+  <!-- Top Blue Header -->
+  <header class="top-header">
+    <a href="index.html" class="brand-title">
+      AskExpert
+    </a>
+    <div class="header-right">
+      <a href="questions.html" class="header-link">My Questions</a>
+      <a href="dashboard.html" class="header-link">Dashboard</a>
+    </div>
+  </header>
+
+  <!-- Main Content Area with Centered Floating Card -->
+  <main class="main-wrapper">
+    <div class="question-card">
+      <h1 class="card-title">Ask Your Question</h1>
+
+      <form id="askQuestionForm" novalidate>
+        
+        <!-- Field 1: Select Language -->
+        <div class="form-group">
+          <label class="field-label" for="languageSelect">Select Language</label>
+          <div class="select-wrapper">
+            <select id="languageSelect" class="custom-select">
+              <option value="en-US" selected>English</option>
+              <option value="hi-IN">Hindi (हिंदी)</option>
+              <option value="te-IN">Telugu (తెలుగు)</option>
+              <option value="ta-IN">Tamil (தமிழ்)</option>
+              <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+              <option value="ml-IN">Malayalam (മലയാളം)</option>
+              <option value="es-ES">Spanish (Español)</option>
+              <option value="fr-FR">French (Français)</option>
+              <option value="de-DE">German (Deutsch)</option>
+              <option value="ar-SA">Arabic (العربية)</option>
+            </select>
+            <span class="select-chevron">▼</span>
+          </div>
+        </div>
+
+        <!-- Field 2: Describe your problem -->
+        <div class="form-group">
+          <label class="field-label" for="problemDescription">Describe your problem</label>
+          <textarea
+            id="problemDescription"
+            class="custom-textarea"
+            placeholder="Explain your problem..."
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <!-- AI & Voice Actions Stack -->
+        <div class="button-stack">
+          <!-- Voice Input Button (Orange) -->
+          <button type="button" id="voiceInputButton" class="btn-action btn-voice">
+            <span id="voiceIcon">🎤</span>
+            <span id="voiceBtnText">Voice Input</span>
+          </button>
+
+          <!-- AI Fix Sentence Button (Purple) -->
+          <button type="button" id="aiFixButton" class="btn-action btn-ai-fix">
+            <span>🤖</span>
+            <span>AI Fix Sentence</span>
+          </button>
+
+          <!-- AI Identify Expert Button (Purple) -->
+          <button type="button" id="aiExpertButton" class="btn-action btn-ai-expert">
+            <span>🧠</span>
+            <span>AI Identify Expert</span>
+          </button>
+        </div>
+
+        <!-- Field 3: Select Professional -->
+        <div class="form-group">
+          <label class="field-label" for="professionalSelect">Select Professional</label>
+          <div class="select-wrapper">
+            <select id="professionalSelect" class="custom-select" required>
+              <option value="" disabled selected>Select Profession</option>
+              <option value="Legal Advisor / Lawyer">Legal Advisor / Lawyer</option>
+              <option value="Chartered Accountant / Tax Expert">Chartered Accountant / Tax Expert</option>
+              <option value="Software & Cloud Architect">Software & Cloud Architect</option>
+              <option value="Doctor / Healthcare Specialist">Doctor / Healthcare Specialist</option>
+              <option value="Financial Planner & Wealth Advisor">Financial Planner & Wealth Advisor</option>
+              <option value="Business & Startup Consultant">Business & Startup Consultant</option>
+              <option value="Civil Engineer / Architect">Civil Engineer / Architect</option>
+              <option value="Career & HR Consultant">Career & HR Counselor</option>
+              <option value="Education & Study Abroad Mentor">Education & Study Abroad Mentor</option>
+            </select>
+            <span class="select-chevron">▼</span>
+          </div>
+        </div>
+
+        <!-- Field 4: Optional Notes -->
+        <div class="form-group">
+          <label class="field-label" for="optionalNotes">Optional Notes</label>
+          <input
+            type="text"
+            id="optionalNotes"
+            class="custom-input"
+            placeholder="Extra information"
+          />
+        </div>
+
+        <!-- Feedback / Status Pill -->
+        <div id="actionFeedback" class="feedback-pill"></div>
+
+        <!-- Field 5: Submit Question Button (Green) -->
+        <button type="submit" id="submitQuestionButton" class="btn-action btn-submit">
+          <span>✈</span>
+          <span>Submit Question</span>
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Bottom Blue Navigation Bar -->
+  <footer class="bottom-bar">
+    <a href="dashboard.html" class="bottom-bar-btn">
+      <span class="bottom-dots">•••</span>
+      <span>More</span>
+    </a>
+  </footer>
+
+  <!-- Submission Success Modal -->
+  <div id="toastOverlay" class="toast-overlay">
+    <div class="toast-card">
+      <div class="toast-icon">✓</div>
+      <h3 class="toast-title">Question Submitted!</h3>
+      <p id="toastDesc" class="toast-desc">Your question has been broadcast to verified experts. You will receive answers shortly.</p>
+      <button type="button" id="toastOkBtn" class="toast-btn">View My Questions</button>
+    </div>
+  </div>
+
+</body>
+</html>

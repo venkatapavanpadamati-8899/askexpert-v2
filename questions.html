@@ -840,51 +840,6 @@
     const totalQuestionsCount = document.getElementById("totalQuestionsCount");
     const resultsCountText = document.getElementById("resultsCountText");
 
-    /* ========================================================
-       LOCAL / DEFAULT FALLBACK QUESTIONS
-       ======================================================== */
-    const DEFAULT_SEED_QUESTIONS = [
-      {
-        id: "q-101",
-        title: "Domestic arbitration clause compliance with MCA & RBI mandates",
-        description: "Need guidance on drafting domestic arbitration and IP indemnity clauses for an Indian SaaS vendor contract under the 2026 corporate compliance revisions.",
-        category: "Legal Advisor / Lawyer",
-        language: "English",
-        status: "answered",
-        answers_count: 2,
-        created_at: new Date(Date.now() - 3600000 * 3).toISOString()
-      },
-      {
-        id: "q-102",
-        title: "GST input tax credit reconciliation discrepancy for Q3 filing",
-        description: "Encountered an invoice mismatch under GSTR-2B with an unregistered vendor. Seeking advice on the safest rectification route to prevent scrutiny notices.",
-        category: "Chartered Accountant / Tax Expert",
-        language: "English",
-        status: "open",
-        answers_count: 1,
-        created_at: new Date(Date.now() - 3600000 * 8).toISOString()
-      },
-      {
-        id: "q-103",
-        title: "Microservices database partition strategy for multi-tenant SaaS",
-        description: "Evaluating Row-Level Security (RLS) PostgreSQL schema isolation versus multi-database deployment on Supabase/Cloud for fintech compliance.",
-        category: "Software & Cloud Architect",
-        language: "English",
-        status: "answered",
-        answers_count: 3,
-        created_at: new Date(Date.now() - 3600000 * 24).toISOString()
-      },
-      {
-        id: "q-104",
-        title: "Patent prior art search protocol for medical device innovation",
-        description: "Conducting novelty and freedom-to-operate analysis for an IoT-based non-invasive glucose monitor before filing provisional patent with IPO.",
-        category: "Legal Advisor / Lawyer",
-        language: "English",
-        status: "open",
-        answers_count: 0,
-        created_at: new Date(Date.now() - 3600000 * 48).toISOString()
-      }
-    ];
 
     /* ========================================================
        STATE
@@ -895,6 +850,7 @@
     let activeSort = "newest";
     let searchQuery = "";
     let realtimeChannel = null;
+
 
     /* ========================================================
        LOAD QUESTIONS FROM SUPABASE
@@ -944,17 +900,7 @@
           }
         });
 
-        if (combined.length === 0) {
-          rawQuestions = DEFAULT_SEED_QUESTIONS;
-        } else {
-          // If less than seed, append seed for rich presentation
-          DEFAULT_SEED_QUESTIONS.forEach(seed => {
-            if (!combined.some(c => c.id === seed.id)) {
-              combined.push(seed);
-            }
-          });
-          rawQuestions = combined;
-        }
+        rawQuestions = combined;
 
         totalQuestionsCount.textContent = rawQuestions.length;
         applyFiltersAndRender();

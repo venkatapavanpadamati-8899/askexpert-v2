@@ -847,7 +847,7 @@
           <div class="stat-icon-wrap stat-icon-purple">💬</div>
           <div class="stat-info">
             <span>Active Chats</span>
-            <strong id="statChats">3</strong>
+            <strong id="statChats">0</strong>
           </div>
         </div>
 
@@ -856,7 +856,7 @@
           <div class="stat-icon-wrap stat-icon-gold">💳</div>
           <div class="stat-info">
             <span>Wallet Balance</span>
-            <strong id="statWallet">₹4,500</strong>
+            <strong id="statWallet">₹0</strong>
           </div>
         </div>
       </section>
@@ -890,7 +890,7 @@
               <span style="font-size: 12.5px; font-weight: 750; color: #bad3eb; text-transform: uppercase;">Consultation Wallet</span>
               <span>🔒 Encrypted</span>
             </div>
-            <div class="wallet-balance" id="sideWalletBalance">₹4,500.00</div>
+            <div class="wallet-balance" id="sideWalletBalance">₹0.00</div>
             <div style="margin-top: 14px; display: flex; gap: 8px;">
               <a href="payments.html" class="btn-ask-top" style="flex: 1; justify-content: center; font-size: 12.5px; padding: 7px 12px;">
                 <span>➕</span> Add Funds
@@ -1002,8 +1002,8 @@
        AUTH & USER PROFILE
        ======================================================== */
     async function loadAuthUser() {
-      let displayName = "Aditya Sharma";
-      let userAvatarInitials = "AS";
+      let displayName = "";
+      let userAvatarInitials = "U";
 
       try {
         if (supabase) {
@@ -1046,8 +1046,8 @@
 
       if (totalQuestions === 0) {
         const local = JSON.parse(localStorage.getItem("askexpert_questions") || "[]");
-        totalQuestions = local.length || 3;
-        totalAnswers = totalQuestions * 2;
+        totalQuestions = local.length || 0;
+        totalAnswers = 0;
       }
 
       document.getElementById("statQuestions").textContent = totalQuestions;
@@ -1077,39 +1077,9 @@
         }
 
         if (questions.length === 0) {
-          const stored = JSON.parse(localStorage.getItem("askexpert_questions") || "[]");
-          if (stored.length > 0) {
-            questions = stored.slice(0, 5);
-          }
-        }
-
-        if (questions.length === 0) {
-          questions = [
-            {
-              id: "q-101",
-              title: "Compliance renewal & vendor contract statutory requirements under Indian Corporate Law",
-              category: "Legal & Regulatory",
-              status: "answered",
-              answers_count: 2,
-              created_at: new Date(Date.now() - 3600000 * 3).toISOString()
-            },
-            {
-              id: "q-102",
-              title: "GST reverse charge mechanism & international software export invoicing",
-              category: "Taxation & GST",
-              status: "answered",
-              answers_count: 1,
-              created_at: new Date(Date.now() - 3600000 * 24).toISOString()
-            },
-            {
-              id: "q-103",
-              title: "Patent filing prior art novelty requirements for AI medical diagnostics",
-              category: "Intellectual Property",
-              status: "open",
-              answers_count: 0,
-              created_at: new Date(Date.now() - 3600000 * 48).toISOString()
-            }
-          ];
+          myQuestions = [];
+          renderQuestionsList([]);
+          return;
         }
 
         myQuestions = questions;

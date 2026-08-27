@@ -1803,15 +1803,16 @@
         loginButton.innerHTML = '<span class="spinner"></span>Signing in...';
 
         try {
-          let targetEmail = emailOrUsername;
+          const rawInput = (emailOrUsername || "").trim();
+          let targetEmail = rawInput;
 
           if (supabase) {
             // 1. Resolve username to email if input does not contain '@'
-            if (!emailOrUsername.includes("@")) {
+            if (!rawInput.includes("@")) {
               const { data: profile } = await supabase
                 .from("profiles")
                 .select("email, role")
-                .eq("username", emailOrUsername)
+                .ilike("username", rawInput)
                 .maybeSingle();
 
               if (profile && profile.email) {
@@ -1821,6 +1822,9 @@
               }
             }
 
+            // Ensure trimmed, lowercased email string for Supabase Auth
+            targetEmail = targetEmail.trim().toLowerCase();
+
             // 2. Perform Real Supabase Auth Login
             const { data, error } = await supabase.auth.signInWithPassword({
               email: targetEmail,
@@ -1828,6 +1832,18 @@
             });
 
             if (error) {
+              console.error("[Supabase Auth Error]", {
+                code: error.code || error.name,
+                status: error.status,
+                message: error.message,
+                attemptedEmail: targetEmail
+              });
+
+              if (error.message && error.message.includes("Invalid login credentials")) {
+                throw new Error("Invalid email/username or password. If you recently reset your password, please ensure you used the official reset link.");
+              } else if (error.message && error.message.includes("Email not confirmed")) {
+                throw new Error("Your email address is not yet confirmed. Please check your inbox for the verification email.");
+              }
               throw error;
             }
 
@@ -1848,8 +1864,14 @@
 
             showStatus("Login successful! Redirecting...", "success");
 
+            // Check for redirect parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get("redirect");
+
             setTimeout(function () {
-              if (userRole === "admin") {
+              if (redirectUrl) {
+                window.location.href = redirectUrl;
+              } else if (userRole === "admin") {
                 window.location.href = "admin-dashboard.html";
               } else if (userRole === "expert" || userRole === "professional") {
                 window.location.href = "professional-dashboard.html";

@@ -521,7 +521,7 @@
       .admin-sidebar { display: none; }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminUsers-B8nt_rxO.js"></script>
+  <script type="module" crossorigin src="/assets/adminUsers-B7uX1FRl.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
 <body>
@@ -644,131 +644,12 @@
               </tr>
             </thead>
             <tbody id="usersTableBody">
-              
-              <!-- User 1 -->
-              <tr data-role="expert" data-status="active" data-id="u-101">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar">VR</div>
-                    <div>
-                      <strong style="color: var(--white);">Adv. Vikram Rao</strong>
-                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10148</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-expert">Expert</span></td>
-                <td>
-                  <span>vikram.rao@legal.in</span><br>
-                  <small style="color: var(--muted);">+91 98765 43210</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>✨ 48 Answers • 💬 146 Chats</span><br>
-                  <small style="color: var(--green);">💳 ₹48.9k Earned</small>
-                </td>
-                <td>Jan 14, 2025</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Adv. Vikram Rao" data-role="expert" data-email="vikram.rao@legal.in" data-phone="+91 98765 43210" data-status="active" data-joined="Jan 14, 2025" data-stats="48 Answers | 146 Consultations">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Adv. Vikram Rao">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Adv. Vikram Rao">Block</button>
-                  </div>
+              <!-- Dynamically populated from Supabase profiles table -->
+              <tr id="usersLoadingRow">
+                <td colspan="6" style="text-align: center; padding: 32px; color: var(--muted);">
+                  Loading platform users...
                 </td>
               </tr>
-
-              <!-- User 2 -->
-              <tr data-role="user" data-status="active" data-id="u-102">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar" style="background: rgba(0, 153, 255, 0.2); color: var(--cyan);">AS</div>
-                    <div>
-                      <strong style="color: var(--white);">Aditya Sharma</strong>
-                      <span style="display: block; font-size: 11px; color: var(--muted); font-family: monospace;">#USR-10920</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-user">User</span></td>
-                <td>
-                  <span>aditya.s@saas.com</span><br>
-                  <small style="color: var(--muted);">+91 91234 56789</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>❓ 6 Questions • 💬 4 Chats</span><br>
-                  <small style="color: var(--muted);">💳 ₹4.5k Paid</small>
-                </td>
-                <td>Mar 02, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Aditya Sharma" data-role="user" data-email="aditya.s@saas.com" data-phone="+91 91234 56789" data-status="active" data-joined="Mar 02, 2026" data-stats="6 Questions | 4 Chats">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Aditya Sharma">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Aditya Sharma">Block</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- User 3 -->
-              <tr data-role="expert" data-status="active" data-id="u-103">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar">AS</div>
-                    <div>
-                      <strong style="color: var(--white);">CA Ananya Sharma</strong>
-                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10332</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-expert">Expert</span></td>
-                <td>
-                  <span>ananya.tax@icai.org</span><br>
-                  <small style="color: var(--muted);">+91 98111 22334</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>✨ 34 Answers • 💬 89 Chats</span><br>
-                  <small style="color: var(--green);">💳 ₹32.4k Earned</small>
-                </td>
-                <td>Feb 18, 2025</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="CA Ananya Sharma" data-role="expert" data-email="ananya.tax@icai.org" data-phone="+91 98111 22334" data-status="active" data-joined="Feb 18, 2025" data-stats="34 Answers | 89 Consultations">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="CA Ananya Sharma">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="CA Ananya Sharma">Block</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- User 4 (Suspended Demo) -->
-              <tr data-role="user" data-status="suspended" data-id="u-104">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar" style="background: rgba(255, 183, 3, 0.2); color: var(--gold);">RK</div>
-                    <div>
-                      <strong style="color: var(--white);">Rohan Kapoor</strong>
-                      <span style="display: block; font-size: 11px; color: var(--gold); font-family: monospace;">#USR-10884</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-user">User</span></td>
-                <td>
-                  <span>rohan.k@mail.com</span><br>
-                  <small style="color: var(--muted);">+91 94567 89012</small>
-                </td>
-                <td><span class="status-badge status-suspended">⏸️ Suspended</span></td>
-                <td>
-                  <span>❓ 2 Questions • 💬 1 Chat</span><br>
-                  <small style="color: var(--red);">Spam Warning</small>
-                </td>
-                <td>Apr 11, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Rohan Kapoor" data-role="user" data-email="rohan.k@mail.com" data-phone="+91 94567 89012" data-status="suspended" data-joined="Apr 11, 2026" data-stats="2 Questions | 1 Chat">View</button>
-                    <button type="button" class="btn-action action-activate" data-action="activate" data-name="Rohan Kapoor">Re-Activate</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Rohan Kapoor">Block</button>
-                  </div>
-                </td>
-              </tr>
-
             </tbody>
           </table>
         </div>

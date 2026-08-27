@@ -642,131 +642,12 @@
               </tr>
             </thead>
             <tbody id="usersTableBody">
-              
-              <!-- User 1 -->
-              <tr data-role="expert" data-status="active" data-id="u-101">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar">VR</div>
-                    <div>
-                      <strong style="color: var(--white);">Adv. Vikram Rao</strong>
-                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10148</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-expert">Expert</span></td>
-                <td>
-                  <span>vikram.rao@legal.in</span><br>
-                  <small style="color: var(--muted);">+91 98765 43210</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>✨ 48 Answers • 💬 146 Chats</span><br>
-                  <small style="color: var(--green);">💳 ₹48.9k Earned</small>
-                </td>
-                <td>Jan 14, 2025</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Adv. Vikram Rao" data-role="expert" data-email="vikram.rao@legal.in" data-phone="+91 98765 43210" data-status="active" data-joined="Jan 14, 2025" data-stats="48 Answers | 146 Consultations">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Adv. Vikram Rao">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Adv. Vikram Rao">Block</button>
-                  </div>
+              <!-- Dynamically populated from Supabase profiles table -->
+              <tr id="usersLoadingRow">
+                <td colspan="6" style="text-align: center; padding: 32px; color: var(--muted);">
+                  Loading platform users...
                 </td>
               </tr>
-
-              <!-- User 2 -->
-              <tr data-role="user" data-status="active" data-id="u-102">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar" style="background: rgba(0, 153, 255, 0.2); color: var(--cyan);">AS</div>
-                    <div>
-                      <strong style="color: var(--white);">Aditya Sharma</strong>
-                      <span style="display: block; font-size: 11px; color: var(--muted); font-family: monospace;">#USR-10920</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-user">User</span></td>
-                <td>
-                  <span>aditya.s@saas.com</span><br>
-                  <small style="color: var(--muted);">+91 91234 56789</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>❓ 6 Questions • 💬 4 Chats</span><br>
-                  <small style="color: var(--muted);">💳 ₹4.5k Paid</small>
-                </td>
-                <td>Mar 02, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Aditya Sharma" data-role="user" data-email="aditya.s@saas.com" data-phone="+91 91234 56789" data-status="active" data-joined="Mar 02, 2026" data-stats="6 Questions | 4 Chats">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="Aditya Sharma">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Aditya Sharma">Block</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- User 3 -->
-              <tr data-role="expert" data-status="active" data-id="u-103">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar">AS</div>
-                    <div>
-                      <strong style="color: var(--white);">CA Ananya Sharma</strong>
-                      <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#USR-10332</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-expert">Expert</span></td>
-                <td>
-                  <span>ananya.tax@icai.org</span><br>
-                  <small style="color: var(--muted);">+91 98111 22334</small>
-                </td>
-                <td><span class="status-badge status-active">● Active</span></td>
-                <td>
-                  <span>✨ 34 Answers • 💬 89 Chats</span><br>
-                  <small style="color: var(--green);">💳 ₹32.4k Earned</small>
-                </td>
-                <td>Feb 18, 2025</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="CA Ananya Sharma" data-role="expert" data-email="ananya.tax@icai.org" data-phone="+91 98111 22334" data-status="active" data-joined="Feb 18, 2025" data-stats="34 Answers | 89 Consultations">View</button>
-                    <button type="button" class="btn-action action-suspend" data-action="suspend" data-name="CA Ananya Sharma">Suspend</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="CA Ananya Sharma">Block</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- User 4 (Suspended Demo) -->
-              <tr data-role="user" data-status="suspended" data-id="u-104">
-                <td>
-                  <div class="user-profile-cell">
-                    <div class="user-avatar" style="background: rgba(255, 183, 3, 0.2); color: var(--gold);">RK</div>
-                    <div>
-                      <strong style="color: var(--white);">Rohan Kapoor</strong>
-                      <span style="display: block; font-size: 11px; color: var(--gold); font-family: monospace;">#USR-10884</span>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="role-badge role-user">User</span></td>
-                <td>
-                  <span>rohan.k@mail.com</span><br>
-                  <small style="color: var(--muted);">+91 94567 89012</small>
-                </td>
-                <td><span class="status-badge status-suspended">⏸️ Suspended</span></td>
-                <td>
-                  <span>❓ 2 Questions • 💬 1 Chat</span><br>
-                  <small style="color: var(--red);">Spam Warning</small>
-                </td>
-                <td>Apr 11, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-name="Rohan Kapoor" data-role="user" data-email="rohan.k@mail.com" data-phone="+91 94567 89012" data-status="suspended" data-joined="Apr 11, 2026" data-stats="2 Questions | 1 Chat">View</button>
-                    <button type="button" class="btn-action action-activate" data-action="activate" data-name="Rohan Kapoor">Re-Activate</button>
-                    <button type="button" class="btn-action action-block" data-action="block" data-name="Rohan Kapoor">Block</button>
-                  </div>
-                </td>
-              </tr>
-
             </tbody>
           </table>
         </div>
@@ -855,11 +736,96 @@
     async function initAdminUsers() {
       const isAuth = await verifyAdminAccess();
       if (!isAuth) return;
+      await loadUsersFromSupabase();
       setupFilters();
       setupSearch();
-      setupActionHandlers();
       setupLogout();
     }
+
+    async function loadUsersFromSupabase() {
+      const tbody = document.getElementById("usersTableBody");
+      if (!tbody) return;
+
+      try {
+        if (!supabase) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted);">Supabase unavailable</td></tr>`;
+          return;
+        }
+
+        const { data: users, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error || !users || users.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted);">
+            <div style="font-size:28px;margin-bottom:8px;">👥</div>
+            <div>No users found in database.</div>
+          </td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = "";
+        users.forEach(u => {
+          const name = u.full_name || u.username || "Anonymous User";
+          const role = u.role || "user";
+          const email = u.email || "No email";
+          const phone = u.phone || "No phone";
+          const initials = name.split(/\s+/).map(p => p[0]).join("").toUpperCase().slice(0, 2) || "U";
+          const joinedDate = u.created_at ? new Date(u.created_at).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" }) : "Recently";
+          const status = u.is_verified ? "active" : (u.is_blocked ? "blocked" : "active");
+          const roleBadgeClass = role === "expert" ? "role-expert" : (role === "admin" ? "role-admin" : "role-user");
+          const statusBadgeClass = status === "active" ? "status-active" : (status === "blocked" ? "status-suspended" : "status-active");
+
+          const tr = document.createElement("tr");
+          tr.dataset.role = role;
+          tr.dataset.status = status;
+          tr.dataset.id = u.id;
+
+          tr.innerHTML = `
+            <td>
+              <div class="user-profile-cell">
+                <div class="user-avatar">${escapeHTML(initials)}</div>
+                <div>
+                  <strong style="color: var(--white);">${escapeHTML(name)}</strong>
+                  <span style="display: block; font-size: 11px; color: var(--cyan); font-family: monospace;">#${escapeHTML(u.id.slice(0, 8))}</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="role-badge ${roleBadgeClass}">${role.toUpperCase()}</span></td>
+            <td>
+              <span>${escapeHTML(email)}</span><br>
+              <small style="color: var(--muted);">${escapeHTML(phone)}</small>
+            </td>
+            <td><span class="status-badge ${statusBadgeClass}">● ${status.toUpperCase()}</span></td>
+            <td>
+              <span>${role === 'expert' ? 'Verified Specialist' : 'Platform Member'}</span>
+            </td>
+            <td>${joinedDate}</td>
+            <td>
+              <div class="actions-cell">
+                <button type="button" class="btn-action action-view" data-action="view" data-name="${escapeHTML(name)}" data-role="${role}" data-email="${escapeHTML(email)}" data-phone="${escapeHTML(phone)}" data-status="${status}" data-joined="${joinedDate}" data-stats="Registered Profile">View</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        setupActionHandlers();
+
+      } catch (err) {
+        console.error("loadUsers error:", err);
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red);">Error loading users from database</td></tr>`;
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
 
     async function verifyAdminAccess() {
       try {

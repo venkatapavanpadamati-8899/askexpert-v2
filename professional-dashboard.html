@@ -1061,15 +1061,20 @@
               return;
             }
 
-            const name = (meta.full_name || "Adv. Vikram Rao").trim();
+            const name = (meta.full_name || "Verified Expert").trim();
             const nameParts = name.split(/\s+/);
             const firstName = nameParts[0] || name;
             const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : firstName;
-            const initials = nameParts.map(n => n[0]).join("").slice(0, 2).toUpperCase() || "VR";
+            const initials = nameParts.map(n => n[0]).join("").slice(0, 2).toUpperCase() || "EX";
 
             document.getElementById("topExpertName").textContent = name;
             document.getElementById("welcomeName").textContent = lastName;
             document.getElementById("topAvatarInitial").textContent = initials;
+          } else {
+            // Unauthenticated: redirect to login
+            const currentPath = window.location.pathname.split("/").pop() || "professional-dashboard.html";
+            window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
+            return;
           }
         }
       } catch (err) {

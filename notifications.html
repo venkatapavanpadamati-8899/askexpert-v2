@@ -567,58 +567,8 @@
     /* ========================================================
        DEFAULT SEED NOTIFICATIONS (FALLBACK)
        ======================================================== */
-    const SEED_NOTIFICATIONS = [
-      {
-        id: "notif-1",
-        type: "answer",
-        title: "New Verified Answer",
-        message: "Adv. Vikram Rao posted a structured compliance roadmap on your vendor contract inquiry.",
-        related_id: "q-101",
-        target_url: "question-details.html?id=q-101",
-        is_read: false,
-        created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString()
-      },
-      {
-        id: "notif-2",
-        type: "chat",
-        title: "Encrypted Message Received",
-        message: "CA Ananya Sharma sent consultation notes regarding GST reverse charge compliance.",
-        related_id: "22222222-2222-2222-2222-222222222222",
-        target_url: "chat.html?expert=22222222-2222-2222-2222-222222222222",
-        is_read: false,
-        created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString()
-      },
-      {
-        id: "notif-3",
-        type: "payment",
-        title: "Wallet Recharge Successful",
-        message: "Your consultation wallet was credited with ₹2,000.00 via UPI. Current balance: ₹4,500.00.",
-        related_id: null,
-        target_url: "payments.html",
-        is_read: true,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString()
-      },
-      {
-        id: "notif-4",
-        type: "question",
-        title: "Question Status Updated",
-        message: "Your inquiry 'Compliance renewal statutory requirements' has been marked as Answered.",
-        related_id: "q-101",
-        target_url: "question-details.html?id=q-101",
-        is_read: true,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
-      },
-      {
-        id: "notif-5",
-        type: "expert",
-        title: "Expert Follow Alert",
-        message: "Dr. Rahul Kumar is now available for direct IP & Patent drafting consultations.",
-        related_id: "33333333-3333-3333-3333-333333333333",
-        target_url: "expert-profile.html?expert=33333333-3333-3333-3333-333333333333",
-        is_read: true,
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString()
-      }
-    ];
+    // SEED_NOTIFICATIONS removed — only real Supabase notifications shown
+
 
     /* ========================================================
        STATE
@@ -681,12 +631,10 @@
         }
 
         if (fetched.length === 0) {
-          const stored = JSON.parse(localStorage.getItem("askexpert_notifications") || "null");
-          if (stored && stored.length > 0) {
-            fetched = stored;
-          } else {
-            fetched = SEED_NOTIFICATIONS;
-          }
+          // No notifications from Supabase — show empty state
+          notificationsList = [];
+          applyFilterAndRender();
+          return;
         }
 
         notificationsList = fetched;
@@ -694,7 +642,7 @@
 
       } catch (err) {
         console.error("loadNotifications error:", err);
-        notificationsList = SEED_NOTIFICATIONS;
+        notificationsList = [];
         applyFilterAndRender();
       }
     }

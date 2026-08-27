@@ -646,7 +646,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/professionalDashboard-DRsN0LgS.js"></script>
+  <script type="module" crossorigin src="/assets/professionalDashboard-DFvx47Wo.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
 
@@ -796,7 +796,7 @@
           <div class="stat-icon-wrap icon-purple">💬</div>
           <div class="stat-info">
             <span>Active Chats</span>
-            <strong id="statActiveChats">4</strong>
+            <strong id="statActiveChats">0</strong>
           </div>
         </div>
 
@@ -805,7 +805,7 @@
           <div class="stat-icon-wrap icon-green">✓</div>
           <div class="stat-info">
             <span>Completed Sessions</span>
-            <strong id="statCompleted">142</strong>
+            <strong id="statCompleted">0</strong>
           </div>
         </div>
 
@@ -814,7 +814,7 @@
           <div class="stat-icon-wrap icon-gold">⭐</div>
           <div class="stat-info">
             <span>Client Rating</span>
-            <strong id="statRating">4.9 (184)</strong>
+            <strong id="statRating">–</strong>
           </div>
         </div>
       </section>
@@ -825,72 +825,18 @@
         <!-- Left: Consultation Requests Queue -->
         <section class="glass-card">
           <div class="card-header-row">
-            <h2 class="card-title">
-              <span>📥</span> Consultation Requests (<span id="requestsCountHeader">2</span>)
+              <h2 class="card-title">
+              <span>📥</span> Consultation Requests (<span id="requestsCountHeader">0</span>)
             </h2>
             <a href="consultation-requests.html" class="view-all-link">Manage Queue →</a>
           </div>
 
           <div class="requests-list" id="requestsList">
-
-            <!-- Request 1 -->
-            <article class="req-item" id="req-1">
-              <div class="req-top-row">
-                <div class="req-client-info">
-                  <div class="req-client-avatar">AS</div>
-                  <div>
-                    <strong style="font-size: 13.5px; color: var(--white);">Aditya Sharma</strong>
-                    <span style="display: block; font-size: 11px; color: var(--muted);">SaaS Founder • Mumbai</span>
-                  </div>
-                </div>
-                <span class="req-fee-badge">₹1,200 Offered</span>
-              </div>
-
-              <div class="req-question-title">Vendor Contract Compliance & Arbitration Seating</div>
-              <p class="req-question-snippet">Need urgent guidance on drafting domestic arbitration and IP indemnity
-                caps under MCA 2026 mandates for enterprise vendor renewals.</p>
-
-              <div class="req-actions-row">
-                <a href="question-details.html?id=q-101" style="font-size: 12px; color: var(--cyan); font-weight: 700;">
-                  View Question Thread →
-                </a>
-                <div style="display: flex; gap: 8px;">
-                  <button type="button" class="btn-action-reject" data-id="req-1">Decline</button>
-                  <button type="button" class="btn-action-accept" data-id="req-1">Accept & Start Chat</button>
-                </div>
-              </div>
-            </article>
-
-            <!-- Request 2 -->
-            <article class="req-item" id="req-2">
-              <div class="req-top-row">
-                <div class="req-client-info">
-                  <div class="req-client-avatar">RK</div>
-                  <div>
-                    <strong style="font-size: 13.5px; color: var(--white);">Ravi Kumar</strong>
-                    <span style="display: block; font-size: 11px; color: var(--muted);">Tech Director • Bengaluru</span>
-                  </div>
-                </div>
-                <span class="req-fee-badge">₹1,500 Offered</span>
-              </div>
-
-              <div class="req-question-title">Cross-Border Technology IP Licensing & FEMA Guidelines</div>
-              <p class="req-question-snippet">Looking for contract review on royalty remittance withholding tax and
-                intellectual property assignment clauses.</p>
-
-              <div class="req-actions-row">
-                <a href="question-details.html?id=q-103" style="font-size: 12px; color: var(--cyan); font-weight: 700;">
-                  View Question Thread →
-                </a>
-                <div style="display: flex; gap: 8px;">
-                  <button type="button" class="btn-action-reject" data-id="req-2">Decline</button>
-                  <button type="button" class="btn-action-accept" data-id="req-2">Accept & Start Chat</button>
-                </div>
-              </div>
-            </article>
-
+            <div style="text-align:center;padding:28px;color:var(--muted);font-size:13px;">Loading consultation requests...</div>
+          </div>
           </div>
         </section>
+
 
         <!-- Right: Earnings & Active Chats -->
         <div style="display: flex; flex-direction: column; gap: 24px;">
@@ -899,11 +845,11 @@
           <div class="earnings-hero-widget">
             <span style="font-size: 12px; font-weight: 750; color: #bad3eb; text-transform: uppercase;">Total Verified
               Earnings</span>
-            <div class="earnings-amount" id="earningsDisplay">₹48,900.00</div>
+            <div class="earnings-amount" id="earningsDisplay">₹0.00</div>
             <div
               style="display: flex; justify-content: space-between; font-size: 12px; color: #bad3eb; margin-bottom: 12px;">
-              <span>Today: <strong style="color: var(--white);">₹3,600</strong></span>
-              <span>Pending Payout: <strong style="color: var(--gold);">₹12,400</strong></span>
+              <span>Today: <strong style="color: var(--white);" id="earningsToday">₹0</strong></span>
+              <span>Pending Payout: <strong style="color: var(--gold);" id="earningsPending">₹0</strong></span>
             </div>
             <a href="professional-earnings.html" class="btn-action-accept"
               style="width: 100%; justify-content: center; display: flex;">
@@ -920,22 +866,8 @@
               <a href="chat.html" class="view-all-link">Open All</a>
             </div>
 
-            <div class="chats-widget-list">
-              <div class="chat-widget-row" onclick="window.location.href='chat.html'">
-                <div>
-                  <strong style="font-size: 13px; color: var(--white); display: block;">Aditya Sharma</strong>
-                  <span style="font-size: 11.5px; color: var(--muted);">Contract clauses clarification</span>
-                </div>
-                <span style="font-size: 11px; color: var(--green); font-weight: 750;">● Live</span>
-              </div>
-
-              <div class="chat-widget-row" onclick="window.location.href='chat.html'">
-                <div>
-                  <strong style="font-size: 13px; color: var(--white); display: block;">Pooja Hegde</strong>
-                  <span style="font-size: 11.5px; color: var(--muted);">Trademark registration status</span>
-                </div>
-                <span style="font-size: 11px; color: var(--muted);">10m ago</span>
-              </div>
+            <div class="chats-widget-list" id="activeChatsWidget">
+              <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Loading active chats...</div>
             </div>
           </section>
 
@@ -945,29 +877,11 @@
               <h3 style="font-size: 15px; font-weight: 800; color: var(--white);">
                 <span>⭐</span> Recent Client Reviews
               </h3>
-              <span style="font-size: 11.5px; color: var(--gold);" id="dashRatingSummary">4.9 ★ (184)</span>
+              <span style="font-size: 11.5px; color: var(--gold);" id="dashRatingSummary">–</span>
             </div>
 
-            <div id="dashReviewsFeed" style="display: flex; flex-direction: column; gap: 10px;">
-              <div
-                style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
-                  <strong style="color: var(--white);">Aditya Sharma</strong>
-                  <span style="color: var(--gold);">★★★★★</span>
-                </div>
-                <p style="font-size: 11.5px; color: #bad3eb; line-height: 1.4;">"Exceptional legal advice regarding
-                  vendor indemnity caps and arbitration seating."</p>
-              </div>
-
-              <div
-                style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
-                  <strong style="color: var(--white);">Ravi Kumar</strong>
-                  <span style="color: var(--gold);">★★★★★</span>
-                </div>
-                <p style="font-size: 11.5px; color: #bad3eb; line-height: 1.4;">"Prompt and thorough counsel. Explained
-                  MCA compliance with clarity."</p>
-              </div>
+            <div id="dashReviewsFeed" style="display:flex;flex-direction:column;gap:10px;">
+              <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Loading reviews...</div>
             </div>
           </section>
 

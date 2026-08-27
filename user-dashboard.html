@@ -1013,6 +1013,11 @@
             const meta = session.user.user_metadata || {};
             displayName = meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
             userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+          } else {
+            // Unauthenticated: redirect to login
+            const currentPath = window.location.pathname.split("/").pop() || "user-dashboard.html";
+            window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
+            return;
           }
         }
       } catch (err) {

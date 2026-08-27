@@ -2253,37 +2253,24 @@
         </div>
 
 
-        <!-- DEMO OTP DISPLAY -->
-
+        <!-- MOBILE OTP: TEST MODE NOTICE ONLY (no SMS gateway) -->
         <div
           id="demoOtpBox"
           class="demo-otp-box"
           aria-live="polite"
         >
-
           <div class="demo-otp-left">
-
             <span class="demo-otp-tag">
-              ⚡ Demo OTP:
+              📱 Mobile Test Mode:
             </span>
-
             <strong
               id="demoOtpCode"
               class="demo-otp-code"
             >
-              ------
+              Check email for OTP
             </strong>
-
           </div>
-
-          <button
-            type="button"
-            id="autoFillOtpButton"
-            class="demo-otp-fill-btn"
-          >
-            Auto-fill OTP
-          </button>
-
+          <span style="font-size: 11px; color: #94a3b8;">No SMS sent — email OTP is real</span>
         </div>
 
 
@@ -2687,8 +2674,7 @@
     const demoOtpCode =
       document.getElementById("demoOtpCode");
 
-    const autoFillOtpButton =
-      document.getElementById("autoFillOtpButton");
+    // autoFillOtpButton removed — no demo auto-fill
 
     const formStatus =
       document.getElementById("formStatus");
@@ -2716,10 +2702,11 @@
        OTP STATE & VERIFICATION
        ======================================================== */
 
-    let generatedOtp = null;
+    // generatedOtp removed — OTP now sent by Supabase to real email
     let otpVerified = false;
     let otpTimer = null;
     let remainingSeconds = 0;
+    let emailOtpSent = false;  // tracks if Supabase email OTP was dispatched
 
 
     /* ========================================================
@@ -2777,11 +2764,11 @@
 
 
     /* ========================================================
-       SEND OTP
+       SEND OTP — Real Supabase Email OTP
        ======================================================== */
 
-    sendOtpButton.addEventListener("click", function () {
-      const emailValue = email.value.trim();
+    sendOtpButton.addEventListener("click", async function () {
+      const emailValue = email.value.trim().toLowerCase();
       const phoneValue = phone.value.trim();
 
       if (!emailValue && !phoneValue) {
@@ -2801,17 +2788,56 @@
         return;
       }
 
-      /* Generate 6-digit Demo OTP */
-      generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+      sendOtpButton.disabled = true;
+      sendOtpButton.textContent = "Sending...";
+      showOtpStatus("Sending verification email...", "loading");
+
+      if (!supabase) {
+        showOtpStatus("Supabase is not configured. Cannot send OTP.", "error");
+        sendOtpButton.disabled = false;
+        sendOtpButton.textContent = "Send OTP";
+        return;
+      }
+
+      // Send real email OTP via Supabase signInWithOtp
+      const { error } = await supabase.auth.signInWithOtp({
+        email: emailValue,
+        options: {
+          shouldCreateUser: false  // don't create account yet — just send OTP for verification
+        }
+      });
+
+      if (error) {
+        // If user doesn't exist yet, that's expected — OTP still sent for verification
+        if (error.message && error.message.includes("not found")) {
+          // Try with shouldCreateUser: true for new registrations
+          const { error: err2 } = await supabase.auth.signInWithOtp({
+            email: emailValue,
+            options: { shouldCreateUser: true }
+          });
+          if (err2) {
+            showOtpStatus("Failed to send OTP: " + err2.message, "error");
+            sendOtpButton.disabled = false;
+            sendOtpButton.textContent = "Retry Send OTP";
+            return;
+          }
+        } else if (!error.message.includes("already registered")) {
+          showOtpStatus("Failed to send OTP: " + error.message, "error");
+          sendOtpButton.disabled = false;
+          sendOtpButton.textContent = "Retry Send OTP";
+          return;
+        }
+      }
+
+      emailOtpSent = true;
       otpVerified = false;
-
-      console.log("AskExpert Demo OTP:", generatedOtp);
-
-      demoOtpCode.textContent = generatedOtp;
       demoOtpBox.classList.add("show");
       if (verifyOtpButton) verifyOtpButton.style.display = "inline-flex";
 
-      showOtpStatus("⚡ Demo OTP generated: " + generatedOtp + ". Click Auto-fill or enter code above.", "success");
+      showOtpStatus(
+        "✉️ Verification email sent to " + emailValue + ". Check your inbox and enter the 6-digit code.",
+        "success"
+      );
 
       startOtpTimer();
     });
@@ -2845,13 +2871,14 @@
 
 
     /* ========================================================
-       VERIFY OTP (AUTOMATIC / MANUAL)
+       VERIFY OTP — Real Supabase verifyOtp
        ======================================================== */
 
-    function verifyCurrentOtp() {
+    async function verifyCurrentOtp() {
       const enteredOtp = otp.value.trim();
+      const emailValue = email.value.trim().toLowerCase();
 
-      if (!generatedOtp) {
+      if (!emailOtpSent) {
         showOtpStatus("Please request an OTP first.", "error");
         return false;
       }
@@ -2861,19 +2888,38 @@
         return false;
       }
 
-      if (enteredOtp === generatedOtp) {
-        otpVerified = true;
-        showOtpStatus("✓ OTP Verified Successfully!", "success");
-        otp.disabled = true;
-        sendOtpButton.disabled = true;
-        if (verifyOtpButton) verifyOtpButton.style.display = "none";
-        updateProgress();
-        return true;
-      } else {
-        otpVerified = false;
-        showOtpStatus("Invalid OTP. Please check and try again.", "error");
+      if (!supabase) {
+        showOtpStatus("Supabase not configured.", "error");
         return false;
       }
+
+      showOtpStatus("Verifying OTP...", "loading");
+
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: emailValue,
+        token: enteredOtp,
+        type: "email"
+      });
+
+      if (error) {
+        otpVerified = false;
+        showOtpStatus("Invalid or expired OTP. Please check and try again.", "error");
+        return false;
+      }
+
+      otpVerified = true;
+      showOtpStatus("✓ Email Verified Successfully!", "success");
+      otp.disabled = true;
+      sendOtpButton.disabled = true;
+      if (verifyOtpButton) verifyOtpButton.style.display = "none";
+      updateProgress();
+
+      // Store verified session token temporarily
+      if (data?.session) {
+        sessionStorage.setItem("askexpert_otp_verified", "1");
+      }
+
+      return true;
     }
 
     if (verifyOtpButton) {
@@ -2882,16 +2928,9 @@
       });
     }
 
-    autoFillOtpButton.addEventListener("click", function () {
-      if (generatedOtp) {
-        otp.value = generatedOtp;
-        verifyCurrentOtp();
-      }
-    });
-
     otp.addEventListener("input", function () {
       otp.value = otp.value.replace(/\D/g, "").slice(0, 6);
-      if (otp.value.length === 6 && generatedOtp && !otpVerified) {
+      if (otp.value.length === 6 && emailOtpSent && !otpVerified) {
         verifyCurrentOtp();
       }
     });
@@ -2899,6 +2938,7 @@
     phone.addEventListener("input", function () {
       phone.value = phone.value.replace(/\D/g, "").slice(0, 15);
     });
+
 
 
     /* ========================================================

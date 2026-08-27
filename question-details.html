@@ -1073,7 +1073,7 @@ Specifically, we have international client vendor contracts up for renewal. We n
        STATE & URL PARAMS
        ======================================================== */
     const urlParams = new URLSearchParams(window.location.search);
-    const currentQuestionId = urlParams.get("id") || "q-101";
+    const currentQuestionId = urlParams.get("id");
 
     let currentQuestion = null;
     let answersList = [];
@@ -1086,10 +1086,16 @@ Specifically, we have international client vendor contracts up for renewal. We n
        INITIALIZATION
        ======================================================== */
     async function initPage() {
+      if (!currentQuestionId) {
+        renderNotFound("No question ID provided in the URL.");
+        return;
+      }
       await initUser();
-      await loadQuestionDetails();
-      await loadAnswers();
-      subscribeRealtimeAnswers();
+      const loaded = await loadQuestionDetails();
+      if (loaded) {
+        await loadAnswers();
+        subscribeRealtimeAnswers();
+      }
     }
 
     async function initUser() {
@@ -1115,9 +1121,10 @@ Specifically, we have international client vendor contracts up for renewal. We n
     async function loadQuestionDetails() {
       try {
         let qData = null;
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentQuestionId);
 
-        // 1. Try Supabase
-        if (supabase) {
+        // 1. Try Supabase (only if valid UUID or standard ID format)
+        if (supabase && (isUuid || currentQuestionId.startsWith("q-"))) {
           const { data, error } = await supabase
             .from("questions")
             .select("*")
@@ -1129,32 +1136,57 @@ Specifically, we have international client vendor contracts up for renewal. We n
           }
         }
 
-        // 2. Fallback to localStorage
+        // 2. Fallback to localStorage (user's own posted questions)
         if (!qData) {
           const stored = JSON.parse(localStorage.getItem("askexpert_questions") || "[]");
-          qData = stored.find(q => q.id === currentQuestionId);
+          qData = stored.find(q => q.id === currentQuestionId) || null;
         }
 
-        // 3. Fallback default
+        // 3. Not found — show proper UI, do not use fake fallback
         if (!qData) {
-          qData = {
-            id: currentQuestionId,
-            title: "Compliance renewal & vendor contract statutory requirements under Indian Corporate Law",
-            description: "Need guidance on drafting domestic arbitration and IP indemnity clauses for an Indian SaaS vendor contract under the 2026 corporate compliance revisions to ensure statutory compliance.",
-            category: "Legal Advisor / Lawyer",
-            language: "English",
-            status: "answered",
-            answers_count: 1,
-            created_at: new Date(Date.now() - 3600000 * 2).toISOString()
-          };
+          renderNotFound("This question does not exist or has been removed.");
+          return false;
         }
 
         currentQuestion = qData;
         renderQuestionUI(qData);
+        return true;
 
       } catch (err) {
         console.error("loadQuestionDetails error:", err);
+        renderNotFound("An error occurred while loading this question.");
+        return false;
       }
+    }
+
+    /* ========================================================
+       NOT FOUND STATE
+       ======================================================== */
+    function renderNotFound(reason) {
+      const container = document.querySelector(".question-thread-layout") ||
+                        document.querySelector("main") ||
+                        document.body;
+      container.innerHTML = `
+        <div style="
+          display: flex; flex-direction: column; align-items: center;
+          justify-content: center; min-height: 60vh; gap: 16px;
+          text-align: center; padding: 32px;
+        ">
+          <div style="font-size: 56px;">🔍</div>
+          <h2 style="font-size: 24px; font-weight: 800; color: var(--white, #fff); margin: 0;">
+            Question Not Found
+          </h2>
+          <p style="font-size: 14px; color: var(--muted, #94a3b8); max-width: 400px; margin: 0;">
+            ${reason || 'The question you are looking for does not exist or has been removed.'}
+          </p>
+          <a href="questions.html" style="
+            margin-top: 8px; padding: 10px 24px; border-radius: 8px;
+            background: rgba(0,217,255,0.15); color: #00d9ff;
+            font-weight: 600; text-decoration: none; font-size: 14px;
+            border: 1px solid rgba(0,217,255,0.3);
+          ">Browse All Questions</a>
+        </div>
+      `;
     }
 
     function renderQuestionUI(q) {

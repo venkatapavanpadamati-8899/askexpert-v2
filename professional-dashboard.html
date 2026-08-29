@@ -718,6 +718,13 @@
             <span>Notifications</span>
           </div>
         </a>
+
+        <a href="javascript:void(0)" id="btnExpertReportIssue" class="nav-item" style="color: #00d9ff; border: 1px dashed rgba(0, 217, 255, 0.3); margin-top: 8px;">
+          <div class="nav-item-left">
+            <span>🛠️</span>
+            <span>Report Issue / AI Fix</span>
+          </div>
+        </a>
       </nav>
     </div>
 
@@ -900,6 +907,7 @@
   <script type="module">
     "use strict";
     import { supabase } from "./assets/js/supabaseClient.js";
+    import { openReportIssueModal } from "./assets/js/reportIssueModal.js";
 
     /* ========================================================
        STATE
@@ -919,6 +927,8 @@
       setupStatusToggle();
       setupLogout();
       setupRealtimeRequests();
+
+      document.getElementById("btnExpertReportIssue")?.addEventListener("click", openReportIssueModal);
     }
 
     /* ========================================================

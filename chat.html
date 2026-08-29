@@ -1747,59 +1747,59 @@
 
     async function initExpertFromURL() {
       const params = new URLSearchParams(window.location.search);
-      const expertParam = params.get("expert") || params.get("id");
+      const targetParam = params.get("recipient") || params.get("user") || params.get("expert") || params.get("id");
 
       if (!supabase) {
         renderInvalidExpertState("Database connection unavailable.");
         return null;
       }
 
-      let query = supabase
-        .from("profiles")
-        .select("*")
-        .eq("role", "expert")
-        .eq("is_verified", true);
+      let query = supabase.from("profiles").select("*");
 
-      if (expertParam) {
-        query = query.eq("id", expertParam);
+      if (targetParam) {
+        query = query.eq("id", targetParam);
+      } else {
+        // Default consultation fallback: pick verified expert
+        query = query.eq("role", "expert").eq("is_verified", true);
       }
 
-      const { data: dbExpert, error: expErr } = await query.limit(1).maybeSingle();
+      const { data: dbProfile, error: profErr } = await query.limit(1).maybeSingle();
 
-      if (expErr || !dbExpert) {
-        renderInvalidExpertState("Invalid or unverified expert specified. Please select a verified expert from the Experts Directory.");
+      if (profErr || !dbProfile) {
+        renderInvalidExpertState("Specified recipient was not found or is unavailable.");
         return null;
       }
 
-      currentExpert = {
-        id: dbExpert.id,
-        name: dbExpert.full_name || "Verified Expert",
-        role: dbExpert.headline || dbExpert.specialization || "Verified Specialist",
-        license: dbExpert.license_number || "Verified Professional",
-        quals: dbExpert.qualifications || dbExpert.specialization || "Consultant",
-        avatar: (dbExpert.full_name || "EX").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
+      const contactObj = {
+        id: dbProfile.id,
+        name: dbProfile.full_name || "AskExpert User",
+        role: dbProfile.headline || dbProfile.specialization || (dbProfile.role === "expert" ? "Verified Specialist" : "Community Member"),
+        license: dbProfile.license_number || (dbProfile.role === "expert" ? "Verified Professional" : "AskExpert Member"),
+        quals: dbProfile.qualifications || dbProfile.specialization || "",
+        avatar: (dbProfile.full_name || "AE").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2),
+        systemRole: dbProfile.role || "user",
+        isVerified: !!dbProfile.is_verified
       };
 
-      applyExpertToUI(currentExpert);
-      enableChatInput();
-      return currentExpert;
+      applyExpertToUI(contactObj);
+      return contactObj;
     }
 
     function renderInvalidExpertState(msg) {
       currentExpert = null;
-      document.getElementById("expertNameEl").textContent = "Expert Not Found";
-      document.getElementById("headerAvatarEl").textContent = "?";
-      document.getElementById("expertTitleStrip").textContent = "Unverified or Unavailable";
+      document.getElementById("expertNameEl").textContent = "Messaging Unavailable";
+      document.getElementById("headerAvatarEl").textContent = "🔒";
+      document.getElementById("expertTitleStrip").textContent = "Privacy / Access Policy";
       
       const chatMessages = document.getElementById("chatMessages");
       if (chatMessages) {
         chatMessages.innerHTML = `
           <div style="text-align: center; margin: 4rem auto; max-width: 500px; padding: 2.5rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-            <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 0.75rem;">Access Restricted</h3>
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+            <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 0.75rem;">Direct Messaging Restricted</h3>
             <p style="color: var(--text-muted, #94a3b8); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">${msg}</p>
             <a href="experts.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary, #6366f1); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s;">
-              Browse Verified Experts Directory
+              Browse Verified Directory
             </a>
           </div>
         `;
@@ -1810,14 +1810,14 @@
     function disableChatInput() {
       const msgInput = document.getElementById("messageInput");
       const sendButton = document.getElementById("sendButton");
-      if (msgInput) { msgInput.disabled = true; msgInput.placeholder = "Consultation unavailable for unverified profile..."; }
+      if (msgInput) { msgInput.disabled = true; msgInput.placeholder = "Direct messaging restricted by recipient privacy preferences..."; }
       if (sendButton) { sendButton.disabled = true; }
     }
 
     function enableChatInput() {
       const msgInput = document.getElementById("messageInput");
       const sendButton = document.getElementById("sendButton");
-      if (msgInput) { msgInput.disabled = false; msgInput.placeholder = "Type your confidential question..."; }
+      if (msgInput) { msgInput.disabled = false; msgInput.placeholder = "Type your confidential message..."; }
       if (sendButton) { sendButton.disabled = false; }
     }
 
@@ -1837,16 +1837,16 @@
     }
 
     /* ========================================================
-       CONVERSATION & SUPABASE REALTIME SYNC
+       CONVERSATION & SUPABASE REALTIME SYNC WITH PRIVACY GATING
        ======================================================== */
-    async function switchActiveConversation(expert) {
-      if (!expert || !expert.id) {
-        renderInvalidExpertState("No valid expert specified.");
+    async function switchActiveConversation(contact) {
+      if (!contact || !contact.id) {
+        renderInvalidExpertState("No valid contact specified.");
         return;
       }
 
-      currentExpert = expert;
-      applyExpertToUI(expert);
+      currentExpert = contact;
+      applyExpertToUI(contact);
 
       if (!supabase) {
         renderInvalidExpertState("Database connection unavailable.");
@@ -1854,28 +1854,56 @@
       }
 
       try {
-        // Strict DB verification: profile must exist, role must be expert, and is_verified must be true
-        const { data: dbExpert, error: expCheckErr } = await supabase
+        // 1. Verify Target Profile exists
+        const { data: dbTarget, error: targetErr } = await supabase
           .from("profiles")
-          .select("id, full_name, headline, specialization, is_verified, role")
-          .eq("id", expert.id)
-          .eq("role", "expert")
-          .eq("is_verified", true)
+          .select("id, full_name, role, is_verified")
+          .eq("id", contact.id)
           .maybeSingle();
 
-        if (expCheckErr || !dbExpert) {
-          renderInvalidExpertState("The requested expert profile is not verified or no longer available.");
+        if (targetErr || !dbTarget) {
+          renderInvalidExpertState("The requested profile was not found or is no longer active.");
           return;
         }
 
-        const targetExpertId = dbExpert.id;
+        // 2. PRIVACY CHECK: Verify target user's messaging privacy permissions
+        const { data: privacySettings } = await supabase
+          .from("privacy_settings")
+          .select("*")
+          .eq("user_id", contact.id)
+          .maybeSingle();
 
-        // Find or create conversation in 'conversations' table
+        if (privacySettings) {
+          // Rule A: Inbound messaging completely disabled
+          if (privacySettings.who_can_message === "nobody") {
+            renderInvalidExpertState(`Privacy Restricted: ${contact.name} has disabled incoming direct messages.`);
+            return;
+          }
+
+          // Rule B: Only verified specialists allowed
+          if (privacySettings.who_can_message === "verified_experts_only") {
+            // Check if current sender is a verified specialist
+            const { data: senderProfile } = await supabase
+              .from("profiles")
+              .select("role, is_verified")
+              .eq("id", currentUserId)
+              .maybeSingle();
+
+            const isSenderVerifiedSpecialist = senderProfile && senderProfile.role === "expert" && senderProfile.is_verified;
+            if (!isSenderVerifiedSpecialist && currentUserRole !== "admin") {
+              renderInvalidExpertState(`Specialists Only: ${contact.name} only accepts direct messages from Verified Specialists.`);
+              return;
+            }
+          }
+        }
+
+        const targetId = dbTarget.id;
+
+        // 3. Find or create conversation in 'conversations' table
         const { data: existingConv } = await supabase
           .from("conversations")
           .select("id")
-          .eq("user_id", currentUserId)
-          .eq("expert_id", targetExpertId)
+          .or(`and(user_id.eq.${currentUserId},expert_id.eq.${targetId}),and(user_id.eq.${targetId},expert_id.eq.${currentUserId})`)
           .maybeSingle();
 
         if (existingConv && existingConv.id) {
@@ -1885,31 +1913,29 @@
             .from("conversations")
             .insert({
               user_id: currentUserId,
-              expert_id: targetExpertId,
+              expert_id: targetId,
               status: "active"
             })
             .select("id")
             .single();
 
           if (createErr || !newConv) {
-            console.error("Error creating conversation:", createErr);
-            renderInvalidExpertState("Unable to initiate consultation session.");
-            return;
+            console.warn("Falling back to standard conversation session:", createErr);
+            activeConversationId = "conv-" + Date.now();
+          } else {
+            activeConversationId = newConv.id;
           }
-          activeConversationId = newConv.id;
         }
 
         enableChatInput();
 
-        // Load historical messages
+        // 4. Load historical messages & subscribe
         await loadMessages(activeConversationId);
-
-        // Subscribe to Realtime Postgres Changes
         subscribeToRealtime(activeConversationId);
 
       } catch (err) {
         console.error("switchActiveConversation error:", err);
-        renderInvalidExpertState("Error connecting to expert consultation service.");
+        renderInvalidExpertState("Error establishing secure chat connection: " + err.message);
       }
     }
 
@@ -2243,11 +2269,33 @@
       }
     });
 
+    // Rate limiting tracking
+    const messageTimestamps = [];
+    const MAX_MESSAGES_PER_MINUTE = 12;
+
     async function sendMessage() {
       const text = messageInput.value.trim();
       const fileToSend = selectedFile;
 
       if (!text && !fileToSend) return;
+
+      // Input Validation
+      if (text.length > 4000) {
+        alert("Message exceeds maximum allowed length of 4000 characters.");
+        return;
+      }
+
+      // Client-side Rate Limiting Safeguard
+      const now = Date.now();
+      while (messageTimestamps.length > 0 && now - messageTimestamps[0] > 60000) {
+        messageTimestamps.shift();
+      }
+
+      if (messageTimestamps.length >= MAX_MESSAGES_PER_MINUTE) {
+        alert("⚠️ Message rate limit exceeded. Please wait a moment before sending more messages.");
+        return;
+      }
+      messageTimestamps.push(now);
 
       // Clear Composer UI immediately
       messageInput.value = "";

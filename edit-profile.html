@@ -312,6 +312,42 @@
             <label class="form-label" for="inputBio">Personal Bio / Consultation Notes</label>
             <textarea id="inputBio" class="form-textarea" placeholder="Tell experts about your business, projects, or consultation goals..."></textarea>
           </div>
+
+          <!-- PRIVACY & COMMUNICATION SETTINGS -->
+          <div class="form-group full" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 10px;">
+            <h3 style="font-size: 15px; font-weight: 700; color: #00d9ff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>🔒</span> Privacy & Direct Messaging Controls
+            </h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="selectWhoCanMessage">Who Can Message You</label>
+            <select id="selectWhoCanMessage" class="form-input" style="background: rgba(255,255,255,0.05); color: #fff;">
+              <option value="everyone">🌐 Everyone (Users & Specialists)</option>
+              <option value="verified_experts_only">⚖️ Verified Specialists Only</option>
+              <option value="nobody">🚫 Nobody (Disable Inbound Messages)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="selectProfileVisibility">Profile Visibility</label>
+            <select id="selectProfileVisibility" class="form-input" style="background: rgba(255,255,255,0.05); color: #fff;">
+              <option value="public">🌍 Public (Visible in Directory)</option>
+              <option value="verified_experts_only">🛡️ Verified Specialists Only</option>
+              <option value="private">🔒 Private (Hidden from Directory)</option>
+            </select>
+          </div>
+
+          <div class="form-group full" style="display: flex; gap: 24px; margin-top: 4px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer;">
+              <input type="checkbox" id="checkOnlineStatus" checked />
+              <span>Show online status indicator</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer;">
+              <input type="checkbox" id="checkReadReceipts" checked />
+              <span>Send read receipts in chats</span>
+            </label>
+          </div>
         </div>
 
         <div class="btn-actions-row">
@@ -341,8 +377,12 @@
           if (session && session.user) {
             currentUserId = session.user.id;
             const { data: profile } = await supabase.from("profiles").select("*").eq("id", currentUserId).maybeSingle();
+            
+            // Also fetch privacy settings
+            const { data: privacy } = await supabase.from("privacy_settings").select("*").eq("user_id", currentUserId).maybeSingle();
+
             if (profile) {
-              populateForm(profile);
+              populateForm(profile, privacy);
               return;
             }
           }
@@ -353,24 +393,32 @@
 
       // Fallback local
       const stored = JSON.parse(localStorage.getItem("askexpert_user_profile") || "null");
+      const storedPrivacy = JSON.parse(localStorage.getItem("askexpert_user_privacy") || "null");
       if (stored) {
-        populateForm(stored);
+        populateForm(stored, storedPrivacy);
       } else {
         populateForm({
           full_name: "Aditya Sharma",
           phone: "+91 98765 43210",
           languages: ["English", "Hindi", "Marathi"],
           bio: "Technology founder and business executive seeking verified legal and statutory tax compliance advisory."
-        });
+        }, storedPrivacy);
       }
     }
 
-    function populateForm(data) {
+    function populateForm(data, privacy = {}) {
       document.getElementById("inputFullName").value = data.full_name || "";
       document.getElementById("inputPhone").value = data.phone || "";
       const langs = Array.isArray(data.languages) ? data.languages.join(", ") : (data.languages || "English, Hindi");
       document.getElementById("inputLanguages").value = langs;
       document.getElementById("inputBio").value = data.bio || "";
+
+      if (privacy) {
+        if (privacy.who_can_message) document.getElementById("selectWhoCanMessage").value = privacy.who_can_message;
+        if (privacy.profile_visibility) document.getElementById("selectProfileVisibility").value = privacy.profile_visibility;
+        if (privacy.show_online_status !== undefined) document.getElementById("checkOnlineStatus").checked = privacy.show_online_status;
+        if (privacy.read_receipts !== undefined) document.getElementById("checkReadReceipts").checked = privacy.read_receipts;
+      }
     }
 
     const form = document.getElementById("editProfileForm");
@@ -386,11 +434,25 @@
       const langs = document.getElementById("inputLanguages").value.split(",").map(s => s.trim()).filter(Boolean);
       const bio = document.getElementById("inputBio").value.trim();
 
+      const whoCanMessage = document.getElementById("selectWhoCanMessage").value;
+      const profileVisibility = document.getElementById("selectProfileVisibility").value;
+      const showOnline = document.getElementById("checkOnlineStatus").checked;
+      const readReceipts = document.getElementById("checkReadReceipts").checked;
+
       const updatedData = {
         full_name: fullName,
         phone: phone,
         languages: langs,
         bio: bio,
+        updated_at: new Date().toISOString()
+      };
+
+      const privacyData = {
+        user_id: currentUserId,
+        who_can_message: whoCanMessage,
+        profile_visibility: profileVisibility,
+        show_online_status: showOnline,
+        read_receipts: readReceipts,
         updated_at: new Date().toISOString()
       };
 
@@ -400,6 +462,8 @@
             id: currentUserId,
             ...updatedData
           });
+
+          await supabase.from("privacy_settings").upsert(privacyData);
         } catch (err) {
           console.warn("DB update error:", err);
         }
@@ -408,8 +472,9 @@
       // Local storage backup
       const stored = JSON.parse(localStorage.getItem("askexpert_user_profile") || "{}");
       localStorage.setItem("askexpert_user_profile", JSON.stringify({ ...stored, ...updatedData }));
+      localStorage.setItem("askexpert_user_privacy", JSON.stringify(privacyData));
 
-      showToast("✓ Profile updated successfully! Redirecting...");
+      showToast("✓ Profile & Privacy preferences saved! Redirecting...");
       setTimeout(() => {
         window.location.href = "profile.html";
       }, 1000);

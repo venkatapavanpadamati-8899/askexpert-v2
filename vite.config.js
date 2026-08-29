@@ -41,7 +41,8 @@ export default defineConfig({
         adminQuestions: resolve(__dirname, 'admin-questions.html'),
         adminPayments: resolve(__dirname, 'admin-payments.html'),
         adminReports: resolve(__dirname, 'admin-reports.html'),
-        adminHealth: resolve(__dirname, 'admin-health.html')
+        adminHealth: resolve(__dirname, 'admin-health.html'),
+        adminAiFixCenter: resolve(__dirname, 'admin-ai-fix-center.html')
       }
     }
   }

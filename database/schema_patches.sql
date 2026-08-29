@@ -92,6 +92,21 @@ BEGIN
 END
 $$;
 
+-- questions: Authenticated users can insert questions
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'questions'
+      AND policyname = 'Authenticated users can ask questions'
+  ) THEN
+    CREATE POLICY "Authenticated users can ask questions"
+      ON questions FOR INSERT
+      WITH CHECK (auth.uid() = user_id);
+  END IF;
+END
+$$;
+
 -- questions: Admins can update moderation status
 DO $$
 BEGIN
@@ -112,6 +127,22 @@ BEGIN
   END IF;
 END
 $$;
+
+-- answers: Authenticated users can insert answers
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'answers'
+      AND policyname = 'Authenticated users can submit answers'
+  ) THEN
+    CREATE POLICY "Authenticated users can submit answers"
+      ON answers FOR INSERT
+      WITH CHECK (auth.uid() = user_id OR auth.uid() = expert_id);
+  END IF;
+END
+$$;
+
 
 -- payments: Admins can read all payments
 DO $$

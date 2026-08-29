@@ -864,15 +864,14 @@
       let insertedId = "q_" + Date.now();
       if (supabase) {
         try {
-          const { data, error } = await supabase.from("questions").insert({
+          const insertPayload = {
             user_id: userId,
             title: questionTitle,
-            description: desc,
-            category: profession,
-            language: lang,
+            body: desc,
             status: "open",
-            answers_count: 0
-          }).select().single();
+            tags: [profession]
+          };
+          const { data, error } = await supabase.from("questions").insert(insertPayload).select().single();
 
           if (error) {
             console.warn("Supabase insert error (using local backup):", error.message);

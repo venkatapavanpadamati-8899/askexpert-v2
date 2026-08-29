@@ -792,10 +792,7 @@
       try {
         const { data, error } = await supabase
           .from("questions")
-          .select(`
-            id, title, description, category, language, status, moderation_status, answer_count, created_at,
-            user:user_id(id, full_name)
-          `)
+          .select(`*, user:user_id(id, full_name)`)
           .order("created_at", { ascending: false })
           .limit(300);
 
@@ -849,14 +846,15 @@
         const answerLabel = answerCount > 0 ? `${answerCount} Answer${answerCount > 1 ? "s" : ""}` : "0 Answers (Open)";
         const canResolve = q.status !== "resolved" && q.moderation_status !== "removed";
         const canRemove  = q.moderation_status !== "removed";
-        const snippet = (q.description || "").slice(0, 120);
+        const snippet = (q.description || q.body || "").slice(0, 120);
+        const category = q.category || (q.tags && q.tags[0]) || "General";
 
         return `<tr data-status="${escapeHTML(displayStatus)}" data-id="${escapeHTML(q.id)}">
           <td class="q-title-cell">
             <strong ${isFlagged ? 'style="color:var(--red);"' : ""}>${escapeHTML(q.title || "")}</strong>
             <span class="q-snippet">${escapeHTML(snippet)}${snippet.length >= 120 ? "..." : ""}</span>
           </td>
-          <td><strong style="color:var(--white);">${escapeHTML(q.category || "—")}</strong><br><small style="color:var(--muted);">${escapeHTML(q.language || "English")}</small></td>
+          <td><strong style="color:var(--white);">${escapeHTML(category)}</strong><br><small style="color:var(--muted);">${escapeHTML(q.language || "English")}</small></td>
           <td><strong>${escapeHTML(asker)}</strong></td>
           <td><span style="color:${answerCount > 0 ? "var(--green)" : "var(--muted)"};font-weight:750;">${escapeHTML(answerLabel)}</span></td>
           <td><span class="status-badge ${statusCls}">${statusLbl}</span></td>
@@ -866,9 +864,9 @@
               <button type="button" class="btn-action action-view"
                 data-id="${escapeHTML(q.id)}"
                 data-title="${escapeHTML(q.title || "")}"
-                data-desc="${escapeHTML(q.description || "")}"
+                data-desc="${escapeHTML(q.description || q.body || "")}"
                 data-asker="${escapeHTML(asker)}"
-                data-cat="${escapeHTML(q.category || "")}"
+                data-cat="${escapeHTML(category)}"
                 data-lang="${escapeHTML(q.language || "English")}"
               >Inspect</button>
               ${canResolve ? `<button type="button" class="btn-action action-resolve" data-id="${escapeHTML(q.id)}">Resolve</button>` : ""}

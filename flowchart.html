@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AskExpert | System & Flowchart Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --bg-main: #030712;
+      --bg-card: rgba(10, 25, 47, 0.85);
+      --border: rgba(0, 217, 255, 0.2);
+      --border-glow: rgba(0, 217, 255, 0.4);
+      --cyan: #00d9ff;
+      --purple: #7952ff;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 20%, rgba(0, 217, 255, 0.08), transparent 30%),
+                  radial-gradient(circle at 90% 80%, rgba(121, 82, 255, 0.08), transparent 30%),
+                  var(--bg-main);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(3, 7, 18, 0.85);
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(0, 217, 255, 0.15);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+    }
+
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+      flex: 1;
+    }
+
+    .hero-banner {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .hero-banner h1 {
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff, #94a3b8, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero-banner p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 28px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      max-width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(121, 82, 255, 0.2));
+      color: #fff;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 15px rgba(0, 217, 255, 0.15);
+    }
+
+    /* Diagram Card */
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .diagram-panel {
+      display: none;
+    }
+
+    .diagram-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .diagram-header {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .diagram-header h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .diagram-header p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .diagram-container {
+      background: rgba(2, 6, 23, 0.5);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      min-height: 250px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-title">
+      <span>⚡</span>
+      <span>AskExpert</span>
+      <span class="brand-badge">System Flowcharts</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="user-dashboard.html">User Dashboard</a>
+      <a href="professional-dashboard.html">Expert Dashboard</a>
+      <a href="admin-dashboard.html">Admin Dashboard</a>
+      <a href="PROJECT-FLOWCHART.md" style="color:var(--cyan);">Documentation Markdown ↗</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="hero-banner">
+      <h1>AskExpert Platform Architecture</h1>
+      <p>Interactive, visual end-to-end operational flow charts for all system actors & subsystems</p>
+    </div>
+
+    <!-- Tab navigation -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="system">🌐 1. System Navigation</button>
+      <button class="tab-btn" data-tab="user">👤 2. User Journey</button>
+      <button class="tab-btn" data-tab="expert">🎓 3. Expert Flow</button>
+      <button class="tab-btn" data-tab="admin">🛡️ 4. Admin Flow</button>
+      <button class="tab-btn" data-tab="aifix">🤖 5. AI Fix Center</button>
+      <button class="tab-btn" data-tab="chat">💬 6. Chat & Privacy</button>
+      <button class="tab-btn" data-tab="erd">🗄️ 7. Database ERD</button>
+    </div>
+
+    <div class="diagram-card">
+      <!-- 1. System Navigation -->
+      <div id="panel-system" class="diagram-panel active">
+        <div class="diagram-header">
+          <div>
+            <h2>🌐 High-Level System Architecture & Navigation Routing</h2>
+            <p>Maps public entrypoints, authentication gateways, and role-based redirect routing</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    Home["Landing Page (index.html)"]
+    Home -->|Sign Up| Reg["register.html<br/>(Demo OTP phone testing)"]
+    Home -->|Sign In| Login["login.html<br/>(Email & Password Authentication)"]
+    Login -->|Forgot Password| Forgot["forgot-password.html<br/>(Interactive OTP Recovery)"]
+    Login -->|Recovery Link| Reset["reset-password.html<br/>(Magic Link Landing)"]
+
+    Login -->|Authenticated| DashRouter["dashboard.html<br/>(Dynamic Role Router)"]
+    DashRouter -->|role = 'user'| UserDash["user-dashboard.html<br/>(User Dashboard)"]
+    DashRouter -->|role = 'expert'| ExpertDash["professional-dashboard.html<br/>(Expert Dashboard)"]
+    DashRouter -->|role = 'admin'| AdminDash["admin-dashboard.html<br/>(Admin Dashboard)"]
+
+    Home -->|Admin Gateway| AdminLogin["admin-login.html"] -->|Admin Credentials| AdminDash
+        </pre>
+      </div>
+
+      <!-- 2. User Journey -->
+      <div id="panel-user" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>👤 Complete User Flow: Inquiries, Booking & Payments</h2>
+            <p>From account registration and Demo OTP to posting questions, hiring experts, and leaving reviews</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    U1["Registration (register.html)"] --> U2["Login (login.html)"]
+    U2 --> U3["User Dashboard (user-dashboard.html)"]
+    
+    %% Question Path
+    U3 -->|Ask Question| U4["ask-question.html<br/>(Domain, title, budget)"]
+    U4 --> QFeed["questions.html<br/>(Questions Feed)"]
+    QFeed --> QDetail["question-details.html<br/>(View inquiry & expert answers)"]
+    
+    %% Consultation Path
+    U3 -->|Browse Directory| U6["experts.html<br/>(Filter by domain & rating)"]
+    U6 --> U7["expert-profile.html<br/>(View bio, rate, credentials)"]
+    U7 -->|Request Consultation| U8["consultation-requests.html<br/>(Schedule consultation)"]
+    U8 -->|Escrow Payment| U9["payments.html<br/>(Complete Payment)"]
+    U9 --> U10["chat.html<br/>(Direct 1-on-1 Consultation Chat)"]
+    U10 -->|Finished| U11["review.html<br/>(Rate & Review Expert)"]
+        </pre>
+      </div>
+
+      <!-- 3. Expert Flow -->
+      <div id="panel-expert" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>🎓 Professional / Expert Lifecycle</h2>
+            <p>KYC onboarding, AI credential verification, answering inquiries, and revenue withdrawal</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    E1["Register as Expert (register.html)"] --> E2["Login (login.html)"]
+    E2 --> E3["Professional Verification KYC (professional-verification.html)"]
+    E3 -->|Upload Bar/License No.| E4["AI Certificate Verifier (aiCertificateVerifier.js)"]
+    E4 -->|Status: 'pending_admin'| E5["Waiting for Admin Approval"]
+    E5 -->|Admin Approves KYC| E6["professional-dashboard.html<br/>(Expert Control Center)"]
+
+    E6 -->|Browse Feed| E7["questions.html<br/>(Questions Feed)"]
+    E7 --> E8["question-details.html<br/>(Submit verified expert solution)"]
+
+    E6 -->|Inbound Consultations| E9["consultation-requests.html<br/>(Accept/Decline booking)"]
+    E9 -->|Delivering Advice| E10["chat.html<br/>(1-on-1 consultation session)"]
+    E6 -->|Earnings Ledger| E11["professional-earnings.html<br/>(Revenue & Escrow Payouts)"]
+        </pre>
+      </div>
+
+      <!-- 4. Admin Flow -->
+      <div id="panel-admin" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>🛡️ Admin Governance & Platform Supervision</h2>
+            <p>Strict role-gated admin portal with moderation, KYC review, financial ledger, and system telemetry</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    A1["admin-login.html<br/>(Admin Credential Gate)"] --> A2["admin-dashboard.html<br/>(Platform Metrics Overview)"]
+    A2 --> A3["admin-users.html<br/>(Manage users, block/unblock)"]
+    A2 --> A4["admin-professionals.html<br/>(Review KYC documents, approve expert badge)"]
+    A2 --> A5["admin-questions.html<br/>(Content moderation, flag/remove inquiries)"]
+    A2 --> A6["admin-reports.html<br/>(Investigate disputes & abuse reports)"]
+    A2 --> A7["admin-payments.html<br/>(Financial escrow monitor & refund releases)"]
+    A2 --> A8["admin-health.html<br/>(Database latency & API uptime telemetry)"]
+    A2 --> A9["admin-ai-fix-center.html<br/>(AI fix pipeline & proposal reviews)"]
+        </pre>
+      </div>
+
+      <!-- 5. AI Fix Center -->
+      <div id="panel-aifix" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>🤖 AI Fix Center & Safety Gating Pipeline</h2>
+            <p>Automated issue reporting, technical diagnosis, and zero-autonomous-execution safety model</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    R1["User, Expert, or Admin encounters an issue"] --> R2["Global Modal: reportIssueModal.js<br/>(Category: bug/feature/security, severity)"]
+    R2 -->|Insert| DB1["Supabase Table: issue_reports<br/>(status: 'pending_ai')"]
+
+    DB1 --> R3["AI Issue Analyzer: aiIssueAnalyzer.js<br/>(Root-cause diagnosis, diff generation)"]
+    R3 -->|Insert| DB2["Supabase Table: ai_fix_proposals<br/>(status: 'pending_review')"]
+
+    DB2 --> R4["admin-ai-fix-center.html<br/>(Admin inspects unified diff & files)"]
+    R4 --> R5{"Admin Decision"}
+
+    R5 -->|REJECT| R6["Proposal Status: REJECTED<br/>(No code applied)"]
+    R5 -->|APPROVE| R7["Admin Approves with Notes & Signature"]
+
+    R7 --> DB3["Supabase Table: admin_approvals<br/>(Authorized execution)"]
+    DB3 --> DB4["Supabase Table: audit_logs<br/>(Immutable cryptographic trail)"]
+    DB4 --> R8["Automated Notification Sent to Reporter"]
+        </pre>
+      </div>
+
+      <!-- 6. Chat & Privacy -->
+      <div id="panel-chat" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>💬 Multi-Tier Chat Access Control & Privacy Engine</h2>
+            <p>Server-backed privacy gating, rate limiting, and realtime participant security</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+flowchart TD
+    C1["User A opens chat with User B<br/>(chat.html?recipient=User_B_ID)"] --> C2["Fetch User B Privacy Settings<br/>(privacy_settings table)"]
+    C2 --> C3{"Check: who_can_message"}
+
+    C3 -->|'nobody'| C4["BLOCK: 'This user has disabled incoming direct messages.'"]
+    C3 -->|'verified_experts_only'| C5{"Is User A a Verified Expert?"}
+    C5 -->|No| C6["BLOCK: 'Only verified specialists can message this user.'"]
+    C5 -->|Yes| C7["ALLOW CONVERSATION"]
+    C3 -->|'everyone'| C7
+
+    C7 --> C8["Check Rate Limit Guard<br/>(Max 10 messages / 10s)"]
+    C8 -->|Threshold Exceeded| C9["Throttle message (HTTP 429 warning)"]
+    C8 -->|Within Limits| C10["Dispatch via Supabase Realtime<br/>(messages table)"]
+        </pre>
+      </div>
+
+      <!-- 7. Database ERD -->
+      <div id="panel-erd" class="diagram-panel">
+        <div class="diagram-header">
+          <div>
+            <h2>🗄️ Database Entity-Relationship Overview</h2>
+            <p>Supabase PostgreSQL tables, foreign key constraints, and operational relations</p>
+          </div>
+        </div>
+        <div class="diagram-container"></div>
+        <pre class="diagram-source" style="display:none">
+erDiagram
+    PROFILES ||--o{ QUESTIONS : writes
+    PROFILES ||--o{ ANSWERS : author
+    PROFILES ||--o{ CONSULTATION_REQUESTS : requests
+    PROFILES ||--o{ CONSULTATION_REQUESTS : receives
+    PROFILES ||--o{ PAYMENTS : pays
+    PROFILES ||--o{ REVIEWS : writes
+    PROFILES ||--o{ REVIEWS : receives
+    PROFILES ||--o{ NOTIFICATIONS : receives
+    PROFILES ||--o| PRIVACY_SETTINGS : configures
+    PROFILES ||--o| PROFESSIONAL_VERIFICATIONS : submits
+
+    QUESTIONS ||--o{ ANSWERS : contains
+    
+    CONVERSATIONS ||--o{ CONVERSATION_PARTICIPANTS : includes
+    CONVERSATIONS ||--o{ MESSAGES : contains
+    PROFILES ||--o{ CONVERSATION_PARTICIPANTS : member
+    PROFILES ||--o{ MESSAGES : sends
+
+    PROFILES ||--o{ ISSUE_REPORTS : reports
+    ISSUE_REPORTS ||--o{ AI_FIX_PROPOSALS : analyzed_into
+    AI_FIX_PROPOSALS ||--o{ ADMIN_APPROVALS : decided_by
+    PROFILES ||--o{ ADMIN_APPROVALS : admin
+    PROFILES ||--o{ AUDIT_LOGS : actor
+        </pre>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AskExpert Platform • System Flow & Architectural Diagrams</p>
+  </footer>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#030712',
+        primaryColor: '#00d9ff',
+        primaryBorderColor: '#00d9ff',
+        primaryTextColor: '#ffffff',
+        lineColor: '#7952ff',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a'
+      }
+    });
+
+    async function renderPanel(panel) {
+      const target = panel.querySelector('.diagram-container');
+      const source = panel.querySelector('.diagram-source');
+      if (target && source && !target.dataset.rendered) {
+        try {
+          const id = 'mermaid_' + panel.id.replace(/[^a-z0-9]/gi, '_') + '_' + Math.floor(Math.random() * 10000);
+          const { svg } = await mermaid.render(id, source.textContent.trim());
+          target.innerHTML = svg;
+          target.dataset.rendered = 'true';
+        } catch (e) {
+          console.error('Mermaid render error in panel ' + panel.id + ':', e);
+        }
+      }
+    }
+
+    const buttons = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.diagram-panel');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const tab = btn.getAttribute('data-tab');
+        const activePanel = document.getElementById('panel-' + tab);
+        if (activePanel) {
+          activePanel.classList.add('active');
+          await renderPanel(activePanel);
+        }
+      });
+    });
+
+    // Render initial active panel on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const initialPanel = document.querySelector('.diagram-panel.active');
+      if (initialPanel) {
+        renderPanel(initialPanel);
+      }
+    });
+  </script>
+</body>
+</html>

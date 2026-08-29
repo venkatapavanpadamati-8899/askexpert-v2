@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Home Landing",
+    "initialUrl": "http://localhost:5173/index.html",
+    "finalUrl": "http://localhost:5173/index.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "01_Home_Landing.png"
+  },
+  {
+    "name": "Login Page",
+    "initialUrl": "http://localhost:5173/login.html",
+    "finalUrl": "http://localhost:5173/login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "02_Login_Page.png"
+  },
+  {
+    "name": "Register Page",
+    "initialUrl": "http://localhost:5173/register.html",
+    "finalUrl": "http://localhost:5173/register.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "03_Register_Page.png"
+  },
+  {
+    "name": "OTP & Password Recovery",
+    "initialUrl": "http://localhost:5173/forgot-password.html",
+    "finalUrl": "http://localhost:5173/forgot-password.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "04_OTP___Password_Recovery.png"
+  },
+  {
+    "name": "Questions Feed",
+    "initialUrl": "http://localhost:5173/questions.html",
+    "finalUrl": "http://localhost:5173/questions.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "05_Questions_Feed.png"
+  },
+  {
+    "name": "Experts Directory",
+    "initialUrl": "http://localhost:5173/experts.html",
+    "finalUrl": "http://localhost:5173/experts.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "06_Experts_Directory.png"
+  },
+  {
+    "name": "Profile Page",
+    "initialUrl": "http://localhost:5173/profile.html",
+    "finalUrl": "http://localhost:5173/profile.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "07_Profile_Page.png"
+  },
+  {
+    "name": "Chat Screen",
+    "initialUrl": "http://localhost:5173/chat.html",
+    "finalUrl": "http://localhost:5173/login.html?redirect=%2Fchat.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "08_Chat_Screen.png"
+  },
+  {
+    "name": "User Dashboard (Guard)",
+    "initialUrl": "http://localhost:5173/user-dashboard.html",
+    "finalUrl": "http://localhost:5173/login.html?redirect=user-dashboard.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "09_User_Dashboard__Guard_.png"
+  },
+  {
+    "name": "Professional Dashboard (Guard)",
+    "initialUrl": "http://localhost:5173/professional-dashboard.html",
+    "finalUrl": "http://localhost:5173/login.html?redirect=professional-dashboard.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "10_Professional_Dashboard__Guard_.png"
+  },
+  {
+    "name": "Admin Login",
+    "initialUrl": "http://localhost:5173/admin-login.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "11_Admin_Login.png"
+  },
+  {
+    "name": "Admin Dashboard (Guard)",
+    "initialUrl": "http://localhost:5173/admin-dashboard.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "12_Admin_Dashboard__Guard_.png"
+  },
+  {
+    "name": "Admin Payments (Guard)",
+    "initialUrl": "http://localhost:5173/admin-payments.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "13_Admin_Payments__Guard_.png"
+  },
+  {
+    "name": "Admin Questions (Guard)",
+    "initialUrl": "http://localhost:5173/admin-questions.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "14_Admin_Questions__Guard_.png"
+  },
+  {
+    "name": "Admin Reports (Guard)",
+    "initialUrl": "http://localhost:5173/admin-reports.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "15_Admin_Reports__Guard_.png"
+  },
+  {
+    "name": "Admin Professionals (Guard)",
+    "initialUrl": "http://localhost:5173/admin-professionals.html",
+    "finalUrl": "http://localhost:5173/admin-login.html",
+    "httpStatus": 200,
+    "consoleErrors": [],
+    "networkFails": [],
+    "hasFakeEmail": false,
+    "hasDemoRows": false,
+    "screenshot": "16_Admin_Professionals__Guard_.png"
+  }
+]

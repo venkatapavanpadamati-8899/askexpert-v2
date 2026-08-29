@@ -1869,7 +1869,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/register-BKVxOMb_.js"></script>
+  <script type="module" crossorigin src="/assets/register-B_c7AkkC.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
 
@@ -2255,14 +2255,30 @@
         </div>
 
 
-        <!-- PHONE VERIFIED BADGE -->
+        <!-- DEMO OTP DISPLAY -->
         <div
-          id="phoneVerifiedBadge"
-          style="display: none; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(32, 216, 137, 0.1); border: 1px solid rgba(32, 216, 137, 0.3); border-radius: 10px; color: #20d889; font-size: 13px; font-weight: 700; margin-bottom: 8px;"
+          id="demoOtpBox"
+          class="demo-otp-box"
           aria-live="polite"
         >
-          <span>✓</span>
-          <span>Phone Number Verified via SMS</span>
+          <div class="demo-otp-left">
+            <span class="demo-otp-tag">
+              ⚡ Demo OTP:
+            </span>
+            <strong
+              id="demoOtpCode"
+              class="demo-otp-code"
+            >
+              ------
+            </strong>
+          </div>
+          <button
+            type="button"
+            id="autoFillOtpButton"
+            class="demo-otp-fill-btn"
+          >
+            Auto-fill OTP
+          </button>
         </div>
 
 

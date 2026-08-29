@@ -2253,14 +2253,30 @@
         </div>
 
 
-        <!-- PHONE VERIFIED BADGE -->
+        <!-- DEMO OTP DISPLAY -->
         <div
-          id="phoneVerifiedBadge"
-          style="display: none; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(32, 216, 137, 0.1); border: 1px solid rgba(32, 216, 137, 0.3); border-radius: 10px; color: #20d889; font-size: 13px; font-weight: 700; margin-bottom: 8px;"
+          id="demoOtpBox"
+          class="demo-otp-box"
           aria-live="polite"
         >
-          <span>✓</span>
-          <span>Phone Number Verified via SMS</span>
+          <div class="demo-otp-left">
+            <span class="demo-otp-tag">
+              ⚡ Demo OTP:
+            </span>
+            <strong
+              id="demoOtpCode"
+              class="demo-otp-code"
+            >
+              ------
+            </strong>
+          </div>
+          <button
+            type="button"
+            id="autoFillOtpButton"
+            class="demo-otp-fill-btn"
+          >
+            Auto-fill OTP
+          </button>
         </div>
 
 
@@ -2679,8 +2695,14 @@
     const otpStatus =
       document.getElementById("otpStatus");
 
-    const phoneVerifiedBadge =
-      document.getElementById("phoneVerifiedBadge");
+    const demoOtpBox =
+      document.getElementById("demoOtpBox");
+
+    const demoOtpCode =
+      document.getElementById("demoOtpCode");
+
+    const autoFillOtpButton =
+      document.getElementById("autoFillOtpButton");
 
     const formStatus =
       document.getElementById("formStatus");
@@ -2705,14 +2727,13 @@
 
 
     /* ========================================================
-       OTP STATE & VERIFICATION (SUPABASE PHONE OTP)
+       OTP STATE & VERIFICATION (DEMO OTP TEST MODE)
        ======================================================== */
 
+    let generatedOtp = null;
     let otpVerified = false;
     let otpTimer = null;
     let remainingSeconds = 0;
-    let phoneOtpSent = false;
-    let verifiedPhone = "";
 
     function getFullPhoneNumber() {
       const countryCodeVal = document.getElementById("countryCode")?.value || "+91";
@@ -2775,10 +2796,10 @@
 
 
     /* ========================================================
-       SEND OTP — Real Supabase Phone SMS OTP
+       SEND OTP — Demo OTP for Phone Testing
        ======================================================== */
 
-    sendOtpButton.addEventListener("click", async function () {
+    sendOtpButton.addEventListener("click", function () {
       const rawPhone = phone.value.trim().replace(/\D/g, "");
 
       if (!rawPhone || rawPhone.length < 7 || rawPhone.length > 15) {
@@ -2787,65 +2808,22 @@
         return;
       }
 
-      const fullPhone = getFullPhoneNumber();
+      /* Generate 6-digit Demo OTP for phone testing */
+      generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+      otpVerified = false;
 
-      sendOtpButton.disabled = true;
-      sendOtpButton.textContent = "Sending...";
-      showOtpStatus("Sending verification SMS to " + fullPhone + "...", "loading");
+      console.log("AskExpert Register Demo OTP:", generatedOtp);
 
-      if (!supabase) {
-        showOtpStatus("Supabase client is not configured. Cannot send OTP.", "error");
-        sendOtpButton.disabled = false;
-        sendOtpButton.textContent = "Send OTP";
-        return;
-      }
+      if (demoOtpCode) demoOtpCode.textContent = generatedOtp;
+      if (demoOtpBox) demoOtpBox.classList.add("show");
+      if (verifyOtpButton) verifyOtpButton.style.display = "inline-flex";
 
-      try {
-        // Official Supabase phone OTP dispatch with shouldCreateUser: true
-        const { data, error } = await supabase.auth.signInWithOtp({
-          phone: fullPhone,
-          options: {
-            channel: "sms",
-            shouldCreateUser: true
-          }
-        });
+      showOtpStatus(
+        "⚡ Demo OTP generated for testing: " + generatedOtp + ". Click Auto-fill or enter the code above.",
+        "success"
+      );
 
-        if (error) {
-          console.error("Supabase phone OTP dispatch error:", error);
-
-          if (error.code === "phone_provider_disabled" || (error.message && error.message.toLowerCase().includes("unsupported phone provider"))) {
-            showOtpStatus(
-              "⚠️ Supabase Phone Provider is disabled. Please enable Phone in Supabase Dashboard (Authentication -> Providers -> Phone).",
-              "error"
-            );
-          } else if (error.code === "over_sms_send_rate_limit" || (error.message && error.message.toLowerCase().includes("rate limit"))) {
-            showOtpStatus("SMS rate limit reached. Please wait a moment before requesting another OTP.", "error");
-          } else {
-            showOtpStatus("Failed to send OTP: " + error.message, "error");
-          }
-
-          sendOtpButton.disabled = false;
-          sendOtpButton.textContent = "Retry Send OTP";
-          return;
-        }
-
-        phoneOtpSent = true;
-        otpVerified = false;
-        if (verifyOtpButton) verifyOtpButton.style.display = "inline-flex";
-
-        showOtpStatus(
-          "📲 SMS verification code sent to " + fullPhone + ". Enter the 6-digit code.",
-          "success"
-        );
-
-        startOtpTimer();
-
-      } catch (err) {
-        console.error("Phone OTP exception:", err);
-        showOtpStatus("Network error sending OTP: " + err.message, "error");
-        sendOtpButton.disabled = false;
-        sendOtpButton.textContent = "Retry Send OTP";
-      }
+      startOtpTimer();
     });
 
 
@@ -2877,70 +2855,35 @@
 
 
     /* ========================================================
-       VERIFY OTP — Real Supabase Phone verifyOtp (type: 'sms')
+       VERIFY OTP (AUTOMATIC / MANUAL)
        ======================================================== */
 
-    async function verifyCurrentOtp() {
+    function verifyCurrentOtp() {
       const enteredOtp = otp.value.trim();
-      const fullPhone = getFullPhoneNumber();
 
-      if (!phoneOtpSent) {
-        showOtpStatus("Please request an SMS OTP first.", "error");
+      if (!generatedOtp) {
+        showOtpStatus("Please click 'Send OTP' first.", "error");
         return false;
       }
 
       if (enteredOtp.length !== 6) {
-        showOtpStatus("Please enter the 6-digit verification code.", "error");
+        showOtpStatus("Please enter the 6-digit OTP.", "error");
         return false;
       }
 
-      if (!supabase) {
-        showOtpStatus("Supabase not configured.", "error");
-        return false;
-      }
-
-      showOtpStatus("Verifying SMS code...", "loading");
-
-      try {
-        // Official Supabase phone verifyOtp with type: 'sms'
-        const { data, error } = await supabase.auth.verifyOtp({
-          phone: fullPhone,
-          token: enteredOtp,
-          type: "sms"
-        });
-
-        if (error) {
-          console.error("Supabase phone verifyOtp error:", error);
-          otpVerified = false;
-          showOtpStatus("Invalid or expired SMS OTP. Please check and try again.", "error");
-          return false;
-        }
-
+      if (enteredOtp === generatedOtp) {
+        clearInterval(otpTimer);
         otpVerified = true;
-        verifiedPhone = fullPhone;
-        showOtpStatus("✓ Phone Number Verified Successfully!", "success");
-
-        // Lock inputs to prevent tampering
+        showOtpStatus("✓ Demo OTP Verified Successfully! You can now create your account.", "success");
         otp.disabled = true;
-        phone.disabled = true;
-        const countryCodeEl = document.getElementById("countryCode");
-        if (countryCodeEl) countryCodeEl.disabled = true;
-
         sendOtpButton.disabled = true;
         sendOtpButton.textContent = "Verified ✓";
         if (verifyOtpButton) verifyOtpButton.style.display = "none";
-
-        const badge = document.getElementById("phoneVerifiedBadge");
-        if (badge) badge.style.display = "flex";
-
         updateProgress();
-
-        sessionStorage.setItem("askexpert_verified_phone", fullPhone);
         return true;
-
-      } catch (err) {
-        console.error("verifyCurrentOtp exception:", err);
-        showOtpStatus("Verification failed: " + err.message, "error");
+      } else {
+        otpVerified = false;
+        showOtpStatus("Invalid OTP. Please check and enter the generated Demo OTP.", "error");
         return false;
       }
     }
@@ -2951,17 +2894,27 @@
       });
     }
 
+    if (autoFillOtpButton) {
+      autoFillOtpButton.addEventListener("click", function () {
+        if (generatedOtp) {
+          otp.value = generatedOtp;
+          verifyCurrentOtp();
+        }
+      });
+    }
+
     otp.addEventListener("input", function () {
       otp.value = otp.value.replace(/\D/g, "").slice(0, 6);
-      if (otp.value.length === 6 && phoneOtpSent && !otpVerified) {
+      if (otp.value.length === 6 && generatedOtp && !otpVerified) {
         verifyCurrentOtp();
       }
     });
 
     phone.addEventListener("input", function () {
       phone.value = phone.value.replace(/\D/g, "").slice(0, 15);
-      if (phoneOtpSent && !otpVerified) {
-        phoneOtpSent = false;
+      if (generatedOtp && !otpVerified) {
+        generatedOtp = null;
+        if (demoOtpBox) demoOtpBox.classList.remove("show");
         showOtpStatus("Phone number modified. Please request a new verification code.", "error");
         sendOtpButton.disabled = false;
         sendOtpButton.textContent = "Send OTP";
@@ -3043,7 +2996,7 @@
       }
 
       if (!otpVerified) {
-        return { valid: false, message: "Please verify your phone number via SMS OTP before creating your account." };
+        return { valid: false, message: "Please verify your phone number with the Demo OTP before creating your account." };
       }
 
       if (passwordValue.length < 8) {
@@ -3090,7 +3043,7 @@
         }
         const usernameVal = baseUsername;
         const emailVal = email.value.trim();
-        const fullPhone = verifiedPhone || getFullPhoneNumber();
+        const fullPhone = getFullPhoneNumber();
         const passwordVal = password.value;
 
         createButton.disabled = true;

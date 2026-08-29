@@ -267,7 +267,7 @@
       to { transform: translateY(0); opacity: 1; }
     }
   </style>
-  <script type="module" crossorigin src="/assets/editProfile-CuBZfGyJ.js"></script>
+  <script type="module" crossorigin src="/assets/editProfile-BmwBdEWx.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
 <body>
@@ -313,6 +313,42 @@
           <div class="form-group full">
             <label class="form-label" for="inputBio">Personal Bio / Consultation Notes</label>
             <textarea id="inputBio" class="form-textarea" placeholder="Tell experts about your business, projects, or consultation goals..."></textarea>
+          </div>
+
+          <!-- PRIVACY & COMMUNICATION SETTINGS -->
+          <div class="form-group full" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: 10px;">
+            <h3 style="font-size: 15px; font-weight: 700; color: #00d9ff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>🔒</span> Privacy & Direct Messaging Controls
+            </h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="selectWhoCanMessage">Who Can Message You</label>
+            <select id="selectWhoCanMessage" class="form-input" style="background: rgba(255,255,255,0.05); color: #fff;">
+              <option value="everyone">🌐 Everyone (Users & Specialists)</option>
+              <option value="verified_experts_only">⚖️ Verified Specialists Only</option>
+              <option value="nobody">🚫 Nobody (Disable Inbound Messages)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="selectProfileVisibility">Profile Visibility</label>
+            <select id="selectProfileVisibility" class="form-input" style="background: rgba(255,255,255,0.05); color: #fff;">
+              <option value="public">🌍 Public (Visible in Directory)</option>
+              <option value="verified_experts_only">🛡️ Verified Specialists Only</option>
+              <option value="private">🔒 Private (Hidden from Directory)</option>
+            </select>
+          </div>
+
+          <div class="form-group full" style="display: flex; gap: 24px; margin-top: 4px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer;">
+              <input type="checkbox" id="checkOnlineStatus" checked />
+              <span>Show online status indicator</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer;">
+              <input type="checkbox" id="checkReadReceipts" checked />
+              <span>Send read receipts in chats</span>
+            </label>
           </div>
         </div>
 

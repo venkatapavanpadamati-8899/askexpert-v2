@@ -2253,24 +2253,14 @@
         </div>
 
 
-        <!-- MOBILE OTP: TEST MODE NOTICE ONLY (no SMS gateway) -->
+        <!-- PHONE VERIFIED BADGE -->
         <div
-          id="demoOtpBox"
-          class="demo-otp-box"
+          id="phoneVerifiedBadge"
+          style="display: none; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(32, 216, 137, 0.1); border: 1px solid rgba(32, 216, 137, 0.3); border-radius: 10px; color: #20d889; font-size: 13px; font-weight: 700; margin-bottom: 8px;"
           aria-live="polite"
         >
-          <div class="demo-otp-left">
-            <span class="demo-otp-tag">
-              📱 Mobile Test Mode:
-            </span>
-            <strong
-              id="demoOtpCode"
-              class="demo-otp-code"
-            >
-              Check email for OTP
-            </strong>
-          </div>
-          <span style="font-size: 11px; color: #94a3b8;">No SMS sent — email OTP is real</span>
+          <span>✓</span>
+          <span>Phone Number Verified via SMS</span>
         </div>
 
 
@@ -2689,13 +2679,8 @@
     const otpStatus =
       document.getElementById("otpStatus");
 
-    const demoOtpBox =
-      document.getElementById("demoOtpBox");
-
-    const demoOtpCode =
-      document.getElementById("demoOtpCode");
-
-    // autoFillOtpButton removed — no demo auto-fill
+    const phoneVerifiedBadge =
+      document.getElementById("phoneVerifiedBadge");
 
     const formStatus =
       document.getElementById("formStatus");
@@ -2720,15 +2705,20 @@
 
 
     /* ========================================================
-       OTP STATE & VERIFICATION
+       OTP STATE & VERIFICATION (SUPABASE PHONE OTP)
        ======================================================== */
 
-    // generatedOtp removed — OTP now sent by Supabase to real email
     let otpVerified = false;
     let otpTimer = null;
     let remainingSeconds = 0;
-    let emailOtpSent = false;  // tracks if Supabase email OTP was dispatched
+    let phoneOtpSent = false;
+    let verifiedPhone = "";
 
+    function getFullPhoneNumber() {
+      const countryCodeVal = document.getElementById("countryCode")?.value || "+91";
+      const rawPhone = phone.value.trim().replace(/\D/g, "");
+      return countryCodeVal + rawPhone;
+    }
 
     /* ========================================================
        HELPERS
@@ -2785,82 +2775,77 @@
 
 
     /* ========================================================
-       SEND OTP — Real Supabase Email OTP
+       SEND OTP — Real Supabase Phone SMS OTP
        ======================================================== */
 
     sendOtpButton.addEventListener("click", async function () {
-      const emailValue = email.value.trim().toLowerCase();
-      const phoneValue = phone.value.trim();
+      const rawPhone = phone.value.trim().replace(/\D/g, "");
 
-      if (!emailValue && !phoneValue) {
-        showOtpStatus("Please enter your email and phone number first.", "error");
-        return;
-      }
-
-      if (!/^\S+@\S+\.\S+$/.test(emailValue)) {
-        showOtpStatus("Please enter a valid email address.", "error");
-        email.focus();
-        return;
-      }
-
-      if (phoneValue.length < 7) {
-        showOtpStatus("Please enter a valid phone number.", "error");
+      if (!rawPhone || rawPhone.length < 7 || rawPhone.length > 15) {
+        showOtpStatus("Please enter a valid phone number (at least 7 to 10 digits).", "error");
         phone.focus();
         return;
       }
 
+      const fullPhone = getFullPhoneNumber();
+
       sendOtpButton.disabled = true;
       sendOtpButton.textContent = "Sending...";
-      showOtpStatus("Sending verification email...", "loading");
+      showOtpStatus("Sending verification SMS to " + fullPhone + "...", "loading");
 
       if (!supabase) {
-        showOtpStatus("Supabase is not configured. Cannot send OTP.", "error");
+        showOtpStatus("Supabase client is not configured. Cannot send OTP.", "error");
         sendOtpButton.disabled = false;
         sendOtpButton.textContent = "Send OTP";
         return;
       }
 
-      // Send real email OTP via Supabase signInWithOtp
-      const { error } = await supabase.auth.signInWithOtp({
-        email: emailValue,
-        options: {
-          shouldCreateUser: false  // don't create account yet — just send OTP for verification
-        }
-      });
-
-      if (error) {
-        // If user doesn't exist yet, that's expected — OTP still sent for verification
-        if (error.message && error.message.includes("not found")) {
-          // Try with shouldCreateUser: true for new registrations
-          const { error: err2 } = await supabase.auth.signInWithOtp({
-            email: emailValue,
-            options: { shouldCreateUser: true }
-          });
-          if (err2) {
-            showOtpStatus("Failed to send OTP: " + err2.message, "error");
-            sendOtpButton.disabled = false;
-            sendOtpButton.textContent = "Retry Send OTP";
-            return;
+      try {
+        // Official Supabase phone OTP dispatch with shouldCreateUser: true
+        const { data, error } = await supabase.auth.signInWithOtp({
+          phone: fullPhone,
+          options: {
+            channel: "sms",
+            shouldCreateUser: true
           }
-        } else if (!error.message.includes("already registered")) {
-          showOtpStatus("Failed to send OTP: " + error.message, "error");
+        });
+
+        if (error) {
+          console.error("Supabase phone OTP dispatch error:", error);
+
+          if (error.code === "phone_provider_disabled" || (error.message && error.message.toLowerCase().includes("unsupported phone provider"))) {
+            showOtpStatus(
+              "⚠️ Supabase Phone Provider is disabled. Please enable Phone in Supabase Dashboard (Authentication -> Providers -> Phone).",
+              "error"
+            );
+          } else if (error.code === "over_sms_send_rate_limit" || (error.message && error.message.toLowerCase().includes("rate limit"))) {
+            showOtpStatus("SMS rate limit reached. Please wait a moment before requesting another OTP.", "error");
+          } else {
+            showOtpStatus("Failed to send OTP: " + error.message, "error");
+          }
+
           sendOtpButton.disabled = false;
           sendOtpButton.textContent = "Retry Send OTP";
           return;
         }
+
+        phoneOtpSent = true;
+        otpVerified = false;
+        if (verifyOtpButton) verifyOtpButton.style.display = "inline-flex";
+
+        showOtpStatus(
+          "📲 SMS verification code sent to " + fullPhone + ". Enter the 6-digit code.",
+          "success"
+        );
+
+        startOtpTimer();
+
+      } catch (err) {
+        console.error("Phone OTP exception:", err);
+        showOtpStatus("Network error sending OTP: " + err.message, "error");
+        sendOtpButton.disabled = false;
+        sendOtpButton.textContent = "Retry Send OTP";
       }
-
-      emailOtpSent = true;
-      otpVerified = false;
-      demoOtpBox.classList.add("show");
-      if (verifyOtpButton) verifyOtpButton.style.display = "inline-flex";
-
-      showOtpStatus(
-        "✉️ Verification email sent to " + emailValue + ". Check your inbox and enter the 6-digit code.",
-        "success"
-      );
-
-      startOtpTimer();
     });
 
 
@@ -2892,20 +2877,20 @@
 
 
     /* ========================================================
-       VERIFY OTP — Real Supabase verifyOtp
+       VERIFY OTP — Real Supabase Phone verifyOtp (type: 'sms')
        ======================================================== */
 
     async function verifyCurrentOtp() {
       const enteredOtp = otp.value.trim();
-      const emailValue = email.value.trim().toLowerCase();
+      const fullPhone = getFullPhoneNumber();
 
-      if (!emailOtpSent) {
-        showOtpStatus("Please request an OTP first.", "error");
+      if (!phoneOtpSent) {
+        showOtpStatus("Please request an SMS OTP first.", "error");
         return false;
       }
 
       if (enteredOtp.length !== 6) {
-        showOtpStatus("Please enter the 6-digit OTP.", "error");
+        showOtpStatus("Please enter the 6-digit verification code.", "error");
         return false;
       }
 
@@ -2914,33 +2899,50 @@
         return false;
       }
 
-      showOtpStatus("Verifying OTP...", "loading");
+      showOtpStatus("Verifying SMS code...", "loading");
 
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: emailValue,
-        token: enteredOtp,
-        type: "email"
-      });
+      try {
+        // Official Supabase phone verifyOtp with type: 'sms'
+        const { data, error } = await supabase.auth.verifyOtp({
+          phone: fullPhone,
+          token: enteredOtp,
+          type: "sms"
+        });
 
-      if (error) {
-        otpVerified = false;
-        showOtpStatus("Invalid or expired OTP. Please check and try again.", "error");
+        if (error) {
+          console.error("Supabase phone verifyOtp error:", error);
+          otpVerified = false;
+          showOtpStatus("Invalid or expired SMS OTP. Please check and try again.", "error");
+          return false;
+        }
+
+        otpVerified = true;
+        verifiedPhone = fullPhone;
+        showOtpStatus("✓ Phone Number Verified Successfully!", "success");
+
+        // Lock inputs to prevent tampering
+        otp.disabled = true;
+        phone.disabled = true;
+        const countryCodeEl = document.getElementById("countryCode");
+        if (countryCodeEl) countryCodeEl.disabled = true;
+
+        sendOtpButton.disabled = true;
+        sendOtpButton.textContent = "Verified ✓";
+        if (verifyOtpButton) verifyOtpButton.style.display = "none";
+
+        const badge = document.getElementById("phoneVerifiedBadge");
+        if (badge) badge.style.display = "flex";
+
+        updateProgress();
+
+        sessionStorage.setItem("askexpert_verified_phone", fullPhone);
+        return true;
+
+      } catch (err) {
+        console.error("verifyCurrentOtp exception:", err);
+        showOtpStatus("Verification failed: " + err.message, "error");
         return false;
       }
-
-      otpVerified = true;
-      showOtpStatus("✓ Email Verified Successfully!", "success");
-      otp.disabled = true;
-      sendOtpButton.disabled = true;
-      if (verifyOtpButton) verifyOtpButton.style.display = "none";
-      updateProgress();
-
-      // Store verified session token temporarily
-      if (data?.session) {
-        sessionStorage.setItem("askexpert_otp_verified", "1");
-      }
-
-      return true;
     }
 
     if (verifyOtpButton) {
@@ -2951,13 +2953,20 @@
 
     otp.addEventListener("input", function () {
       otp.value = otp.value.replace(/\D/g, "").slice(0, 6);
-      if (otp.value.length === 6 && emailOtpSent && !otpVerified) {
+      if (otp.value.length === 6 && phoneOtpSent && !otpVerified) {
         verifyCurrentOtp();
       }
     });
 
     phone.addEventListener("input", function () {
       phone.value = phone.value.replace(/\D/g, "").slice(0, 15);
+      if (phoneOtpSent && !otpVerified) {
+        phoneOtpSent = false;
+        showOtpStatus("Phone number modified. Please request a new verification code.", "error");
+        sendOtpButton.disabled = false;
+        sendOtpButton.textContent = "Send OTP";
+        if (verifyOtpButton) verifyOtpButton.style.display = "none";
+      }
     });
 
 
@@ -3034,7 +3043,7 @@
       }
 
       if (!otpVerified) {
-        return { valid: false, message: "Please verify your OTP before creating your account." };
+        return { valid: false, message: "Please verify your phone number via SMS OTP before creating your account." };
       }
 
       if (passwordValue.length < 8) {
@@ -3081,8 +3090,7 @@
         }
         const usernameVal = baseUsername;
         const emailVal = email.value.trim();
-        const phoneVal = phone.value.trim();
-        const fullPhone = (document.getElementById("countryCode")?.value || "+91") + phoneVal;
+        const fullPhone = verifiedPhone || getFullPhoneNumber();
         const passwordVal = password.value;
 
         createButton.disabled = true;
@@ -3111,6 +3119,7 @@
                   full_name: nameVal,
                   username: finalUsername,
                   phone: fullPhone,
+                  phone_confirmed: true,
                   role: dbRole
                 }
               }

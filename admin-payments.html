@@ -655,7 +655,7 @@
             <span class="metric-label">Total Platform GMV</span>
             <span>💰</span>
           </div>
-          <div class="metric-val" style="color: var(--green);">₹48.2L</div>
+          <div class="metric-val" style="color: var(--green);" id="metricGMV">—</div>
         </div>
 
         <div class="metric-card">
@@ -663,7 +663,7 @@
             <span class="metric-label">Successful Transactions</span>
             <span>💳</span>
           </div>
-          <div class="metric-val">3,214</div>
+          <div class="metric-val" id="metricTxnCount">—</div>
         </div>
 
         <div class="metric-card">
@@ -671,23 +671,23 @@
             <span class="metric-label">Pending Settlements</span>
             <span>⏳</span>
           </div>
-          <div class="metric-val" style="color: var(--gold);">₹84,500</div>
+          <div class="metric-val" style="color: var(--gold);" id="metricPending">—</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-label">Total Refunds (12)</span>
+            <span class="metric-label">Total Refunds</span>
             <span>↩️</span>
           </div>
-          <div class="metric-val" style="color: var(--red);">₹18,390</div>
+          <div class="metric-val" style="color: var(--red);" id="metricRefunds">—</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-label">Platform Net Cut</span>
+            <span class="metric-label">Platform Net Cut (10%)</span>
             <span>🏦</span>
           </div>
-          <div class="metric-val" style="color: var(--cyan);">₹4.82L</div>
+          <div class="metric-val" style="color: var(--cyan);" id="metricNetCut">—</div>
         </div>
       </section>
 
@@ -739,66 +739,7 @@
                 </tr>
               </thead>
               <tbody id="paymentsTableBody">
-                
-                <!-- Row 1 -->
-                <tr data-status="successful" data-id="tx-1">
-                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849201</strong><br><small style="color: var(--muted);">pay_K9482014</small></td>
-                  <td>Aug 22, 2026<br><small style="color: var(--muted);">16:45 PM</small></td>
-                  <td><strong>Aditya Sharma</strong><br><small style="color: var(--muted);">#USR-10920</small></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
-                  <td>₹1,200.00</td>
-                  <td style="color: var(--cyan);">₹120.00</td>
-                  <td style="color: var(--muted);">₹21.60</td>
-                  <td><strong style="color: var(--green);">₹1,058.40</strong></td>
-                  <td><span>UPI (GPay)</span></td>
-                  <td><span class="status-badge status-successful">● Successful</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849201" data-user="Aditya Sharma" data-exp="Adv. Vikram Rao" data-amount="₹1,200.00" data-fee="₹120.00" data-net="₹1,058.40" data-method="UPI" data-status="Successful">Details</button>
-                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849201" data-amount="₹1,200.00">Refund</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr data-status="successful" data-id="tx-2">
-                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849182</strong><br><small style="color: var(--muted);">pay_K9481992</small></td>
-                  <td>Aug 22, 2026<br><small style="color: var(--muted);">14:10 PM</small></td>
-                  <td><strong>Ravi Kumar</strong><br><small style="color: var(--muted);">#USR-10884</small></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
-                  <td>₹1,500.00</td>
-                  <td style="color: var(--cyan);">₹150.00</td>
-                  <td style="color: var(--muted);">₹27.00</td>
-                  <td><strong style="color: var(--green);">₹1,323.00</strong></td>
-                  <td><span>Card (Visa)</span></td>
-                  <td><span class="status-badge status-successful">● Successful</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849182" data-user="Ravi Kumar" data-exp="Adv. Vikram Rao" data-amount="₹1,500.00" data-fee="₹150.00" data-net="₹1,323.00" data-method="Card" data-status="Successful">Details</button>
-                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849182" data-amount="₹1,500.00">Refund</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Row 3 (Refunded) -->
-                <tr data-status="refunded" data-id="tx-3">
-                  <td><strong style="font-family: monospace; color: #bad3eb;">#TXN-848500</strong><br><small style="color: var(--muted);">pay_K9481100</small></td>
-                  <td>Aug 19, 2026<br><small style="color: var(--muted);">10:20 AM</small></td>
-                  <td><strong>Karan Verma</strong><br><small style="color: var(--muted);">#USR-10119</small></td>
-                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
-                  <td>₹2,000.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td><span>Net Banking</span></td>
-                  <td><span class="status-badge status-refunded">↩️ Refunded</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-848500" data-user="Karan Verma" data-exp="CA Rajesh Joshi" data-amount="₹2,000.00" data-fee="₹0.00" data-net="₹0.00" data-method="Net Banking" data-status="Refunded">Details</button>
-                    </div>
-                  </td>
-                </tr>
-
+                <tr><td colspan="11" style="text-align:center;padding:32px;color:var(--muted);"><span class="spinner" style="display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;"></span> Loading transactions...</td></tr>
               </tbody>
             </table>
           </div>
@@ -831,37 +772,7 @@
                 </tr>
               </thead>
               <tbody id="payoutsTableBody">
-                
-                <tr data-payout-id="pay-1">
-                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992014</strong></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Advisor</small></td>
-                  <td><span>HDFC Bank ••••••4819</span><br><small style="color: var(--muted);">IFSC: HDFC0001824</small></td>
-                  <td><strong style="color: var(--green); font-size: 14px;">₹25,000.00</strong></td>
-                  <td>Aug 22, 2026</td>
-                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-approve" data-payout="pay-1" data-amount="₹25,000.00" data-name="Adv. Vikram Rao">Approve & Disburse</button>
-                      <button type="button" class="btn-action action-reject" data-payout="pay-1" data-name="Adv. Vikram Rao">Reject</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr data-payout-id="pay-2">
-                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992015</strong></td>
-                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
-                  <td><span>ICICI Bank ••••••9102</span><br><small style="color: var(--muted);">IFSC: ICIC0000102</small></td>
-                  <td><strong style="color: var(--green); font-size: 14px;">₹18,000.00</strong></td>
-                  <td>Aug 21, 2026</td>
-                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-approve" data-payout="pay-2" data-amount="₹18,000.00" data-name="CA Rajesh Joshi">Approve & Disburse</button>
-                      <button type="button" class="btn-action action-reject" data-payout="pay-2" data-name="CA Rajesh Joshi">Reject</button>
-                    </div>
-                  </td>
-                </tr>
-
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);"><span class="spinner" style="display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;"></span> Loading payout requests...</td></tr>
               </tbody>
             </table>
           </div>
@@ -884,27 +795,27 @@
       <div class="details-grid">
         <div>
           <span style="color: var(--muted); font-size: 11px;">Client Name</span>
-          <strong style="color: var(--white);" id="modalUser">Aditya Sharma</strong>
+          <strong style="color: var(--white);" id="modalUser"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Professional Specialist</span>
-          <strong style="color: var(--cyan);" id="modalExp">Adv. Vikram Rao</strong>
+          <strong style="color: var(--cyan);" id="modalExp"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Gross Paid</span>
-          <strong style="color: var(--white);" id="modalAmount">₹1,200.00</strong>
+          <strong style="color: var(--white);" id="modalAmount"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Platform Commission (10%)</span>
-          <strong style="color: var(--green);" id="modalFee">₹120.00</strong>
+          <strong style="color: var(--green);" id="modalFee"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Professional Net</span>
-          <strong style="color: var(--green);" id="modalNet">₹1,058.40</strong>
+          <strong style="color: var(--green);" id="modalNet"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Payment Method & Status</span>
-          <strong style="color: var(--white);" id="modalStatus">UPI • Successful</strong>
+          <strong style="color: var(--white);" id="modalStatus"></strong>
         </div>
       </div>
 
@@ -951,6 +862,427 @@
        ======================================================== */
     let selectedFilter = "all";
     let pendingRefundData = null;
+    let allPayments = [];
+    let allPayouts = [];
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    async function initAdminPayments() {
+      const isAuth = await verifyAdminAccess();
+      if (!isAuth) return;
+      setupModuleTabs();
+      setupFilters();
+      setupSearch();
+      setupLogout();
+      await Promise.all([
+        loadPaymentsFromSupabase(),
+        loadPayoutsFromSupabase(),
+        loadPaymentMetrics()
+      ]);
+    }
+
+    async function verifyAdminAccess() {
+      try {
+        if (!supabase) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+        window.location.replace("admin-login.html");
+        return false;
+      }
+    }
+
+    /* ========================================================
+       LOAD METRICS FROM SUPABASE
+       ======================================================== */
+    async function loadPaymentMetrics() {
+      try {
+        const { data, error } = await supabase
+          .from("payments")
+          .select("amount, status");
+
+        if (error) throw error;
+
+        const payments = data || [];
+        const successful = payments.filter(p => p.status === "successful");
+        const refunded   = payments.filter(p => p.status === "refunded");
+        const pending    = payments.filter(p => p.status === "pending");
+
+        const gmv        = successful.reduce((s, p) => s + parseFloat(p.amount || 0), 0);
+        const refundAmt  = refunded.reduce((s, p) => s + parseFloat(p.amount || 0), 0);
+        const pendingAmt = pending.reduce((s, p) => s + parseFloat(p.amount || 0), 0);
+        const netCut     = gmv * 0.10;
+
+        const fmt = v => "₹" + v.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+        document.getElementById("metricGMV").textContent        = fmt(gmv);
+        document.getElementById("metricTxnCount").textContent   = successful.length.toLocaleString();
+        document.getElementById("metricPending").textContent    = fmt(pendingAmt);
+        document.getElementById("metricRefunds").textContent    = fmt(refundAmt);
+        document.getElementById("metricNetCut").textContent     = fmt(netCut);
+
+        // Update page subtitle
+        const subtitleEl = document.querySelector(".topbar > div");
+        if (subtitleEl) subtitleEl.innerHTML = `Platform Revenue (10% Net): <strong style="color:var(--green);">${fmt(netCut)}</strong>`;
+      } catch (err) {
+        console.error("loadPaymentMetrics error:", err);
+      }
+    }
+
+    /* ========================================================
+       LOAD PAYMENTS FROM SUPABASE
+       ======================================================== */
+    async function loadPaymentsFromSupabase() {
+      const tbody = document.getElementById("paymentsTableBody");
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--muted);">Loading transactions...</td></tr>`;
+
+      try {
+        const { data, error } = await supabase
+          .from("payments")
+          .select(`
+            id, amount, currency, payment_method, provider_payment_id, status, description, created_at,
+            user:user_id(id, full_name, email),
+            expert:expert_id(id, full_name, specialization)
+          `)
+          .order("created_at", { ascending: false })
+          .limit(200);
+
+        if (error) throw error;
+        allPayments = data || [];
+        renderPaymentsTable(allPayments);
+      } catch (err) {
+        console.error("loadPaymentsFromSupabase error:", err);
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--red);">⚠️ Failed to load transactions: ${escapeHTML(err.message)}</td></tr>`;
+      }
+    }
+
+    function renderPaymentsTable(list) {
+      const tbody = document.getElementById("paymentsTableBody");
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--muted);">No transactions found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => {
+        const gross    = parseFloat(p.amount || 0);
+        const fee      = gross * 0.10;
+        const gst      = fee * 0.18;
+        const net      = gross - fee - gst;
+        const fmt      = v => "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const dt       = new Date(p.created_at);
+        const dateStr  = dt.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+        const timeStr  = dt.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+        const statusCls = { successful: "status-successful", refunded: "status-refunded", pending: "status-pending", failed: "status-failed", cancelled: "status-failed" }[p.status] || "status-pending";
+        const statusLbl = { successful: "● Successful", refunded: "↩️ Refunded", pending: "⏳ Pending", failed: "✕ Failed", cancelled: "✕ Cancelled" }[p.status] || p.status;
+        const clientName = p.user?.full_name || "Unknown";
+        const expertName = p.expert?.full_name || "—";
+        const method    = p.payment_method || "—";
+        const provId    = p.provider_payment_id || "";
+        const shortId   = p.id.slice(0, 8).toUpperCase();
+        const canRefund = p.status === "successful";
+
+        return `<tr data-status="${escapeHTML(p.status)}" data-id="${escapeHTML(p.id)}">
+          <td><strong style="font-family:monospace;color:var(--cyan);">#TXN-${escapeHTML(shortId)}</strong><br><small style="color:var(--muted);">${escapeHTML(provId)}</small></td>
+          <td>${escapeHTML(dateStr)}<br><small style="color:var(--muted);">${escapeHTML(timeStr)}</small></td>
+          <td><strong>${escapeHTML(clientName)}</strong></td>
+          <td><strong>${escapeHTML(expertName)}</strong><br><small style="color:var(--muted);">${escapeHTML(p.expert?.specialization || "Professional")}</small></td>
+          <td>${fmt(gross)}</td>
+          <td style="color:var(--cyan);">${fmt(fee)}</td>
+          <td style="color:var(--muted);">${fmt(gst)}</td>
+          <td><strong style="color:var(--green);">${fmt(net)}</strong></td>
+          <td>${escapeHTML(method)}</td>
+          <td><span class="status-badge ${statusCls}">${statusLbl}</span></td>
+          <td>
+            <div class="actions-cell">
+              <button type="button" class="btn-action action-view"
+                data-id="${escapeHTML(p.id)}"
+                data-txn="TXN-${escapeHTML(shortId)}"
+                data-user="${escapeHTML(clientName)}"
+                data-exp="${escapeHTML(expertName)}"
+                data-amount="${fmt(gross)}"
+                data-fee="${fmt(fee)}"
+                data-net="${fmt(net)}"
+                data-method="${escapeHTML(method)}"
+                data-status="${escapeHTML(p.status)}"
+              >Details</button>
+              ${canRefund ? `<button type="button" class="btn-action action-refund" data-id="${escapeHTML(p.id)}" data-txn="TXN-${escapeHTML(shortId)}" data-amount="${fmt(gross)}">Refund</button>` : ""}
+            </div>
+          </td>
+        </tr>`;
+      }).join("");
+
+      setupViewHandlers();
+      setupRefundHandlers();
+      filterPaymentsTable();
+    }
+
+    /* ========================================================
+       LOAD PAYOUTS FROM SUPABASE
+       ======================================================== */
+    async function loadPayoutsFromSupabase() {
+      const tbody = document.getElementById("payoutsTableBody");
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">Loading payout requests...</td></tr>`;
+
+      try {
+        const { data, error } = await supabase
+          .from("payout_requests")
+          .select(`
+            id, amount, status, payout_reference, notes, created_at,
+            expert:expert_id(id, full_name, specialization, phone)
+          `)
+          .eq("status", "pending")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        allPayouts = data || [];
+        renderPayoutsTable(allPayouts);
+
+        // Update tab button count
+        const tabBtn = document.getElementById("tabPayoutRequests");
+        if (tabBtn) tabBtn.innerHTML = `<span>💸</span> Professional Payout Requests (${allPayouts.length})`;
+      } catch (err) {
+        console.error("loadPayoutsFromSupabase error:", err);
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--red);">⚠️ Failed to load payouts: ${escapeHTML(err.message)}</td></tr>`;
+      }
+    }
+
+    function renderPayoutsTable(list) {
+      const tbody = document.getElementById("payoutsTableBody");
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">No pending payout requests.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => {
+        const fmt  = v => "₹" + parseFloat(v || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const dt   = new Date(p.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+        const name = p.expert?.full_name || "Unknown";
+        const spec = p.expert?.specialization || "Professional";
+
+        return `<tr data-payout-id="${escapeHTML(p.id)}">
+          <td><strong style="font-family:monospace;color:var(--purple);">#PAY-${p.id.slice(0,8).toUpperCase()}</strong></td>
+          <td><strong>${escapeHTML(name)}</strong><br><small style="color:var(--muted);">${escapeHTML(spec)}</small></td>
+          <td><span>Bank / UPI on file</span></td>
+          <td><strong style="color:var(--green);font-size:14px;">${fmt(p.amount)}</strong></td>
+          <td>${escapeHTML(dt)}</td>
+          <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
+          <td>
+            <div class="actions-cell">
+              <button type="button" class="btn-action action-approve"
+                data-payout="${escapeHTML(p.id)}"
+                data-amount="${fmt(p.amount)}"
+                data-name="${escapeHTML(name)}"
+              >Approve &amp; Disburse</button>
+              <button type="button" class="btn-action action-reject"
+                data-payout="${escapeHTML(p.id)}"
+                data-name="${escapeHTML(name)}"
+              >Reject</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join("");
+
+      setupPayoutHandlers();
+    }
+
+    /* ========================================================
+       MODULE TABS (PAYMENTS VS PAYOUTS)
+       ======================================================== */
+    function setupModuleTabs() {
+      const tabPayments = document.getElementById("tabConsultationPayments");
+      const tabPayouts  = document.getElementById("tabPayoutRequests");
+      const secPayments = document.getElementById("sectionPayments");
+      const secPayouts  = document.getElementById("sectionPayouts");
+
+      tabPayments.addEventListener("click", () => {
+        tabPayments.classList.add("active");
+        tabPayouts.classList.remove("active");
+        secPayments.style.display = "block";
+        secPayouts.style.display  = "none";
+      });
+
+      tabPayouts.addEventListener("click", () => {
+        tabPayouts.classList.add("active");
+        tabPayments.classList.remove("active");
+        secPayments.style.display = "none";
+        secPayouts.style.display  = "block";
+      });
+    }
+
+    /* ========================================================
+       FILTERS & SEARCH
+       ======================================================== */
+    function setupFilters() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          selectedFilter = tab.dataset.filter;
+          filterPaymentsTable();
+        });
+      });
+    }
+
+    function setupSearch() {
+      const input = document.getElementById("paySearchInput");
+      input.addEventListener("input", () => filterPaymentsTable());
+    }
+
+    function filterPaymentsTable() {
+      const term = document.getElementById("paySearchInput").value.toLowerCase().trim();
+      const rows = document.querySelectorAll("#paymentsTableBody tr");
+
+      rows.forEach(row => {
+        const st = row.dataset.status;
+        const text = row.textContent.toLowerCase();
+        const matchFilter = selectedFilter === "all" || st === selectedFilter;
+        const matchSearch = !term || text.includes(term);
+        row.style.display = (matchFilter && matchSearch) ? "" : "none";
+      });
+    }
+
+    /* ========================================================
+       ACTION HANDLERS — VIEW DETAILS
+       ======================================================== */
+    function setupViewHandlers() {
+      document.querySelectorAll('.btn-action[data-action="view"], .btn-action.action-view').forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.getElementById("modalTxnTitle").textContent = `Ledger #${btn.dataset.txn}`;
+          document.getElementById("modalUser").textContent   = btn.dataset.user;
+          document.getElementById("modalExp").textContent    = btn.dataset.exp;
+          document.getElementById("modalAmount").textContent = btn.dataset.amount;
+          document.getElementById("modalFee").textContent    = btn.dataset.fee;
+          document.getElementById("modalNet").textContent    = btn.dataset.net;
+          document.getElementById("modalStatus").textContent = `${btn.dataset.method} • ${btn.dataset.status}`;
+          document.getElementById("txnModal").classList.add("show");
+        });
+      });
+      document.getElementById("closeTxnModalBtn").addEventListener("click", () => document.getElementById("txnModal").classList.remove("show"));
+      document.getElementById("dismissTxnModalBtn").addEventListener("click", () => document.getElementById("txnModal").classList.remove("show"));
+    }
+
+    /* ========================================================
+       ACTION HANDLERS — REFUND (WRITES TO SUPABASE)
+       ======================================================== */
+    function setupRefundHandlers() {
+      document.querySelectorAll('.btn-action.action-refund').forEach(btn => {
+        btn.addEventListener("click", () => {
+          pendingRefundData = { id: btn.dataset.id, txn: btn.dataset.txn, amount: btn.dataset.amount };
+          document.getElementById("refundTxnText").textContent    = `#${btn.dataset.txn}`;
+          document.getElementById("refundAmountText").textContent = btn.dataset.amount;
+          document.getElementById("refundModal").classList.add("show");
+        });
+      });
+
+      document.getElementById("cancelRefundBtn").addEventListener("click", () => document.getElementById("refundModal").classList.remove("show"));
+
+      document.getElementById("confirmRefundBtn").addEventListener("click", async () => {
+        const reason = document.getElementById("refundReasonText").value.trim();
+        if (!reason) { showToast("Please provide a compliance reason for the refund.", true); return; }
+        if (!pendingRefundData?.id) { showToast("No payment ID found.", true); return; }
+
+        try {
+          const { error } = await supabase
+            .from("payments")
+            .update({ status: "refunded", description: `REFUND: ${reason}` })
+            .eq("id", pendingRefundData.id);
+
+          if (error) throw error;
+
+          document.getElementById("refundModal").classList.remove("show");
+          showToast(`✓ Refund executed for ${pendingRefundData.txn} (${pendingRefundData.amount}).`);
+          await loadPaymentsFromSupabase();
+          await loadPaymentMetrics();
+        } catch (err) {
+          showToast(`⚠️ Refund failed: ${err.message}`, true);
+        }
+      });
+    }
+
+    /* ========================================================
+       ACTION HANDLERS — PAYOUT APPROVE/REJECT (WRITES TO SUPABASE)
+       ======================================================== */
+    function setupPayoutHandlers() {
+      document.querySelectorAll('.btn-action[data-payout]').forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const payoutId = btn.dataset.payout;
+          const name     = btn.dataset.name;
+          const isApprove = btn.classList.contains("action-approve");
+          const newStatus = isApprove ? "paid" : "rejected";
+
+          try {
+            const { error } = await supabase
+              .from("payout_requests")
+              .update({ status: newStatus, processed_at: new Date().toISOString() })
+              .eq("id", payoutId);
+
+            if (error) throw error;
+
+            showToast(isApprove
+              ? `✓ Payout of ${btn.dataset.amount} approved for ${name}!`
+              : `✕ Payout request rejected.`);
+
+            const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
+            if (row) {
+              const badge = row.querySelector(".status-badge");
+              if (badge) {
+                badge.className  = `status-badge ${isApprove ? "status-successful" : "status-failed"}`;
+                badge.textContent = isApprove ? "✓ Disbursed (Paid)" : "✕ Rejected";
+              }
+              row.querySelectorAll(".btn-action").forEach(b => b.remove());
+            }
+          } catch (err) {
+            showToast(`⚠️ Failed: ${err.message}`, true);
+          }
+        });
+      });
+    }
+
+    function setupLogout() {
+      document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+        showToast("Ending admin session...");
+        try { if (supabase) await supabase.auth.signOut(); } catch (e) {}
+        setTimeout(() => window.location.href = "admin-login.html", 500);
+      });
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.className = isError ? "toast-pill error show" : "toast-pill show";
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    initAdminPayments();
+  </script>
+</body>
+</html>
 
     /* ========================================================
        INIT
@@ -997,166 +1329,7 @@
       }
     }
 
-    /* ========================================================
-       MODULE TABS (PAYMENTS VS PAYOUTS)
-       ======================================================== */
-    function setupModuleTabs() {
-      const tabPayments = document.getElementById("tabConsultationPayments");
-      const tabPayouts = document.getElementById("tabPayoutRequests");
-      const secPayments = document.getElementById("sectionPayments");
-      const secPayouts = document.getElementById("sectionPayouts");
 
-      tabPayments.addEventListener("click", () => {
-        tabPayments.classList.add("active");
-        tabPayouts.classList.remove("active");
-        secPayments.style.display = "block";
-        secPayouts.style.display = "none";
-      });
-
-      tabPayouts.addEventListener("click", () => {
-        tabPayouts.classList.add("active");
-        tabPayments.classList.remove("active");
-        secPayments.style.display = "none";
-        secPayouts.style.display = "block";
-      });
-    }
-
-    /* ========================================================
-       FILTERS & SEARCH
-       ======================================================== */
-    function setupFilters() {
-      const tabs = document.querySelectorAll(".tab-btn");
-      tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          tabs.forEach(t => t.classList.remove("active"));
-          tab.classList.add("active");
-          selectedFilter = tab.dataset.filter;
-          filterPaymentsTable();
-        });
-      });
-    }
-
-    function setupSearch() {
-      const input = document.getElementById("paySearchInput");
-      input.addEventListener("input", () => filterPaymentsTable());
-    }
-
-    function filterPaymentsTable() {
-      const term = document.getElementById("paySearchInput").value.toLowerCase().trim();
-      const rows = document.querySelectorAll("#paymentsTableBody tr");
-
-      rows.forEach(row => {
-        const st = row.dataset.status;
-        const text = row.textContent.toLowerCase();
-
-        const matchFilter = selectedFilter === "all" || st === selectedFilter;
-        const matchSearch = !term || text.includes(term);
-
-        row.style.display = (matchFilter && matchSearch) ? "" : "none";
-      });
-    }
-
-    /* ========================================================
-       ACTIONS & MODALS
-       ======================================================== */
-    function setupActionHandlers() {
-      // View Details
-      document.querySelectorAll('.btn-action[data-action="view"]').forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.getElementById("modalTxnTitle").textContent = `Ledger #${btn.dataset.txn}`;
-          document.getElementById("modalUser").textContent = btn.dataset.user;
-          document.getElementById("modalExp").textContent = btn.dataset.exp;
-          document.getElementById("modalAmount").textContent = btn.dataset.amount;
-          document.getElementById("modalFee").textContent = btn.dataset.fee;
-          document.getElementById("modalNet").textContent = btn.dataset.net;
-          document.getElementById("modalStatus").textContent = `${btn.dataset.method} • ${btn.dataset.status}`;
-
-          document.getElementById("txnModal").classList.add("show");
-        });
-      });
-
-      document.getElementById("closeTxnModalBtn").addEventListener("click", () => {
-        document.getElementById("txnModal").classList.remove("show");
-      });
-      document.getElementById("dismissTxnModalBtn").addEventListener("click", () => {
-        document.getElementById("txnModal").classList.remove("show");
-      });
-
-      // Refund Modal
-      document.querySelectorAll('.btn-action[data-action="refund"]').forEach(btn => {
-        btn.addEventListener("click", () => {
-          pendingRefundData = { txn: btn.dataset.txn, amount: btn.dataset.amount };
-          document.getElementById("refundTxnText").textContent = `#${btn.dataset.txn}`;
-          document.getElementById("refundAmountText").textContent = btn.dataset.amount;
-          document.getElementById("refundModal").classList.add("show");
-        });
-      });
-
-      document.getElementById("cancelRefundBtn").addEventListener("click", () => {
-        document.getElementById("refundModal").classList.remove("show");
-      });
-
-      document.getElementById("confirmRefundBtn").addEventListener("click", async () => {
-        const reason = document.getElementById("refundReasonText").value.trim();
-        if (!reason) {
-          showToast("Please provide a compliance reason for the refund.", true);
-          return;
-        }
-
-        document.getElementById("refundModal").classList.remove("show");
-        showToast(`✓ Refund executed for ${pendingRefundData.txn} (${pendingRefundData.amount}).`);
-      });
-
-      // Payout Approve / Reject
-      document.querySelectorAll('.btn-action[data-payout]').forEach(btn => {
-        btn.addEventListener("click", () => {
-          const payoutId = btn.dataset.payout;
-          const name = btn.dataset.name;
-          const isApprove = btn.classList.contains("action-approve");
-
-          if (isApprove) {
-            showToast(`✓ Payout of ${btn.dataset.amount} approved for ${name}! Transferred via IMPS.`);
-            const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
-            if (row) {
-              const badge = row.querySelector(".status-badge");
-              if (badge) {
-                badge.className = "status-badge status-successful";
-                badge.textContent = "✓ Disbursed (Paid)";
-              }
-            }
-          } else {
-            showToast(`✕ Payout request rejected.`);
-            const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
-            if (row) {
-              const badge = row.querySelector(".status-badge");
-              if (badge) {
-                badge.className = "status-badge status-failed";
-                badge.textContent = "✕ Rejected";
-              }
-            }
-          }
-        });
-      });
-    }
-
-    function setupLogout() {
-      document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
-        showToast("Ending admin session...");
-        try {
-          if (supabase) await supabase.auth.signOut();
-        } catch (e) {}
-        setTimeout(() => window.location.href = "admin-login.html", 500);
-      });
-    }
-
-    function showToast(msg, isError = false) {
-      const toast = document.getElementById("toastPill");
-      toast.textContent = msg;
-      toast.className = isError ? "toast-pill error show" : "toast-pill show";
-      setTimeout(() => toast.classList.remove("show"), 3500);
-    }
-
-    initAdminPayments();
   </script>
 </body>
 </html>

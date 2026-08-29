@@ -2556,11 +2556,32 @@
           </div>
 
 
+          <!-- COUNCIL / BAR / ICAI / ICSI REGISTRATION NUMBER -->
+          <div class="field-group" style="margin-top: 18px;">
+            <label class="field-label" for="councilRegNo">
+              Council / Bar / ICAI / ICSI Registration Number
+              <span class="required">*</span>
+            </label>
+            <input
+              class="input"
+              type="text"
+              id="councilRegNo"
+              name="councilRegNo"
+              placeholder="e.g. Bar Council #MH/2014/9842 or ICAI #FCA/2012/104"
+              minlength="5"
+              maxlength="100"
+              autocomplete="off"
+            >
+            <small style="color: #94a3b8; font-size: 11.5px; margin-top: 4px; display: block;">
+              Enter your official council or regulatory body registration number. This is verified by our compliance team.
+            </small>
+          </div>
+
+
           <div class="verification-note">
-            🔒 Verification documents should be securely handled by
-            the backend. This frontend currently only collects the
-            files for UI demonstration. Do not store sensitive identity
-            documents in localStorage.
+            🔒 Verification documents are stored securely. Your council
+            registration number will be verified by our compliance team
+            before your expert profile is activated.
           </div>
 
         </section>
@@ -3114,14 +3135,21 @@
               }, { onConflict: "id" });
 
               if (selectedRole === "professional") {
-                const degreeVal = document.getElementById("degreeFileName")?.textContent || "Degree Certificate Uploaded";
-                const licenseVal = document.getElementById("licenseFileName")?.textContent || "Practice License Document Uploaded";
-                
+                const degreeVal = document.getElementById("degreeFileName")?.textContent || "";
+                const licenseVal = document.getElementById("licenseFileName")?.textContent || "";
+                const councilRegNoVal = document.getElementById("councilRegNo")?.value.trim() || "";
+
+                if (!councilRegNoVal || councilRegNoVal.length < 5) {
+                  showFormStatus("Please enter your council/bar/ICAI registration number (minimum 5 characters).", "error");
+                  createButton.disabled = false;
+                  createButton.textContent = "Create Account";
+                  return;
+                }
+
                 await supabase.from("professional_verifications").upsert({
                   expert_id: data.user.id,
-                  specialization: "Professional Specialist",
-                  degree: degreeVal,
-                  council_registration_number: "REG-" + Math.floor(100000 + Math.random() * 900000),
+                  degree_qualification: degreeVal || "Pending document upload",
+                  council_registration_no: councilRegNoVal,
                   verification_status: "pending"
                 }, { onConflict: "expert_id" });
               }

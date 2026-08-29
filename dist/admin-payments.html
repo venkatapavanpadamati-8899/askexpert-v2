@@ -560,7 +560,7 @@
       .admin-sidebar { display: none; }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminPayments-Cznv1BKS.js"></script>
+  <script type="module" crossorigin src="/assets/adminPayments-pn2dAqwU.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
 <body>
@@ -657,7 +657,7 @@
             <span class="metric-label">Total Platform GMV</span>
             <span>💰</span>
           </div>
-          <div class="metric-val" style="color: var(--green);">₹48.2L</div>
+          <div class="metric-val" style="color: var(--green);" id="metricGMV">—</div>
         </div>
 
         <div class="metric-card">
@@ -665,7 +665,7 @@
             <span class="metric-label">Successful Transactions</span>
             <span>💳</span>
           </div>
-          <div class="metric-val">3,214</div>
+          <div class="metric-val" id="metricTxnCount">—</div>
         </div>
 
         <div class="metric-card">
@@ -673,23 +673,23 @@
             <span class="metric-label">Pending Settlements</span>
             <span>⏳</span>
           </div>
-          <div class="metric-val" style="color: var(--gold);">₹84,500</div>
+          <div class="metric-val" style="color: var(--gold);" id="metricPending">—</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-label">Total Refunds (12)</span>
+            <span class="metric-label">Total Refunds</span>
             <span>↩️</span>
           </div>
-          <div class="metric-val" style="color: var(--red);">₹18,390</div>
+          <div class="metric-val" style="color: var(--red);" id="metricRefunds">—</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-top-row">
-            <span class="metric-label">Platform Net Cut</span>
+            <span class="metric-label">Platform Net Cut (10%)</span>
             <span>🏦</span>
           </div>
-          <div class="metric-val" style="color: var(--cyan);">₹4.82L</div>
+          <div class="metric-val" style="color: var(--cyan);" id="metricNetCut">—</div>
         </div>
       </section>
 
@@ -741,66 +741,7 @@
                 </tr>
               </thead>
               <tbody id="paymentsTableBody">
-                
-                <!-- Row 1 -->
-                <tr data-status="successful" data-id="tx-1">
-                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849201</strong><br><small style="color: var(--muted);">pay_K9482014</small></td>
-                  <td>Aug 22, 2026<br><small style="color: var(--muted);">16:45 PM</small></td>
-                  <td><strong>Aditya Sharma</strong><br><small style="color: var(--muted);">#USR-10920</small></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
-                  <td>₹1,200.00</td>
-                  <td style="color: var(--cyan);">₹120.00</td>
-                  <td style="color: var(--muted);">₹21.60</td>
-                  <td><strong style="color: var(--green);">₹1,058.40</strong></td>
-                  <td><span>UPI (GPay)</span></td>
-                  <td><span class="status-badge status-successful">● Successful</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849201" data-user="Aditya Sharma" data-exp="Adv. Vikram Rao" data-amount="₹1,200.00" data-fee="₹120.00" data-net="₹1,058.40" data-method="UPI" data-status="Successful">Details</button>
-                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849201" data-amount="₹1,200.00">Refund</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr data-status="successful" data-id="tx-2">
-                  <td><strong style="font-family: monospace; color: var(--cyan);">#TXN-849182</strong><br><small style="color: var(--muted);">pay_K9481992</small></td>
-                  <td>Aug 22, 2026<br><small style="color: var(--muted);">14:10 PM</small></td>
-                  <td><strong>Ravi Kumar</strong><br><small style="color: var(--muted);">#USR-10884</small></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Specialist</small></td>
-                  <td>₹1,500.00</td>
-                  <td style="color: var(--cyan);">₹150.00</td>
-                  <td style="color: var(--muted);">₹27.00</td>
-                  <td><strong style="color: var(--green);">₹1,323.00</strong></td>
-                  <td><span>Card (Visa)</span></td>
-                  <td><span class="status-badge status-successful">● Successful</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-849182" data-user="Ravi Kumar" data-exp="Adv. Vikram Rao" data-amount="₹1,500.00" data-fee="₹150.00" data-net="₹1,323.00" data-method="Card" data-status="Successful">Details</button>
-                      <button type="button" class="btn-action action-refund" data-action="refund" data-txn="TXN-849182" data-amount="₹1,500.00">Refund</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Row 3 (Refunded) -->
-                <tr data-status="refunded" data-id="tx-3">
-                  <td><strong style="font-family: monospace; color: #bad3eb;">#TXN-848500</strong><br><small style="color: var(--muted);">pay_K9481100</small></td>
-                  <td>Aug 19, 2026<br><small style="color: var(--muted);">10:20 AM</small></td>
-                  <td><strong>Karan Verma</strong><br><small style="color: var(--muted);">#USR-10119</small></td>
-                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
-                  <td>₹2,000.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td style="color: var(--muted);">₹0.00</td>
-                  <td><span>Net Banking</span></td>
-                  <td><span class="status-badge status-refunded">↩️ Refunded</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-view" data-action="view" data-txn="TXN-848500" data-user="Karan Verma" data-exp="CA Rajesh Joshi" data-amount="₹2,000.00" data-fee="₹0.00" data-net="₹0.00" data-method="Net Banking" data-status="Refunded">Details</button>
-                    </div>
-                  </td>
-                </tr>
-
+                <tr><td colspan="11" style="text-align:center;padding:32px;color:var(--muted);"><span class="spinner" style="display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;"></span> Loading transactions...</td></tr>
               </tbody>
             </table>
           </div>
@@ -833,37 +774,7 @@
                 </tr>
               </thead>
               <tbody id="payoutsTableBody">
-                
-                <tr data-payout-id="pay-1">
-                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992014</strong></td>
-                  <td><strong>Adv. Vikram Rao</strong><br><small style="color: var(--muted);">Legal Advisor</small></td>
-                  <td><span>HDFC Bank ••••••4819</span><br><small style="color: var(--muted);">IFSC: HDFC0001824</small></td>
-                  <td><strong style="color: var(--green); font-size: 14px;">₹25,000.00</strong></td>
-                  <td>Aug 22, 2026</td>
-                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-approve" data-payout="pay-1" data-amount="₹25,000.00" data-name="Adv. Vikram Rao">Approve & Disburse</button>
-                      <button type="button" class="btn-action action-reject" data-payout="pay-1" data-name="Adv. Vikram Rao">Reject</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr data-payout-id="pay-2">
-                  <td><strong style="font-family: monospace; color: var(--purple);">#PAY-992015</strong></td>
-                  <td><strong>CA Rajesh Joshi</strong><br><small style="color: var(--muted);">Tax Specialist</small></td>
-                  <td><span>ICICI Bank ••••••9102</span><br><small style="color: var(--muted);">IFSC: ICIC0000102</small></td>
-                  <td><strong style="color: var(--green); font-size: 14px;">₹18,000.00</strong></td>
-                  <td>Aug 21, 2026</td>
-                  <td><span class="status-badge status-pending">⏳ Pending Disbursal</span></td>
-                  <td>
-                    <div class="actions-cell">
-                      <button type="button" class="btn-action action-approve" data-payout="pay-2" data-amount="₹18,000.00" data-name="CA Rajesh Joshi">Approve & Disburse</button>
-                      <button type="button" class="btn-action action-reject" data-payout="pay-2" data-name="CA Rajesh Joshi">Reject</button>
-                    </div>
-                  </td>
-                </tr>
-
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);"><span class="spinner" style="display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;"></span> Loading payout requests...</td></tr>
               </tbody>
             </table>
           </div>
@@ -886,27 +797,27 @@
       <div class="details-grid">
         <div>
           <span style="color: var(--muted); font-size: 11px;">Client Name</span>
-          <strong style="color: var(--white);" id="modalUser">Aditya Sharma</strong>
+          <strong style="color: var(--white);" id="modalUser"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Professional Specialist</span>
-          <strong style="color: var(--cyan);" id="modalExp">Adv. Vikram Rao</strong>
+          <strong style="color: var(--cyan);" id="modalExp"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Gross Paid</span>
-          <strong style="color: var(--white);" id="modalAmount">₹1,200.00</strong>
+          <strong style="color: var(--white);" id="modalAmount"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Platform Commission (10%)</span>
-          <strong style="color: var(--green);" id="modalFee">₹120.00</strong>
+          <strong style="color: var(--green);" id="modalFee"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Professional Net</span>
-          <strong style="color: var(--green);" id="modalNet">₹1,058.40</strong>
+          <strong style="color: var(--green);" id="modalNet"></strong>
         </div>
         <div>
           <span style="color: var(--muted); font-size: 11px;">Payment Method & Status</span>
-          <strong style="color: var(--white);" id="modalStatus">UPI • Successful</strong>
+          <strong style="color: var(--white);" id="modalStatus"></strong>
         </div>
       </div>
 
@@ -944,5 +855,55 @@
   <!-- =======================================================
        SUPABASE ADMIN PAYMENTS SCRIPT
        ======================================================= -->
+</body>
+</html>
+
+    /* ========================================================
+       INIT
+       ======================================================== */
+    async function initAdminPayments() {
+      const isAuth = await verifyAdminAccess();
+      if (!isAuth) return;
+      setupModuleTabs();
+      setupFilters();
+      setupSearch();
+      setupActionHandlers();
+      setupLogout();
+    }
+
+    async function verifyAdminAccess() {
+      try {
+        if (!supabase) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          window.location.replace("admin-login.html");
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+        window.location.replace("admin-login.html");
+        return false;
+      }
+    }
+
+
+  </script>
 </body>
 </html>

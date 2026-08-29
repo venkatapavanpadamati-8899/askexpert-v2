@@ -719,102 +719,9 @@
               </tr>
             </thead>
             <tbody id="reportsTableBody">
-              
-              <!-- Case 1 -->
-              <tr data-status="open" data-priority="critical" data-id="rep-1">
-                <td>
-                  <strong style="font-family: monospace; color: var(--cyan);">#REP-4019</strong><br>
-                  <span class="priority-badge priority-critical">🔴 Critical</span>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">Anonymous User</strong><br>
-                  <small style="color: var(--muted);">#USR-11840</small>
-                </td>
-                <td>
-                  <span>Compliance Bot</span><br>
-                  <small style="color: var(--muted);">Auto Flag</small>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">Statutory Violation</strong><br>
-                  <small style="color: var(--muted);">Solicitation of illegal FEMA outward remittance</small>
-                </td>
-                <td>
-                  <a href="question-details.html?id=q-103" target="_blank" style="font-size: 11.5px; color: var(--cyan); text-decoration: underline;">
-                    Question #q-103
-                  </a>
-                </td>
-                <td><span class="status-badge status-open">🚨 Open</span></td>
-                <td>Aug 22, 2026</td>
-                <td>
-                  <button type="button" class="btn-action action-inspect" data-id="rep-1" data-code="REP-4019" data-reported="Anonymous User (#USR-11840)" data-reporter="Compliance Bot" data-type="Statutory Violation" data-reason="Solicitation of illegal FEMA outward remittance" data-desc="Inquiry asked for unlicensed crypto tunneling to bypass RBI FEMA regulatory caps." data-link="question-details.html?id=q-103" data-status="Open">
-                    Investigate
-                  </button>
-                </td>
-              </tr>
-
-              <!-- Case 2 -->
-              <tr data-status="review" data-priority="high" data-id="rep-2">
-                <td>
-                  <strong style="font-family: monospace; color: var(--cyan);">#REP-4018</strong><br>
-                  <span class="priority-badge priority-high">🟡 High</span>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">CA Rajesh Joshi</strong><br>
-                  <small style="color: var(--muted);">Expert #USR-10332</small>
-                </td>
-                <td>
-                  <span>Karan Verma</span><br>
-                  <small style="color: var(--muted);">Client #USR-10119</small>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">Payment Dispute / Session Issue</strong><br>
-                  <small style="color: var(--muted);">Professional was unavailable during scheduled call</small>
-                </td>
-                <td>
-                  <a href="chat.html" target="_blank" style="font-size: 11.5px; color: var(--cyan); text-decoration: underline;">
-                    Chat Thread #c-4819
-                  </a>
-                </td>
-                <td><span class="status-badge status-review">⏳ Under Review</span></td>
-                <td>Aug 21, 2026</td>
-                <td>
-                  <button type="button" class="btn-action action-inspect" data-id="rep-2" data-code="REP-4018" data-reported="CA Rajesh Joshi (#USR-10332)" data-reporter="Karan Verma (#USR-10119)" data-type="Payment Dispute" data-reason="Session No-Show" data-desc="Client booked 30m consultation for ₹2,000. Professional experienced connectivity outage." data-link="chat.html" data-status="Under Review">
-                    Investigate
-                  </button>
-                </td>
-              </tr>
-
-              <!-- Case 3 (Resolved) -->
-              <tr data-status="resolved" data-priority="medium" data-id="rep-3">
-                <td>
-                  <strong style="font-family: monospace; color: var(--muted);">#REP-4010</strong><br>
-                  <span class="priority-badge priority-medium">🔵 Medium</span>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">Rohan Kapoor</strong><br>
-                  <small style="color: var(--muted);">User #USR-10884</small>
-                </td>
-                <td>
-                  <span>Pooja Hegde</span><br>
-                  <small style="color: var(--muted);">User #USR-10481</small>
-                </td>
-                <td>
-                  <strong style="color: var(--white);">Spam Content</strong><br>
-                  <small style="color: var(--muted);">Promotional affiliate link posted in answer thread</small>
-                </td>
-                <td>
-                  <span style="font-size: 11.5px; color: var(--muted);">Question #q-98</span>
-                </td>
-                <td><span class="status-badge status-resolved">✓ Resolved</span></td>
-                <td>Aug 18, 2026</td>
-                <td>
-                  <button type="button" class="btn-action action-inspect" data-id="rep-3" data-code="REP-4010" data-reported="Rohan Kapoor" data-reporter="Pooja Hegde" data-type="Spam" data-reason="Promotional link" data-desc="Affiliate links purged. Account suspended." data-link="" data-status="Resolved">
-                    Inspect
-                  </button>
-                </td>
-              </tr>
-
+              <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted);">Loading reports...</td></tr>
             </tbody>
+
           </table>
         </div>
       </section>
@@ -961,6 +868,7 @@
       setupSearch();
       setupCaseModal();
       setupLogout();
+      await loadReportsFromSupabase();
     }
 
     async function verifyAdminAccess() {
@@ -993,6 +901,133 @@
         window.location.replace("admin-login.html");
         return false;
       }
+    }
+
+    /* ========================================================
+       LOAD REPORTS FROM SUPABASE
+       ======================================================== */
+    async function loadReportsFromSupabase() {
+      const tbody = document.getElementById("reportsTableBody");
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted);">Loading reports...</td></tr>`;
+
+      try {
+        const { data, error } = await supabase
+          .from("reports")
+          .select(`
+            id, case_code, priority, status,
+            report_type, reason, description, linked_resource_url,
+            created_at,
+            reported_account:reported_user_id(id, full_name),
+            reporter:reporter_user_id(id, full_name)
+          `)
+          .order("created_at", { ascending: false })
+          .limit(200);
+
+        if (error) throw error;
+        renderReportsTable(data || []);
+        updateReportTabCounts(data || []);
+      } catch (err) {
+        console.error("loadReportsFromSupabase error:", err);
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--red);">⚠️ Failed to load reports: ${escapeHTML(err.message)}</td></tr>`;
+      }
+    }
+
+    function updateReportTabCounts(list) {
+      const counts = { open: 0, review: 0, resolved: 0, critical: 0 };
+      list.forEach(r => {
+        const s = r.status || "open";
+        if (counts[s] !== undefined) counts[s]++;
+        if ((r.priority || "").toLowerCase() === "critical") counts.critical++;
+      });
+      const tabs = document.querySelectorAll(".tab-btn[data-filter]");
+      tabs.forEach(tab => {
+        const f = tab.dataset.filter;
+        const labels = { all: "All Cases", open: "🚨 Open", review: "⏳ Under Review", resolved: "✓ Resolved", critical: "🔴 Critical" };
+        if (f === "all") { tab.textContent = `All Cases (${list.length})`; return; }
+        tab.textContent = `${labels[f] || f} (${(counts[f] || 0)})`;
+      });
+    }
+
+    function renderReportsTable(list) {
+      const tbody = document.getElementById("reportsTableBody");
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted);">No reports found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(r => {
+        const status   = r.status || "open";
+        const priority = (r.priority || "medium").toLowerCase();
+        const statusCls = { open: "status-open", review: "status-review", resolved: "status-resolved", dismissed: "status-dismissed" }[status] || "status-open";
+        const statusLbl = { open: "🚨 Open", review: "⏳ Under Review", resolved: "✓ Resolved", dismissed: "✕ Dismissed" }[status] || status;
+        const prioCls   = { critical: "priority-critical", high: "priority-high", medium: "priority-medium", low: "priority-medium" }[priority] || "priority-medium";
+        const prioLbl   = { critical: "🔴 Critical", high: "🟡 High", medium: "🔵 Medium", low: "⚪ Low" }[priority] || priority;
+        const caseCode  = r.case_code || `REP-${String(r.id).slice(-4).toUpperCase()}`;
+        const reported  = r.reported_account?.full_name || "Unknown";
+        const reporter  = r.reporter?.full_name || "System";
+        const dt = new Date(r.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+        const linkedUrl = r.linked_resource_url || "";
+        const btnLabel  = status === "resolved" ? "Inspect" : "Investigate";
+
+        return `<tr data-status="${escapeHTML(status)}" data-priority="${escapeHTML(priority)}" data-id="${escapeHTML(r.id)}">
+          <td>
+            <strong style="font-family:monospace;color:var(--cyan);">#${escapeHTML(caseCode)}</strong><br>
+            <span class="priority-badge ${prioCls}">${prioLbl}</span>
+          </td>
+          <td>
+            <strong style="color:var(--white);">${escapeHTML(reported)}</strong>
+          </td>
+          <td><span>${escapeHTML(reporter)}</span></td>
+          <td>
+            <strong style="color:var(--white);">${escapeHTML(r.report_type || "General")}</strong><br>
+            <small style="color:var(--muted);">${escapeHTML((r.reason || "").slice(0, 80))}</small>
+          </td>
+          <td>
+            ${linkedUrl
+              ? `<a href="${escapeHTML(linkedUrl)}" target="_blank" style="font-size:11.5px;color:var(--cyan);text-decoration:underline;">View Resource ↗</a>`
+              : `<span style="color:var(--muted);font-size:11.5px;">—</span>`
+            }
+          </td>
+          <td><span class="status-badge ${statusCls}">${statusLbl}</span></td>
+          <td>${escapeHTML(dt)}</td>
+          <td>
+            <button type="button" class="btn-action action-inspect"
+              data-id="${escapeHTML(r.id)}"
+              data-code="${escapeHTML(caseCode)}"
+              data-reported="${escapeHTML(reported)}"
+              data-reporter="${escapeHTML(reporter)}"
+              data-type="${escapeHTML(r.report_type || "General")}"
+              data-reason="${escapeHTML(r.reason || "")}"
+              data-desc="${escapeHTML(r.description || "")}"
+              data-link="${escapeHTML(linkedUrl)}"
+              data-status="${escapeHTML(statusLbl)}"
+            >${btnLabel}</button>
+          </td>
+        </tr>`;
+      }).join("");
+
+      attachInspectHandlers();
+      filterTable();
+    }
+
+    function attachInspectHandlers() {
+      document.querySelectorAll('.btn-action.action-inspect').forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeCaseId = btn.dataset.id;
+          document.getElementById("modalCaseCode").textContent = `Case #${btn.dataset.code}`;
+          document.getElementById("modalCaseType").textContent = `Type: ${btn.dataset.type}`;
+          document.getElementById("modalReported").textContent = btn.dataset.reported;
+          document.getElementById("modalReporter").textContent = btn.dataset.reporter;
+          document.getElementById("modalReason").textContent = btn.dataset.reason;
+          document.getElementById("modalStatus").textContent = btn.dataset.status;
+          document.getElementById("modalDesc").textContent = btn.dataset.desc;
+          document.getElementById("investigateModal").classList.add("show");
+        });
+      });
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
     /* ========================================================

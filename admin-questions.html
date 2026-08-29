@@ -668,75 +668,7 @@
               </tr>
             </thead>
             <tbody id="questionsTableBody">
-              
-              <!-- Row 1 -->
-              <tr data-status="answered" data-id="q-101">
-                <td class="q-title-cell">
-                  <strong>Vendor Contract Compliance & Arbitration Seating</strong>
-                  <span class="q-snippet">Need guidance on drafting domestic arbitration and IP indemnity caps under MCA 2026 mandates...</span>
-                </td>
-                <td><strong style="color: var(--white);">Legal Advisor</strong><br><small style="color: var(--muted);">🌐 English</small></td>
-                <td>
-                  <strong>Aditya Sharma</strong><br>
-                  <small style="color: var(--muted);">#USR-10920</small>
-                </td>
-                <td><span style="color: var(--green); font-weight: 750;">2 Verified Answers</span></td>
-                <td><span class="status-badge status-answered">✨ Answered</span></td>
-                <td>Aug 22, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-101" data-title="Vendor Contract Compliance & Arbitration Seating" data-desc="Need guidance on drafting domestic arbitration and IP indemnity caps under MCA 2026 mandates for upcoming enterprise vendor contract renewals." data-asker="Aditya Sharma" data-cat="Legal Advisor" data-lang="English" data-answers="Adv. Vikram Rao: Admitted to Bar. The statutory cap under Section 19 should specify exclusive seat in Mumbai...">Inspect</button>
-                    <button type="button" class="btn-action action-resolve" data-action="resolve" data-id="q-101">Resolve</button>
-                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-101" data-title="Vendor Contract Compliance & Arbitration Seating">Remove</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 2 -->
-              <tr data-status="open" data-id="q-102">
-                <td class="q-title-cell">
-                  <strong>Trademark Class 42 Opposition Notice Reply</strong>
-                  <span class="q-snippet">Received an opposition notice from a competitor alleging phonetically similar software naming...</span>
-                </td>
-                <td><strong style="color: var(--white);">IP & Trademark</strong><br><small style="color: var(--muted);">🌐 English</small></td>
-                <td>
-                  <strong>Pooja Hegde</strong><br>
-                  <small style="color: var(--muted);">#USR-10481</small>
-                </td>
-                <td><span style="color: var(--muted); font-weight: 750;">0 Answers (Open)</span></td>
-                <td><span class="status-badge status-open">🟢 Open</span></td>
-                <td>Aug 21, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-102" data-title="Trademark Class 42 Opposition Notice Reply" data-desc="Received an opposition notice from a competitor alleging phonetically similar software naming under Class 42. Consultation requested to prepare counter-affidavit reply." data-asker="Pooja Hegde" data-cat="IP & Trademark" data-lang="English" data-answers="No expert answers yet.">Inspect</button>
-                    <button type="button" class="btn-action action-resolve" data-action="resolve" data-id="q-102">Resolve</button>
-                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-102" data-title="Trademark Class 42 Opposition Notice Reply">Remove</button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 3 (Flagged) -->
-              <tr data-status="flagged" data-id="q-103">
-                <td class="q-title-cell">
-                  <strong style="color: var(--red);">[FLAGGED] Cross-border cryptocurrency remittance advisory</strong>
-                  <span class="q-snippet">How to bypass RBI FEMA outward remittance caps using un-hosted DeFi pools for offshore consultants?</span>
-                </td>
-                <td><strong style="color: var(--white);">Finance / FEMA</strong><br><small style="color: var(--muted);">🌐 English</small></td>
-                <td>
-                  <strong>Anonymous User</strong><br>
-                  <small style="color: var(--red);">#USR-11840 (Reported)</small>
-                </td>
-                <td><span style="color: var(--red); font-weight: 750;">Flagged: Statutory Violation</span></td>
-                <td><span class="status-badge status-flagged">🚩 Flagged</span></td>
-                <td>Aug 20, 2026</td>
-                <td>
-                  <div class="actions-cell">
-                    <button type="button" class="btn-action action-view" data-action="view" data-id="q-103" data-title="[FLAGGED] Cross-border cryptocurrency remittance advisory" data-desc="How to bypass RBI FEMA outward remittance caps using un-hosted DeFi pools for offshore consultants?" data-asker="Anonymous User" data-cat="Finance / FEMA" data-lang="English" data-answers="Blocked by safety filter.">Inspect</button>
-                    <button type="button" class="btn-action action-remove" data-action="remove" data-id="q-103" data-title="Cross-border remittance bypass inquiry">Remove</button>
-                  </div>
-                </td>
-              </tr>
-
+              <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">Loading questions...</td></tr>
             </tbody>
           </table>
         </div>
@@ -815,6 +747,7 @@
        ======================================================== */
     let selectedStatus = "all";
     let pendingRemoveId = null;
+    let pendingRemoveTitle = "";
 
     /* ========================================================
        INIT
@@ -824,39 +757,198 @@
       if (!isAuth) return;
       setupFilters();
       setupSearch();
-      setupActionHandlers();
+      setupModalHandlers();
       setupLogout();
+      await loadQuestionsFromSupabase();
     }
 
     async function verifyAdminAccess() {
       try {
-        if (!supabase) {
-          window.location.replace("admin-login.html");
-          return false;
-        }
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session || !session.user) {
-          window.location.replace("admin-login.html");
-          return false;
-        }
-
+        if (!supabase) { window.location.replace("admin-login.html"); return false; }
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session?.user) { window.location.replace("admin-login.html"); return false; }
         const { data: prof, error: profError } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
+          .from("profiles").select("role").eq("id", session.user.id).maybeSingle();
         if (profError || !prof || prof.role !== "admin") {
           await supabase.auth.signOut();
           window.location.replace("admin-login.html");
           return false;
         }
-
         return true;
       } catch (err) {
         console.error("Admin verification error:", err);
         window.location.replace("admin-login.html");
         return false;
+      }
+    }
+
+    /* ========================================================
+       LOAD QUESTIONS FROM SUPABASE
+       ======================================================== */
+    async function loadQuestionsFromSupabase() {
+      const tbody = document.getElementById("questionsTableBody");
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">Loading questions...</td></tr>`;
+
+      try {
+        const { data, error } = await supabase
+          .from("questions")
+          .select(`
+            id, title, description, category, language, status, moderation_status, answer_count, created_at,
+            user:user_id(id, full_name)
+          `)
+          .order("created_at", { ascending: false })
+          .limit(300);
+
+        if (error) throw error;
+        renderQuestionsTable(data || []);
+        updateTabCounts(data || []);
+      } catch (err) {
+        console.error("loadQuestionsFromSupabase error:", err);
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--red);">⚠️ Failed to load questions: ${escapeHTML(err.message)}</td></tr>`;
+      }
+    }
+
+    function updateTabCounts(list) {
+      const counts = { open: 0, answered: 0, resolved: 0, flagged: 0 };
+      list.forEach(q => {
+        const s = q.moderation_status === "flagged" ? "flagged" : (q.status || "open");
+        if (counts[s] !== undefined) counts[s]++;
+      });
+      const tabs = document.querySelectorAll(".tab-btn[data-status]");
+      tabs.forEach(tab => {
+        const s = tab.dataset.status;
+        if (s === "all") { tab.textContent = `All Inquiries`; return; }
+        const labels = { open: "🟢 Open", answered: "✨ Answered", resolved: "✓ Resolved", flagged: "🚩 Flagged" };
+        tab.textContent = `${labels[s] || s} (${(counts[s] || 0).toLocaleString()})`;
+      });
+      const flaggedBtn = document.getElementById("viewFlaggedOnlyBtn");
+      if (flaggedBtn) flaggedBtn.textContent = `Inspect Flagged Items (${counts.flagged}) →`;
+    }
+
+    function renderQuestionsTable(list) {
+      const tbody = document.getElementById("questionsTableBody");
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">No questions found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(q => {
+        const isFlagged = q.moderation_status === "flagged" || q.moderation_status === "removed";
+        const displayStatus = isFlagged ? q.moderation_status : (q.status || "open");
+        const statusCls = {
+          answered: "status-answered", open: "status-open", resolved: "status-resolved",
+          flagged: "status-flagged", removed: "status-flagged"
+        }[displayStatus] || "status-open";
+        const statusLbl = {
+          answered: "✨ Answered", open: "🟢 Open", resolved: "✓ Resolved",
+          flagged: "🚩 Flagged", removed: "🗑 Removed"
+        }[displayStatus] || displayStatus;
+        const dt = new Date(q.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+        const asker = q.user?.full_name || "Unknown";
+        const answerCount = parseInt(q.answer_count || 0, 10);
+        const answerLabel = answerCount > 0 ? `${answerCount} Answer${answerCount > 1 ? "s" : ""}` : "0 Answers (Open)";
+        const canResolve = q.status !== "resolved" && q.moderation_status !== "removed";
+        const canRemove  = q.moderation_status !== "removed";
+        const snippet = (q.description || "").slice(0, 120);
+
+        return `<tr data-status="${escapeHTML(displayStatus)}" data-id="${escapeHTML(q.id)}">
+          <td class="q-title-cell">
+            <strong ${isFlagged ? 'style="color:var(--red);"' : ""}>${escapeHTML(q.title || "")}</strong>
+            <span class="q-snippet">${escapeHTML(snippet)}${snippet.length >= 120 ? "..." : ""}</span>
+          </td>
+          <td><strong style="color:var(--white);">${escapeHTML(q.category || "—")}</strong><br><small style="color:var(--muted);">${escapeHTML(q.language || "English")}</small></td>
+          <td><strong>${escapeHTML(asker)}</strong></td>
+          <td><span style="color:${answerCount > 0 ? "var(--green)" : "var(--muted)"};font-weight:750;">${escapeHTML(answerLabel)}</span></td>
+          <td><span class="status-badge ${statusCls}">${statusLbl}</span></td>
+          <td>${escapeHTML(dt)}</td>
+          <td>
+            <div class="actions-cell">
+              <button type="button" class="btn-action action-view"
+                data-id="${escapeHTML(q.id)}"
+                data-title="${escapeHTML(q.title || "")}"
+                data-desc="${escapeHTML(q.description || "")}"
+                data-asker="${escapeHTML(asker)}"
+                data-cat="${escapeHTML(q.category || "")}"
+                data-lang="${escapeHTML(q.language || "English")}"
+              >Inspect</button>
+              ${canResolve ? `<button type="button" class="btn-action action-resolve" data-id="${escapeHTML(q.id)}">Resolve</button>` : ""}
+              ${canRemove  ? `<button type="button" class="btn-action action-remove"  data-id="${escapeHTML(q.id)}" data-title="${escapeHTML(q.title || "")}">Remove</button>` : ""}
+            </div>
+          </td>
+        </tr>`;
+      }).join("");
+
+      // Re-attach event handlers after render
+      attachRowHandlers();
+      filterTable();
+    }
+
+    function attachRowHandlers() {
+      // Inspect
+      document.querySelectorAll('.btn-action.action-view').forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.getElementById("modalQTitle").textContent = btn.dataset.title;
+          document.getElementById("modalQMeta").textContent  = `Category: ${btn.dataset.cat} • Asker: ${btn.dataset.asker}`;
+          document.getElementById("modalQDesc").textContent  = btn.dataset.desc;
+          document.getElementById("modalPublicLink").href = `question-details.html?id=${encodeURIComponent(btn.dataset.id)}`;
+          document.getElementById("modalAnswersContainer").innerHTML = `
+            <div class="answer-card">
+              <strong style="color:var(--cyan);display:block;margin-bottom:4px;">Loading answers from database...</strong>
+            </div>`;
+          document.getElementById("qDetailModal").classList.add("show");
+          loadAnswersForQuestion(btn.dataset.id);
+        });
+      });
+
+      // Resolve
+      document.querySelectorAll('.btn-action.action-resolve').forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const qId = btn.dataset.id;
+          try {
+            const { error } = await supabase
+              .from("questions")
+              .update({ status: "resolved" })
+              .eq("id", qId);
+            if (error) throw error;
+            showToast("✓ Question marked as Resolved!");
+            await loadQuestionsFromSupabase();
+          } catch (err) {
+            showToast(`⚠️ Failed: ${err.message}`, true);
+          }
+        });
+      });
+
+      // Remove
+      document.querySelectorAll('.btn-action.action-remove').forEach(btn => {
+        btn.addEventListener("click", () => {
+          pendingRemoveId    = btn.dataset.id;
+          pendingRemoveTitle = btn.dataset.title;
+          document.getElementById("removeConfirmModal").classList.add("show");
+        });
+      });
+    }
+
+    async function loadAnswersForQuestion(questionId) {
+      try {
+        const { data, error } = await supabase
+          .from("answers")
+          .select("content, created_at, expert:expert_id(full_name)")
+          .eq("question_id", questionId)
+          .order("created_at", { ascending: true })
+          .limit(5);
+
+        const container = document.getElementById("modalAnswersContainer");
+        if (error || !data?.length) {
+          container.innerHTML = `<div class="answer-card"><span>No expert answers yet.</span></div>`;
+          return;
+        }
+        container.innerHTML = data.map(a => `
+          <div class="answer-card">
+            <strong style="color:var(--cyan);display:block;margin-bottom:4px;">${escapeHTML(a.expert?.full_name || "Expert")}:</strong>
+            <span>${escapeHTML(a.content || "")}</span>
+          </div>`).join("");
+      } catch (e) {
+        document.getElementById("modalAnswersContainer").innerHTML = `<div class="answer-card"><span>Failed to load answers.</span></div>`;
       }
     }
 
@@ -873,7 +965,6 @@
           filterTable();
         });
       });
-
       document.getElementById("viewFlaggedOnlyBtn").addEventListener("click", () => {
         const flaggedTab = document.querySelector('.tab-btn[data-status="flagged"]');
         if (flaggedTab) flaggedTab.click();
@@ -881,99 +972,47 @@
     }
 
     function setupSearch() {
-      const input = document.getElementById("questionSearchInput");
-      input.addEventListener("input", () => filterTable());
+      document.getElementById("questionSearchInput").addEventListener("input", () => filterTable());
     }
 
     function filterTable() {
       const term = document.getElementById("questionSearchInput").value.toLowerCase().trim();
       const rows = document.querySelectorAll("#questionsTableBody tr");
-
       rows.forEach(row => {
-        const st = row.dataset.status;
+        const st   = row.dataset.status;
         const text = row.textContent.toLowerCase();
-
         const matchFilter = selectedStatus === "all" || st === selectedStatus;
         const matchSearch = !term || text.includes(term);
-
         row.style.display = (matchFilter && matchSearch) ? "" : "none";
       });
     }
 
     /* ========================================================
-       ACTION HANDLERS & MODALS
+       MODAL HANDLERS
        ======================================================== */
-    function setupActionHandlers() {
-      // Inspect Modal
-      document.querySelectorAll('.btn-action[data-action="view"]').forEach(btn => {
-        btn.addEventListener("click", () => {
-          const qId = btn.dataset.id;
-          document.getElementById("modalQTitle").textContent = btn.dataset.title;
-          document.getElementById("modalQMeta").textContent = `Category: ${btn.dataset.cat} • Asker: ${btn.dataset.asker}`;
-          document.getElementById("modalQDesc").textContent = btn.dataset.desc;
-          document.getElementById("modalPublicLink").href = `question-details.html?id=${encodeURIComponent(qId)}`;
-
-          const ansContainer = document.getElementById("modalAnswersContainer");
-          ansContainer.innerHTML = `
-            <div class="answer-card">
-              <strong style="color: var(--cyan); display: block; margin-bottom: 4px;">Adv. Vikram Rao (Verified Expert):</strong>
-              <span>${btn.dataset.answers}</span>
-            </div>
-          `;
-
-          document.getElementById("qDetailModal").classList.add("show");
-        });
-      });
-
-      document.getElementById("closeQModalBtn").addEventListener("click", () => {
-        document.getElementById("qDetailModal").classList.remove("show");
-      });
-      document.getElementById("dismissQModalBtn").addEventListener("click", () => {
-        document.getElementById("qDetailModal").classList.remove("show");
-      });
-
-      // Resolve Action
-      document.querySelectorAll('.btn-action[data-action="resolve"]').forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const qId = btn.dataset.id;
-          const row = document.querySelector(`tr[data-id="${qId}"]`);
-          if (row) {
-            row.dataset.status = "resolved";
-            const badge = row.querySelector(".status-badge");
-            if (badge) {
-              badge.className = "status-badge status-resolved";
-              badge.textContent = "✓ Resolved";
-            }
-          }
-          showToast("✓ Question marked as Resolved!");
-        });
-      });
-
-      // Remove Action
-      document.querySelectorAll('.btn-action[data-action="remove"]').forEach(btn => {
-        btn.addEventListener("click", () => {
-          pendingRemoveId = btn.dataset.id;
-          document.getElementById("removeConfirmModal").classList.add("show");
-        });
-      });
-
-      document.getElementById("cancelRemoveBtn").addEventListener("click", () => {
-        document.getElementById("removeConfirmModal").classList.remove("show");
-      });
+    function setupModalHandlers() {
+      document.getElementById("closeQModalBtn").addEventListener("click", () => document.getElementById("qDetailModal").classList.remove("show"));
+      document.getElementById("dismissQModalBtn").addEventListener("click", () => document.getElementById("qDetailModal").classList.remove("show"));
+      document.getElementById("cancelRemoveBtn").addEventListener("click", () => document.getElementById("removeConfirmModal").classList.remove("show"));
 
       document.getElementById("confirmRemoveBtn").addEventListener("click", async () => {
         const reason = document.getElementById("removeReasonText").value.trim();
-        if (!reason) {
-          showToast("Please provide a moderation reason.", true);
-          return;
-        }
+        if (!reason) { showToast("Please provide a moderation reason.", true); return; }
+        if (!pendingRemoveId) return;
 
-        document.getElementById("removeConfirmModal").classList.remove("show");
-        showToast("✓ Question removed from feed and archived with audit reason.");
+        try {
+          const { error } = await supabase
+            .from("questions")
+            .update({ moderation_status: "removed", moderation_reason: reason })
+            .eq("id", pendingRemoveId);
 
-        const row = document.querySelector(`tr[data-id="${pendingRemoveId}"]`);
-        if (row) {
-          row.style.display = "none";
+          if (error) throw error;
+          document.getElementById("removeConfirmModal").classList.remove("show");
+          showToast("✓ Question removed from feed and archived.");
+          pendingRemoveId = null;
+          await loadQuestionsFromSupabase();
+        } catch (err) {
+          showToast(`⚠️ Failed: ${err.message}`, true);
         }
       });
     }
@@ -981,11 +1020,13 @@
     function setupLogout() {
       document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
         showToast("Signing out...");
-        try {
-          if (supabase) await supabase.auth.signOut();
-        } catch (e) {}
+        try { if (supabase) await supabase.auth.signOut(); } catch (e) {}
         setTimeout(() => window.location.href = "admin-login.html", 500);
       });
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
     function showToast(msg, isError = false) {
@@ -999,3 +1040,5 @@
   </script>
 </body>
 </html>
+
+

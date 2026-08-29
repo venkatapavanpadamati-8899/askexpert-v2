@@ -882,7 +882,7 @@
           console.warn("localStorage parse error:", e);
         }
 
-        // Merge: Database items take priority, followed by local submissions, then seed defaults
+        // Merge: Database items take priority; locally-submitted questions (via ask-question.html) merged in if not already present
         const combined = [...dbQuestions];
 
         localQuestions.forEach(lq => {

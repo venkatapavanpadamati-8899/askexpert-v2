@@ -1740,14 +1740,9 @@
         console.warn("Supabase auth session check:", e);
       }
 
-      // Guest user fallback (consistent UUID stored locally)
-      let guestId = localStorage.getItem("askexpert_guest_user_id");
-      if (!guestId) {
-        guestId = crypto.randomUUID();
-        localStorage.setItem("askexpert_guest_user_id", guestId);
-      }
-      currentUserId = guestId;
-      currentUserRole = "user";
+      // No authenticated session — redirect to login
+      const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.replace(`login.html?redirect=${redirectUrl}`);
     }
 
     async function initExpertFromURL() {

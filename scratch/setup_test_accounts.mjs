@@ -85,6 +85,39 @@ async function setupAccounts() {
     });
     console.log('✓ Expert account verified and ready with role=expert:', expertId);
   }
+
+  // 3. User Account
+  const userEmail = 'user.audit@askexpert.com';
+  const userPass = 'UserSecurity123!';
+
+  console.log(`Setting up User account: ${userEmail}...`);
+  const { data: uData } = await supabase.auth.signUp({
+    email: userEmail,
+    password: userPass,
+    options: {
+      data: { full_name: 'Audit Tester', role: 'user' }
+    }
+  });
+
+  let userId = uData?.user?.id;
+  if (!userId) {
+    const { data: uLogin } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPass
+    });
+    userId = uLogin?.user?.id;
+  }
+
+  if (userId) {
+    await supabase.from('profiles').upsert({
+      id: userId,
+      full_name: 'Audit Tester',
+      email: userEmail,
+      role: 'user',
+      is_verified: true
+    });
+    console.log('✓ User account verified and ready with role=user:', userId);
+  }
 }
 
 setupAccounts().catch(console.error);

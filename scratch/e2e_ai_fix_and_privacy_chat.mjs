@@ -93,8 +93,8 @@ async function runE2EAiFixAndPrivacyChat() {
   console.log('2.1 Logging in as User to edit privacy settings...');
   await userPage.goto('http://localhost:5173/login.html', { waitUntil: 'domcontentloaded' });
   await userPage.waitForTimeout(1000);
-  await userPage.fill('#email', 'kiran_1772377083166@askexpert.local'); // using an existing verified user
-  await userPage.fill('#password', 'UserPassword123!');
+  await userPage.fill('#email', 'user.audit@askexpert.com');
+  await userPage.fill('#password', 'UserSecurity123!');
   await userPage.click('#loginButton');
   await userPage.waitForTimeout(2000);
 

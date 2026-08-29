@@ -37,11 +37,16 @@ async function runThreeJourneys() {
   await userPage.fill('#fullName', testUserName);
   await userPage.fill('#email', testUserEmail);
   await userPage.fill('#phone', '9876543210');
+  await userPage.click('#sendOtpButton');
+  await userPage.waitForTimeout(1000);
+  await userPage.click('#autoFillOtpButton');
+  await userPage.waitForTimeout(500);
+
   await userPage.fill('#password', testUserPass);
   await userPage.check('#terms');
 
   await userPage.screenshot({ path: path.join(screenshotDir, '01_user_register_filled.png') });
-  console.log('1.2 Submitting registration form...');
+  console.log('1.2 Submitting registration form with verified Demo OTP...');
   await userPage.click('#createButton');
   await userPage.waitForTimeout(3000);
   await userPage.screenshot({ path: path.join(screenshotDir, '02_user_registered_redirect.png') });

@@ -1190,7 +1190,7 @@
       simulateBtn.textContent = "Generating...";
 
       const adminId = sessionStorage.getItem("askexpert_user_id");
-      const mockIssue = {
+      const simulatedIssue = {
         id: "sim-" + Date.now(),
         reporter_id: adminId,
         report_type: "bug",
@@ -1202,14 +1202,14 @@
 
       if (supabase && adminId) {
         try {
-          const { data: created } = await supabase.from("issue_reports").insert(mockIssue).select().single();
-          if (created) mockIssue.id = created.id;
+          const { data: created } = await supabase.from("issue_reports").insert(simulatedIssue).select().single();
+          if (created) simulatedIssue.id = created.id;
         } catch (e) {
           console.warn("DB insert fallback:", e);
         }
       }
 
-      await analyzeIssueAndGenerateProposal(mockIssue);
+      await analyzeIssueAndGenerateProposal(simulatedIssue);
       await loadData();
 
       simulateBtn.disabled = false;

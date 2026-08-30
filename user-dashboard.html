@@ -9,29 +9,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
   <style>
     /* =========================================================
-       ASKEXPERT - USER DASHBOARD DESIGN SYSTEM
+       ASKEXPERT - CLIENT COMMAND CENTER (SOLAR AMBER THEME)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
-      --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --bg-mesh: var(--ae-mesh-solar);
+      --card-bg: rgba(22, 12, 6, 0.94);
+      --card-inner: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --card-hover: rgba(245, 158, 11, 0.50);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
       --muted: #94a3b8;
+
+      --amber: #f59e0b;
+      --orange: #f97316;
+      --rose: #e11d48;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --orange: #ff9d3c;
-      --gold: #ffb703;
-      --radius: 18px;
+      --green: #10b981;
+      --purple: #8b5cf6;
+      --gold: #f59e0b;
+      --radius: 20px;
       --sidebar-width: 260px;
     }
 
@@ -45,13 +48,11 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--bg-mesh);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -256,21 +257,24 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 18px;
-      border-radius: 11px;
-      font-size: 13.5px;
-      font-weight: 750;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      color: #031120;
-      border: none;
+      padding: 10px 20px;
+      min-height: 44px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 850;
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.40);
       transition: all 0.2s ease;
+      text-decoration: none;
     }
 
     .btn-ask-top:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.5);
+      box-shadow: 0 10px 28px rgba(234, 88, 12, 0.60);
+      filter: brightness(1.08);
     }
 
     .icon-btn {
@@ -357,17 +361,29 @@
     }
 
     .welcome-banner {
-      background: linear-gradient(135deg, rgba(0, 153, 255, 0.16), rgba(138, 92, 255, 0.12));
-      border: 1px solid rgba(0, 217, 255, 0.25);
+      background: linear-gradient(135deg, rgba(36, 17, 8, 0.94), rgba(24, 10, 4, 0.96));
+      border: 1.5px solid rgba(245, 158, 11, 0.30);
       border-radius: var(--radius);
-      padding: 26px 32px;
-      display: flex;
-      justify-content: space-between;
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
+      gap: 28px;
+      box-shadow:
+        0 25px 70px -10px rgba(0, 0, 0, 0.8),
+        0 0 35px rgba(245, 158, 11, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
       position: relative;
       overflow: hidden;
+    }
+
+    @media (max-width: 1024px) {
+      .welcome-banner {
+        grid-template-columns: 1fr;
+      }
+      .dashboard-3d-card {
+        display: none;
+      }
     }
 
     .welcome-banner::after {
@@ -375,23 +391,71 @@
       position: absolute;
       right: -30px;
       top: -30px;
-      width: 160px;
-      height: 160px;
-      background: radial-gradient(circle, rgba(0, 217, 255, 0.2), transparent 70%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent 70%);
       pointer-events: none;
     }
 
     .welcome-title {
-      font-size: 24px;
-      font-weight: 850;
+      font-size: 26px;
+      font-weight: 900;
       color: var(--white);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-title span {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .welcome-desc {
-      font-size: 14px;
-      color: #bad3eb;
+      font-size: 14.5px;
+      color: var(--text-muted);
       max-width: 580px;
+      line-height: 1.6;
+    }
+
+    /* 3D Mission Command Card */
+    .dashboard-3d-card {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1.5px solid rgba(245, 158, 11, 0.35);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.2);
+    }
+
+    .dashboard-3d-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dashboard-3d-card:hover img {
+      transform: scale(1.03);
+    }
+
+    .dashboard-3d-overlay {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      right: 12px;
+      padding: 6px 14px;
+      border-radius: 10px;
+      background: rgba(14, 7, 3, 0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 750;
+      color: #f8fafc;
     }
 
     /* Stats Grid */
@@ -411,12 +475,12 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       transition: all 0.2s ease;
     }
 
     .stat-card:hover {
-      border-color: rgba(0, 217, 255, 0.35);
+      border-color: rgba(245, 158, 11, 0.50);
       transform: translateY(-3px);
     }
 
@@ -803,29 +867,41 @@
         <a href="profile.html" class="user-pill" title="My Profile">
           <div class="user-avatar" id="topUserAvatar">U</div>
           <div class="user-info-text">
-            <span class="user-name" id="topUserName">Aditya Sharma</span>
+            <span class="user-name" id="topUserName">User</span>
             <span class="user-role-tag">Client</span>
           </div>
         </a>
+
+        <button type="button" id="userTopbarLogoutBtn" class="icon-btn" title="Sign Out" style="color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); border-radius: 12px; cursor: pointer;">
+          <span>🚪</span>
+        </button>
       </div>
     </header>
 
     <!-- Main Content -->
     <main class="dashboard-body">
 
-      <!-- Welcome Banner -->
+      <!-- Welcome Mission Command Banner (3D Telemetry Grid) -->
       <section class="welcome-banner">
         <div>
-          <h1 class="welcome-title">Welcome back, <span id="welcomeUserName">Aditya</span>! 👋</h1>
-          <p class="welcome-desc">Track your legal, tax, and engineering inquiries with verified specialists. Live consultations and advice are encrypted.</p>
+          <h1 class="welcome-title">Mission Command, <span id="welcomeUserName">User</span>! 🚀</h1>
+          <p class="welcome-desc">Live telemetry of your inquiries, active legal & tech sessions, and escrow wallet balance. All transmissions are encrypted.</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px;">
+            <a href="ask-question.html" class="btn-ask-top" style="background: linear-gradient(135deg, var(--amber), var(--orange)); box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);">
+              <span>📝</span> Submit New Inquiry
+            </a>
+            <a href="experts.html" class="icon-btn" style="width: auto; padding: 0 16px; font-size: 13.5px; font-weight: 750;" title="Browse Directory">
+              <span>👥</span> Find Experts
+            </a>
+          </div>
         </div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="ask-question.html" class="btn-ask-top">
-            <span>📝</span> Submit New Inquiry
-          </a>
-          <a href="experts.html" class="icon-btn" style="width: auto; padding: 0 16px; font-size: 13.5px; font-weight: 750;" title="Browse Directory">
-            <span>👥</span> Browse Experts
-          </a>
+
+        <div class="dashboard-3d-card" aria-hidden="true">
+          <img src="./assets/images/dashboard_hero_art.jpg" alt="AskExpert Mission Command Telemetry" loading="eager">
+          <div class="dashboard-3d-overlay">
+            <span>● Financial & Telemetry Deck</span>
+            <span style="color: var(--amber);">Status: Active</span>
+          </div>
         </div>
       </section>
 
@@ -938,8 +1014,8 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
-    import { openReportIssueModal } from "./assets/js/reportIssueModal.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
+    import { openReportIssueModal } from "./assets/js/common/reportIssueModal.js";
 
     /* ========================================================
        STATE
@@ -951,12 +1027,12 @@
        INIT
        ======================================================== */
     async function initDashboard() {
+      setupLogout();
       await loadAuthUser();
       await loadDashboardStats();
       await loadUserQuestions();
       await loadVerifiedExpertsSidebar();
       setupSearch();
-      setupLogout();
 
       document.getElementById("btnOpenReportIssue")?.addEventListener("click", openReportIssueModal);
     }
@@ -1016,20 +1092,28 @@
       let userAvatarInitials = "U";
 
       try {
-        if (supabase) {
           const { data: { session } } = await supabase.auth.getSession();
+          const storedUserId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
+
           if (session && session.user) {
             currentUser = session.user;
             const meta = session.user.user_metadata || {};
             displayName = meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
             userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+          } else if (storedUserId) {
+            const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
+            currentUser = { id: storedUserId, email: profile?.email || "user@askexpert.com", user_metadata: profile || {} };
+            displayName = profile?.full_name || profile?.username || (profile?.email ? profile.email.split("@")[0] : "User");
+            userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+          } else if (new URLSearchParams(window.location.search).get("preview") === "true") {
+            displayName = "Aditya Sharma";
+            userAvatarInitials = "AS";
           } else {
             // Unauthenticated: redirect to login
             const currentPath = window.location.pathname.split("/").pop() || "user-dashboard.html";
             window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
             return;
           }
-        }
       } catch (err) {
         console.warn("Auth session check:", err);
       }
@@ -1174,21 +1258,26 @@
        LOGOUT HANDLER
        ======================================================== */
     function setupLogout() {
-      const logoutBtn = document.getElementById("logoutBtn");
-      logoutBtn.addEventListener("click", async () => {
+      const doLogout = async () => {
         showToast("Signing out...");
         try {
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          localStorage.removeItem("askexpert_guest_user_id");
           if (supabase) {
             await supabase.auth.signOut();
           }
         } catch (err) {
           console.warn("Sign out err:", err);
         }
-        localStorage.removeItem("askexpert_guest_user_id");
         setTimeout(() => {
           window.location.href = "login.html";
-        }, 600);
-      });
+        }, 400);
+      };
+
+      document.getElementById("logoutBtn")?.addEventListener("click", doLogout);
+      document.getElementById("userTopbarLogoutBtn")?.addEventListener("click", doLogout);
     }
 
     /* ========================================================

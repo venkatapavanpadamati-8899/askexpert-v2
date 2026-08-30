@@ -11,26 +11,26 @@
 
   <style>
     /* =========================================================
-       ASKEXPERT - EXPERT PROFILE STYLES
+       ASKEXPERT - EXPERT PROFILE STYLES (ORCHID & NEON ROSE)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --bg-1: #0f0417;
+      --bg-2: #1c082b;
+      --bg-3: #240a25;
+      --card-bg: rgba(22, 10, 36, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(168, 85, 247, 0.22);
+      --card-hover: rgba(168, 85, 247, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
-      --muted: #94a3b8;
-      --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --orange: #ff9d3c;
-      --gold: #ffb703;
+      --text: #fdf4ff;
+      --muted: #cbd5e1;
+      --cyan: #38bdf8;
+      --blue: #818cf8;
+      --purple: #c084fc;
+      --green: #34d399;
+      --orange: #fb923c;
+      --gold: #fbbf24;
       --radius: 20px;
     }
 
@@ -44,10 +44,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-orchid);
       background-attachment: fixed;
       line-height: 1.6;
       overflow-x: hidden;
@@ -562,9 +559,48 @@
       color: var(--muted);
       text-align: center;
     }
+
+    @media (max-width: 900px) {
+      .hero-card {
+        grid-template-columns: 1fr;
+      }
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .expert-name {
+        font-size: 22px;
+      }
+      .hero-actions {
+        width: 100%;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/expertProfile-DUFvU-rp.js"></script>
+  <script type="module" crossorigin src="/assets/expertProfile-WiUImd2q.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 

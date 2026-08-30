@@ -11,26 +11,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - PROFESSIONAL DASHBOARD STYLES
+       ASKEXPERT - PROFESSIONAL DASHBOARD STYLES (CYBER SAPPHIRE)
        ========================================================= */
     :root {
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-bg: rgba(10, 20, 44, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(59, 130, 246, 0.22);
+      --card-hover: rgba(59, 130, 246, 0.5);
 
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
+      --blue: #3b82f6;
+      --purple: #6366f1;
       --green: #20d889;
       --gold: #ffb703;
       --red: #ff4757;
@@ -48,10 +49,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-sapphire);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -308,17 +306,59 @@
       gap: 28px;
     }
 
-    /* Welcome Banner */
+    /* 3D Specialist Practitioner Console Welcome Banner */
     .welcome-banner {
-      background: linear-gradient(135deg, rgba(0, 153, 255, 0.18), rgba(138, 92, 255, 0.12));
-      border: 1px solid rgba(0, 217, 255, 0.25);
+      background: linear-gradient(135deg, rgba(7, 21, 54, 0.94), rgba(4, 10, 28, 0.96));
+      border: 1px solid rgba(59, 130, 246, 0.35);
       border-radius: var(--radius);
-      padding: 26px 32px;
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      align-items: center;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 30px rgba(59, 130, 246, 0.15);
+      animation: pulseSapphire 6s infinite ease-in-out;
+    }
+
+    @media (max-width: 900px) {
+      .welcome-banner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .welcome-art-wrap {
+      width: 100%;
+      height: 185px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      border: 1.5px solid rgba(99, 102, 241, 0.4);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .welcome-art-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .art-badge-row {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      right: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
+      background: rgba(3, 10, 28, 0.85);
+      backdrop-filter: blur(10px);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .welcome-title {
@@ -644,6 +684,48 @@
       .sidebar {
         display: none;
       }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .welcome-banner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 10px 14px;
+        height: auto;
+        flex-wrap: wrap;
+      }
+      .search-wrap {
+        display: none;
+      }
+      .dashboard-body {
+        padding: 16px 12px;
+        gap: 18px;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .welcome-banner {
+        padding: 18px 14px;
+        gap: 16px;
+      }
+      .welcome-banner h1 {
+        font-size: 22px;
+        line-height: 1.25;
+      }
+      .welcome-actions {
+        flex-direction: column;
+      }
+      .welcome-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .glass-card {
+        padding: 16px 12px;
+      }
     }
   </style>
 </head>
@@ -767,22 +849,40 @@
             <span style="font-size: 10px; color: var(--cyan); font-weight: 700;">Verified Specialist</span>
           </div>
         </a>
+
+        <button type="button" id="expertTopbarLogoutBtn" class="icon-btn" title="Sign Out" style="color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); border-radius: 12px; cursor: pointer;">
+          <span>🚪</span>
+        </button>
       </div>
     </header>
 
     <!-- Main Content Body -->
     <main class="dashboard-body">
 
-      <!-- Welcome Banner -->
+      <!-- 3D Specialist Practitioner Console Welcome Banner -->
       <section class="welcome-banner">
         <div>
-          <h1 class="welcome-title">Welcome to your workspace, <span id="welcomeName">Vikram</span>! ⚖️</h1>
-          <p class="welcome-desc">You have 2 pending client consultation requests. Your bar registration #MH/2014/9842
-            is verified and active.</p>
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 750; margin-bottom: 12px;">
+            <span>🛡️</span> Practitioner Command Workspace
+          </div>
+          <h1 class="welcome-title">Welcome to your workspace, <span id="welcomeName">Specialist</span>! ⚖️</h1>
+          <p class="welcome-desc" id="welcomeDesc">You have <span id="welcomeRequestsCount">0</span> pending client consultation requests. Your professional credential is verified and active.</p>
+          <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+            <a href="consultation-requests.html" class="btn-action-accept" style="padding: 10px 20px; font-size: 13.5px;">
+              <span>📥</span> Review Requests (<span id="btnReviewRequestsCount">0</span>)
+            </a>
+            <a href="professional-earnings.html" class="btn-action-reject" style="background: rgba(255,255,255,0.08); color: #ffffff; border-color: rgba(255,255,255,0.2); padding: 10px 18px; font-size: 13.5px;">
+              <span>💳</span> View Payouts
+            </a>
+          </div>
         </div>
-        <a href="consultation-requests.html" class="btn-action-accept" style="padding: 10px 20px; font-size: 13.5px;">
-          <span>📥</span> Review Requests
-        </a>
+        <div class="welcome-art-wrap" aria-hidden="true">
+          <img src="./assets/images/professional_hero_art.jpg" alt="Specialist Workspace Console" loading="eager">
+          <div class="art-badge-row">
+            <span style="color: #38bdf8; font-weight: 700;">● Verified Practitioner</span>
+            <span id="councilRegBadge">Active Specialization</span>
+          </div>
+        </div>
       </section>
 
       <!-- Metric Stats Cards -->
@@ -792,7 +892,7 @@
           <div class="stat-icon-wrap icon-blue">✨</div>
           <div class="stat-info">
             <span>Questions Answered</span>
-            <strong id="statAnswered">48</strong>
+            <strong id="statAnswered">0</strong>
           </div>
         </div>
 
@@ -906,8 +1006,8 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
-    import { openReportIssueModal } from "./assets/js/reportIssueModal.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
+    import { openReportIssueModal } from "./assets/js/common/reportIssueModal.js";
 
     /* ========================================================
        STATE
@@ -919,16 +1019,39 @@
        INIT
        ======================================================== */
     async function initWorkspace() {
+      setupLogout();
       await enforceRoleAndLoadProfile();
       await calculateProfessionalEarnings();
       await loadConsultationRequests();
       await loadDashboardReviews();
+      await loadExpertStats();
       setupRequestActions();
       setupStatusToggle();
-      setupLogout();
       setupRealtimeRequests();
 
       document.getElementById("btnExpertReportIssue")?.addEventListener("click", openReportIssueModal);
+    }
+
+    async function loadExpertStats() {
+      if (!supabase || !currentExpertId || currentExpertId.startsWith("1111")) return;
+      try {
+        const { count: ansCount } = await supabase
+          .from("answers")
+          .select("*", { count: "exact", head: true })
+          .eq("expert_id", currentExpertId);
+        const statAnsweredEl = document.getElementById("statAnswered");
+        if (statAnsweredEl) statAnsweredEl.textContent = (ansCount || 0).toString();
+
+        const { count: chatCount } = await supabase
+          .from("consultation_requests")
+          .select("*", { count: "exact", head: true })
+          .eq("expert_id", currentExpertId)
+          .eq("status", "accepted");
+        const statActiveChatsEl = document.getElementById("statActiveChats");
+        if (statActiveChatsEl) statActiveChatsEl.textContent = (chatCount || 0).toString();
+      } catch (e) {
+        console.warn("Expert stats error:", e);
+      }
     }
 
     /* ========================================================
@@ -982,6 +1105,11 @@
                 `;
                 feed.appendChild(card);
               });
+            } else {
+              feed.innerHTML = `
+                <div style="text-align:center;padding:24px 16px;color:var(--muted);font-size:12.5px;">
+                  No client reviews recorded yet.
+                </div>`;
             }
           }
         }
@@ -1004,8 +1132,9 @@
           .eq("status", "pending")
           .order("created_at", { ascending: false });
 
+        const listEl = document.getElementById("requestsList");
+
         if (!error && requests && requests.length > 0) {
-          const listEl = document.getElementById("requestsList");
           listEl.innerHTML = "";
 
           requests.forEach((req, idx) => {
@@ -1045,6 +1174,15 @@
 
           updateRequestsBadge();
           setupRequestActions();
+        } else {
+          if (listEl) {
+            listEl.innerHTML = `
+              <div style="text-align:center;padding:36px 20px;color:var(--muted);font-size:13px;">
+                <span style="font-size: 24px; display: block; margin-bottom: 8px;">📭</span>
+                No pending consultation requests. Your queue is clear!
+              </div>`;
+          }
+          updateRequestsBadge();
         }
       } catch (err) {
         console.warn("loadConsultationRequests error:", err);
@@ -1056,8 +1194,10 @@
        ======================================================== */
     async function enforceRoleAndLoadProfile() {
       try {
-        if (supabase) {
           const { data: { session } } = await supabase.auth.getSession();
+          const storedUserId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
+          const storedUserRole = sessionStorage.getItem("askexpert_user_role") || localStorage.getItem("askexpert_user_role");
+
           if (session && session.user) {
             currentExpertId = session.user.id;
             const meta = session.user.user_metadata || {};
@@ -1080,13 +1220,30 @@
             document.getElementById("topExpertName").textContent = name;
             document.getElementById("welcomeName").textContent = lastName;
             document.getElementById("topAvatarInitial").textContent = initials;
+          } else if (storedUserId && (storedUserRole === "expert" || storedUserRole === "professional" || storedUserRole === "admin")) {
+            currentExpertId = storedUserId;
+            const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
+            const name = profile?.full_name || profile?.username || "Verified Expert";
+            const nameParts = name.split(/\s+/);
+            const firstName = nameParts[0] || name;
+            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : firstName;
+            const initials = nameParts.map(n => n[0]).join("").slice(0, 2).toUpperCase() || "EX";
+
+            document.getElementById("topExpertName").textContent = name;
+            document.getElementById("welcomeName").textContent = lastName;
+            document.getElementById("topAvatarInitial").textContent = initials;
+          } else if (new URLSearchParams(window.location.search).get("preview") === "true") {
+            currentExpertId = "expert_demo_1";
+            document.getElementById("topExpertName").textContent = "Adv. Vikram Rao";
+            document.getElementById("welcomeName").textContent = "Vikram";
+            document.getElementById("topAvatarInitial").textContent = "VR";
+            return;
           } else {
             // Unauthenticated: redirect to login
             const currentPath = window.location.pathname.split("/").pop() || "professional-dashboard.html";
             window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
             return;
           }
-        }
       } catch (err) {
         console.warn("Auth role check warning:", err);
       }
@@ -1250,14 +1407,19 @@
        LOGOUT
        ======================================================== */
     function setupLogout() {
-      const logoutBtn = document.getElementById("expertLogoutBtn");
-      logoutBtn.addEventListener("click", async () => {
+      const doLogout = async () => {
         showToast("Signing out...");
         try {
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
           if (supabase) await supabase.auth.signOut();
         } catch (e) { }
-        setTimeout(() => window.location.href = "login.html", 500);
-      });
+        setTimeout(() => window.location.href = "login.html", 400);
+      };
+
+      document.getElementById("expertLogoutBtn")?.addEventListener("click", doLogout);
+      document.getElementById("expertTopbarLogoutBtn")?.addEventListener("click", doLogout);
     }
 
     function showToast(msg) {

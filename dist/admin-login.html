@@ -11,25 +11,25 @@
 
   <style>
     /* =========================================================
-       ASKEXPERT - ADMIN LOGIN PORTAL STYLES
+       ASKEXPERT - ADMIN LOGIN PORTAL (CRIMSON & CYBER)
        ========================================================= */
     :root {
-      --bg-1: #02050e;
-      --bg-2: #050d1e;
-      --bg-3: #0a1128;
-      --card-bg: rgba(10, 18, 36, 0.9);
+      --bg-1: #120306;
+      --bg-2: #21050b;
+      --bg-3: #180309;
+      --card-bg: rgba(24, 6, 12, 0.92);
       --card-inner: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(239, 68, 68, 0.25);
       
       --white: #ffffff;
-      --text: #eaf6ff;
-      --muted: #8499b5;
-      --cyan: #00d9ff;
-      --blue: #0088ff;
-      --purple: #7952ff;
-      --green: #20d889;
-      --gold: #ffb703;
-      --red: #ff4757;
+      --text: #fff1f2;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --blue: #60a5fa;
+      --purple: #f43f5e;
+      --green: #10b981;
+      --gold: #fbbf24;
+      --red: #ef4444;
       --radius: 22px;
     }
 
@@ -43,10 +43,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(121, 82, 255, 0.15), transparent 45%),
-        radial-gradient(circle at 10% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background: var(--ae-mesh-crimson);
       background-attachment: fixed;
       display: flex;
       flex-direction: column;
@@ -314,9 +311,24 @@
       font-size: 12px;
       color: #5d7594;
     }
+
+    @media (max-width: 480px) {
+      .admin-shell {
+        width: 100%;
+        padding: 10px;
+      }
+      .auth-card {
+        padding: 24px 18px;
+        border-radius: 18px;
+      }
+      .card-heading {
+        font-size: 20px;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/adminLogin-CteNiPtt.js"></script>
+  <script type="module" crossorigin src="/assets/adminLogin-BvfH6UO1.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 

@@ -8,29 +8,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - NOTIFICATIONS CENTER STYLES
+       ASKEXPERT - NOTIFICATIONS CENTER STYLES (DEEP TEAL)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --bg-1: #03141a;
+      --bg-2: #05212b;
+      --bg-3: #031821;
+      --card-bg: rgba(7, 26, 33, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(13, 148, 136, 0.25);
+      --card-hover: rgba(6, 182, 212, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f0fdfa;
       --muted: #94a3b8;
-      --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
+      --cyan: #06b6d4;
+      --blue: #0ea5e9;
+      --purple: #14b8a6;
+      --green: #10b981;
       --orange: #ff9d3c;
-      --gold: #ffb703;
+      --gold: #fbbf24;
       --red: #ff4757;
       --radius: 18px;
     }
@@ -45,10 +46,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-teal);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -470,6 +468,38 @@
       color: var(--muted);
       text-align: center;
     }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .header-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .tabs-row {
+        overflow-x: auto;
+        width: 100%;
+      }
+      .notif-item {
+        padding: 14px 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -562,7 +592,7 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     /* ========================================================
        DEFAULT SEED NOTIFICATIONS (FALLBACK)

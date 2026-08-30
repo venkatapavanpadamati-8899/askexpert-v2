@@ -7,26 +7,26 @@
   <title>AskExpert | Question Details</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.82);
+      --bg-1: #03141a;
+      --bg-2: #05212b;
+      --bg-3: #031821;
+      --card-bg: rgba(7, 26, 33, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.10);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(13, 148, 136, 0.25);
+      --card-hover: rgba(6, 182, 212, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f0fdfa;
       --muted: #94a3b8;
-      --cyan: #00d9ff;
-      --blue: #4d8dff;
-      --purple: #754cff;
-      --green: #00c853;
-      --orange: #ff6a00;
-      --gold: #ffb703;
+      --cyan: #06b6d4;
+      --blue: #0ea5e9;
+      --purple: #14b8a6;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --gold: #fbbf24;
       --radius: 20px;
     }
 
@@ -40,10 +40,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 217, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(117, 76, 255, 0.14), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-teal);
       background-attachment: fixed;
       line-height: 1.6;
       overflow-x: hidden;
@@ -844,6 +841,9 @@
     }
 
     @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
       .glass-card {
         padding: 22px 18px;
       }
@@ -863,9 +863,35 @@
         align-items: flex-start;
       }
     }
+
+    @media (max-width: 480px) {
+      .nav-inner {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .btn-nav-back {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .question-title {
+        font-size: 19px;
+        line-height: 1.3;
+      }
+      .glass-card {
+        padding: 16px 14px;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/questionDetails-D3k5NXuI.js"></script>
+  <script type="module" crossorigin src="/assets/questionDetails-CHr5ozTx.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 
@@ -873,16 +899,17 @@
   <header class="topbar">
     <div class="container nav-inner">
       <a href="index.html" class="brand">
-        <span class="brand-mark">AE</span>
-        <span>AskExpert</span>
+        <span class="brand-mark">A</span>
+        Ask<span>Expert</span>
       </a>
       <nav class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
+        <a href="user-dashboard.html">Dashboard</a>
         <a href="questions.html" style="color: var(--cyan);">Questions</a>
         <a href="experts.html">Experts</a>
+        <a href="chat.html">Chat</a>
       </nav>
       <div class="nav-actions">
-        <a href="questions.html" class="btn-nav-back">
+        <a href="questions.html" class="btn btn-secondary btn-nav-back">
           <span>←</span>
           <span>Back to Questions</span>
         </a>

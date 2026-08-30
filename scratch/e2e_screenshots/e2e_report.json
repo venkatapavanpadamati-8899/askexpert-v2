@@ -1,0 +1,182 @@
+[
+  {
+    "step": 1,
+    "desc": "Home page loads successfully",
+    "result": "PASS",
+    "details": "Title: \"AskExpert\""
+  },
+  {
+    "step": 1,
+    "desc": "Home page: zero console errors",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 2,
+    "desc": "Login page loaded",
+    "result": "PASS",
+    "details": "http://localhost:5175/login.html"
+  },
+  {
+    "step": 2,
+    "desc": "Admin login → admin-dashboard.html",
+    "result": "PASS",
+    "details": "http://localhost:5175/admin-dashboard.html"
+  },
+  {
+    "step": 2,
+    "desc": "Admin dashboard shows live stats (totalUsers: 0)",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 3,
+    "desc": "Admin logout → login.html",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 3,
+    "desc": "Back button after logout → session guard blocked, stays on login",
+    "result": "PASS",
+    "details": "http://localhost:5175/login.html"
+  },
+  {
+    "step": 4,
+    "desc": "User login → user-dashboard.html",
+    "result": "PASS",
+    "details": "http://localhost:5175/user-dashboard.html"
+  },
+  {
+    "step": 5,
+    "desc": "User logout → login.html",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 5,
+    "desc": "Back button blocked by session guard → stays on login",
+    "result": "PASS",
+    "details": "http://localhost:5175/login.html?redirect=user-dashboard.html"
+  },
+  {
+    "step": 6,
+    "desc": "Expert login (Enter key) → professional-dashboard.html",
+    "result": "PASS",
+    "details": "http://localhost:5175/professional-dashboard.html"
+  },
+  {
+    "step": 6,
+    "desc": "Expert dashboard: no fake hardcoded data found",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 7,
+    "desc": "Expert logout → login.html",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 8,
+    "desc": "Registration page loaded",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 8,
+    "desc": "Demo OTP generated: 160216",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 8,
+    "desc": "OTP verified: \"✓ OTP Verified Successfully! You can now register.\"",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 8,
+    "desc": "Aadhaar auto-formatted: \"2345 6789 1234\"",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 8,
+    "desc": "Registration submit → redirected to login.html",
+    "result": "PASS",
+    "details": "http://localhost:5175/login.html"
+  },
+  {
+    "step": 9,
+    "desc": "Forgot Password page loaded",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 9,
+    "desc": "Demo OTP generated: 275919",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 9,
+    "desc": "Countdown active: \"Resend in 59s\"",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 9,
+    "desc": "Step 2 (Reset Password) activated after OTP verify",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 9,
+    "desc": "Success screen shown with login link",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 10,
+    "desc": "Wallet shows ₹0.00 (no fake data)",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 10,
+    "desc": "Payment gateway modal opened",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 10,
+    "desc": "Payment succeeded — TXN: #TXN-441313",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 11,
+    "desc": "Admin payments page: zero hardcoded fake records",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 11,
+    "desc": "Admin payments page loaded (live Supabase data)",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 12,
+    "desc": "AI Advisory Policy banner visible — AI cannot auto-approve/reject",
+    "result": "PASS",
+    "details": ""
+  },
+  {
+    "step": 12,
+    "desc": "Professional verification/pending section visible",
+    "result": "PASS",
+    "details": ""
+  }
+]

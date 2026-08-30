@@ -1,159 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="AskExpert - Ask your question and get expert answers." />
-  <title>AskExpert | Ask Your Question</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ask your question to verified professionals on AskExpert">
+  <title>Ask Your Question | AskExpert</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-blue: #0099ff;
-      --card-bg: rgba(28, 33, 41, 0.82);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --input-bg: #3f454c;
-      --input-text: #ffffff;
-      --input-placeholder: #9ba3af;
-      --orange-btn: #ff6a00;
-      --orange-btn-hover: #ff7d1a;
-      --purple-btn: #931ec2;
-      --purple-btn-hover: #a52cd6;
-      --green-btn: #00b848;
-      --green-btn-hover: #00d152;
-      --text-white: #ffffff;
-      --text-muted: #d0d7de;
-    }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
       min-height: 100vh;
+      background: url('/assets/ask_hero_art-iYtvqYWG.jpg') center center / cover no-repeat fixed;
       display: flex;
       flex-direction: column;
-      background-color: #0d1117;
-      background-image: 
-        radial-gradient(circle at 50% 30%, rgba(0, 153, 255, 0.12), transparent 60%),
-        linear-gradient(rgba(10, 14, 22, 0.88), rgba(8, 12, 20, 0.94)),
-        url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: var(--text-white);
+      align-items: center;
+      justify-content: center;
+      position: relative;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ========================================================
-       TOP STATUS & HEADER BAR
-       ======================================================== */
-    .top-header {
-      background: var(--primary-blue);
-      color: #ffffff;
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 16px rgba(0, 153, 255, 0.35);
-      position: sticky;
+    /* Top Blue Bar */
+    .top-bar {
+      position: fixed;
       top: 0;
+      left: 0;
+      width: 100%;
+      height: 56px;
+      background: #0099ff;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
       z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
 
-    .brand-title {
+    .top-bar-brand {
+      color: #ffffff;
       font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-weight: 700;
       text-decoration: none;
-      color: #ffffff;
+      letter-spacing: -0.3px;
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .header-link {
-      color: #ffffff;
-      text-decoration: none;
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
-
-    .header-link:hover {
-      opacity: 1;
-    }
-
-    /* ========================================================
-       MAIN CONTAINER & FLOATING CARD
-       ======================================================== */
-    .main-wrapper {
+    /* Centered Glass Card */
+    .center-container {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px 40px;
-    }
-
-    .question-card {
+      padding: 64px 14px 64px;
       width: 100%;
-      max-width: 460px;
-      background: var(--card-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--card-border);
-      border-radius: 26px;
-      padding: 32px 24px;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      animation: cardFadeIn 0.4s ease-out;
+      z-index: 10;
     }
 
-    @keyframes cardFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .glass-card {
+      background: rgba(35, 38, 45, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 24px 20px;
+      width: min(440px, 94%);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
     }
 
     .card-title {
-      font-size: 28px;
-      font-weight: 800;
       color: #ffffff;
+      font-size: 26px;
+      font-weight: 800;
       text-align: center;
-      margin-bottom: 24px;
-      letter-spacing: -0.6px;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
     }
 
-    /* ========================================================
-       FORM FIELDS & CONTROLS
-       ======================================================== */
-    .form-group {
-      margin-bottom: 15px;
+    /* Form Elements */
+    form#askQuestionForm {
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
     }
 
     .field-label {
-      font-size: 15px;
+      color: #ffffff;
+      font-size: 13.5px;
       font-weight: 600;
-      color: #f1f5f9;
-      letter-spacing: -0.2px;
     }
 
     .select-wrapper {
@@ -161,163 +113,153 @@
       width: 100%;
     }
 
-    .custom-select,
-    .custom-input,
-    .custom-textarea {
-      width: 100%;
-      background: var(--input-bg);
-      color: var(--input-text);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 13px;
-      font-size: 14.5px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-
     .custom-select {
-      height: 48px;
-      padding: 0 40px 0 16px;
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-size: 14px;
+      padding: 0 36px 0 14px;
+      outline: none;
       appearance: none;
       -webkit-appearance: none;
       cursor: pointer;
-      font-weight: 500;
+    }
+
+    .custom-select option {
+      background: #1e293b;
+      color: #ffffff;
     }
 
     .select-chevron {
       position: absolute;
-      right: 15px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
       pointer-events: none;
-      color: #cbd5e1;
-      font-size: 12px;
     }
 
     .custom-textarea {
-      min-height: 145px;
-      padding: 14px 16px;
+      width: 100%;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
       resize: vertical;
-      line-height: 1.55;
+      min-height: 80px;
+      line-height: 1.45;
+    }
+
+    .custom-textarea::placeholder {
+      color: rgba(255, 255, 255, 0.55);
     }
 
     .custom-input {
-      height: 48px;
-      padding: 0 16px;
-    }
-
-    .custom-textarea::placeholder,
-    .custom-input::placeholder {
-      color: var(--input-placeholder);
-      font-size: 14px;
-    }
-
-    .custom-select:focus,
-    .custom-textarea:focus,
-    .custom-input:focus {
-      border-color: rgba(0, 153, 255, 0.7);
-      background: #474e56;
-      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.18);
-    }
-
-    .custom-select option {
-      background: #252b33;
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       color: #ffffff;
-      padding: 10px;
+      font-size: 14px;
+      padding: 0 14px;
+      outline: none;
     }
 
-    /* ========================================================
-       ACTION BUTTONS
-       ======================================================== */
+    .custom-input::placeholder {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .custom-textarea:focus,
+    .custom-input:focus,
+    .custom-select:focus {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(0, 217, 255, 0.5);
+    }
+
+    /* Action Buttons Stack */
     .button-stack {
       display: flex;
       flex-direction: column;
-      gap: 11px;
-      margin: 16px 0 18px;
+      gap: 8px;
+      width: 100%;
+      margin: 0;
     }
 
     .btn-action {
-      width: 100%;
-      height: 48px;
-      border: none;
-      border-radius: 12px;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      gap: 10px;
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-action:hover:not(:disabled) {
       transform: translateY(-2px);
-      filter: brightness(1.08);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-    }
-
-    .btn-action:active:not(:disabled) {
-      transform: translateY(0);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
     }
 
     .btn-action:disabled {
       opacity: 0.65;
       cursor: not-allowed;
-      transform: none;
     }
 
-    /* Voice Input Button */
     .btn-voice {
-      background: var(--orange-btn);
+      background: #ff7300;
     }
+
     .btn-voice.listening {
-      animation: micPulse 1.2s infinite alternate;
-      background: #ff3b00;
+      background: #dc2626;
+      animation: pulse 1s infinite alternate;
     }
 
-    @keyframes micPulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.6); }
-      100% { box-shadow: 0 0 0 12px rgba(255, 106, 0, 0); }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
+      100% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
     }
 
-    /* AI Fix Sentence Button */
     .btn-ai-fix {
-      background: var(--purple-btn);
+      background: #9333ea;
     }
 
-    /* AI Identify Expert Button */
     .btn-ai-expert {
-      background: var(--purple-btn);
+      background: #9333ea;
     }
 
-    /* Submit Question Button */
     .btn-submit {
-      background: var(--green-btn);
-      height: 50px;
-      font-size: 16px;
-      font-weight: 800;
-      margin-top: 6px;
-      box-shadow: 0 6px 20px rgba(0, 184, 72, 0.3);
+      background: #00c853;
+      height: 48px;
+      font-size: 15.5px;
+      font-weight: 700;
+      margin-top: 2px;
+      box-shadow: 0 6px 18px rgba(0, 200, 83, 0.35);
     }
 
-    .btn-submit:hover:not(:disabled) {
-      background: var(--green-btn-hover);
-      box-shadow: 0 8px 25px rgba(0, 184, 72, 0.45);
-    }
-
-    /* ========================================================
-       FEEDBACK & STATUS NOTIFICATIONS
-       ======================================================== */
+    /* Feedback Pill */
     .feedback-pill {
       display: none;
-      margin-top: 8px;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-radius: 10px;
       font-size: 13px;
-      line-height: 1.45;
-      animation: fadeIn 0.25s ease;
+      line-height: 1.4;
+      text-align: center;
+      width: 100%;
     }
 
     .feedback-pill.show {
@@ -325,119 +267,121 @@
     }
 
     .feedback-pill.info {
-      background: rgba(0, 153, 255, 0.15);
-      border: 1px solid rgba(0, 153, 255, 0.35);
-      color: #70c4ff;
+      background: rgba(0, 153, 255, 0.25);
+      border: 1px solid rgba(0, 153, 255, 0.45);
+      color: #93c5fd;
     }
 
     .feedback-pill.success {
-      background: rgba(0, 184, 72, 0.15);
-      border: 1px solid rgba(0, 184, 72, 0.35);
-      color: #79f2a7;
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #86efac;
     }
 
     .feedback-pill.warning {
-      background: rgba(255, 106, 0, 0.15);
-      border: 1px solid rgba(255, 106, 0, 0.35);
-      color: #ffaa6b;
+      background: rgba(245, 158, 11, 0.25);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fde047;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Back to Home Link */
+    .back-home {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 14px;
+      transition: color 0.2s ease;
+      display: inline-block;
+      width: 100%;
     }
 
-    /* ========================================================
-       BOTTOM BAR
-       ======================================================== */
-    .bottom-bar {
-      background: var(--primary-blue);
+    .back-home:hover {
       color: #ffffff;
-      padding: 12px 16px 16px;
+      text-decoration: underline;
+    }
+
+    /* Bottom Blue Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 56px;
+      background: #0099ff;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 3px;
-      box-shadow: 0 -4px 16px rgba(0, 153, 255, 0.25);
-    }
-
-    .bottom-bar-btn {
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      gap: 2px;
-      cursor: pointer;
+      z-index: 100;
       text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
     }
 
     .bottom-dots {
-      font-size: 20px;
-      letter-spacing: 2px;
+      color: #ffffff;
+      font-size: 18px;
       line-height: 1;
+      letter-spacing: 2px;
     }
 
-    /* Toast Notification Modal */
+    .bottom-label {
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* Success Modal */
     .toast-overlay {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(8px);
-      display: none;
-      place-items: center;
-      z-index: 1000;
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
     }
 
     .toast-overlay.show {
-      display: grid;
+      display: flex;
     }
 
     .toast-card {
-      background: #1e2530;
-      border: 1px solid rgba(0, 217, 255, 0.3);
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      padding: 28px 24px;
+      padding: 30px 24px;
       max-width: 380px;
-      width: 100%;
       text-align: center;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     .toast-icon {
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(0, 184, 72, 0.15);
-      color: #00d959;
+      background: #00c853;
+      color: #ffffff;
       display: grid;
       place-items: center;
-      font-size: 28px;
+      font-size: 26px;
       margin: 0 auto 16px;
-      border: 1px solid rgba(0, 184, 72, 0.3);
     }
 
     .toast-title {
-      font-size: 20px;
-      font-weight: 800;
       color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
     .toast-desc {
-      font-size: 13.5px;
-      color: #cbd5e1;
+      color: #94a3b8;
+      font-size: 14px;
       line-height: 1.5;
       margin-bottom: 20px;
     }
@@ -445,56 +389,34 @@
     .toast-btn {
       width: 100%;
       height: 46px;
-      background: var(--primary-blue);
-      border: none;
       border-radius: 12px;
+      background: #0099ff;
       color: #ffffff;
+      border: none;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
-      transition: filter 0.2s;
-    }
-
-    .toast-btn:hover {
-      filter: brightness(1.1);
-    }
-
-    @media (max-width: 480px) {
-      .main-wrapper {
-        padding: 16px 10px 24px;
-      }
-      .question-card {
-        padding: 24px 16px;
-        border-radius: 22px;
-      }
-      .card-title {
-        font-size: 25px;
-      }
     }
   </style>
   <script type="module" crossorigin src="/assets/askQuestion-DN5b0d09.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
 </head>
+
 <body>
 
-  <!-- Top Blue Header -->
-  <header class="top-header">
-    <a href="index.html" class="brand-title">
-      AskExpert
-    </a>
-    <div class="header-right">
-      <a href="questions.html" class="header-link">My Questions</a>
-      <a href="dashboard.html" class="header-link">Dashboard</a>
-    </div>
+  <!-- Top Blue Bar -->
+  <header class="top-bar">
+    <a href="index.html" class="top-bar-brand">AskExpert</a>
   </header>
 
-  <!-- Main Content Area with Centered Floating Card -->
-  <main class="main-wrapper">
-    <div class="question-card">
+  <!-- Centered Glass Card -->
+  <main class="center-container">
+    <div class="glass-card">
+
       <h1 class="card-title">Ask Your Question</h1>
 
       <form id="askQuestionForm" novalidate>
-        
+
         <!-- Field 1: Select Language -->
         <div class="form-group">
           <label class="field-label" for="languageSelect">Select Language</label>
@@ -588,16 +510,18 @@
           <span>Submit Question</span>
         </button>
 
+        <!-- Back to Home Link -->
+        <a href="index.html" class="back-home">← Back to Home</a>
+
       </form>
+
     </div>
   </main>
 
   <!-- Bottom Blue Navigation Bar -->
-  <footer class="bottom-bar">
-    <a href="dashboard.html" class="bottom-bar-btn">
-      <span class="bottom-dots">•••</span>
-      <span>More</span>
-    </a>
+  <footer class="bottom-bar" onclick="window.location.href='questions.html'">
+    <span class="bottom-dots">•••</span>
+    <span class="bottom-label">More</span>
   </footer>
 
   <!-- Submission Success Modal -->
@@ -609,6 +533,6 @@
       <button type="button" id="toastOkBtn" class="toast-btn">View My Questions</button>
     </div>
   </div>
-
+
 </body>
 </html>

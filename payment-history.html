@@ -8,28 +8,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - PAYMENT HISTORY STYLES
+       ASKEXPERT - PAYMENT HISTORY STYLES (SOLAR GOLD & ESCROW)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --bg-1: #06100c;
+      --bg-2: #0e1c14;
+      --bg-3: #162612;
+      --card-bg: rgba(12, 24, 18, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --card-hover: rgba(245, 158, 11, 0.5);
 
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
+      --blue: #3b82f6;
       --purple: #8a5cff;
-      --green: #20d889;
-      --gold: #ffb703;
+      --green: #10b981;
+      --gold: #f59e0b;
       --red: #ff4757;
       --radius: 18px;
     }
@@ -44,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-escrow);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -419,6 +417,36 @@
       color: var(--muted);
       text-align: center;
     }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-actions .btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .filters-row {
+        flex-direction: column;
+      }
+      .glass-card {
+        padding: 16px 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -439,7 +467,7 @@
         <a href="payment-history.html" class="active">History</a>
       </nav>
       <div class="nav-actions">
-        <a class="btn btn-secondary" href="payments.html">
+        <a class="btn btn-gold" href="payments.html">
           <span>➕</span> Add Funds
         </a>
       </div>
@@ -575,50 +603,11 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     /* ========================================================
        DEFAULT SEED TRANSACTIONS
        ======================================================== */
-    const SEED_HISTORY = [
-      {
-        id: "TXN-849201",
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-        description: "1-on-1 Legal Contract Consultation",
-        expert_name: "Adv. Vikram Rao",
-        amount: 1532.82,
-        payment_method: "UPI (GPay)",
-        status: "successful"
-      },
-      {
-        id: "TXN-739102",
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
-        description: "Wallet Refill Top-up",
-        expert_name: "AskExpert Escrow",
-        amount: 2000.00,
-        payment_method: "UPI (PhonePe)",
-        status: "successful"
-      },
-      {
-        id: "TXN-628491",
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
-        description: "GST Audit Appeal Consultation",
-        expert_name: "CA Ananya Sharma",
-        amount: 1886.82,
-        payment_method: "Card (•••• 4242)",
-        status: "successful"
-      },
-      {
-        id: "TXN-519203",
-        created_at: new Date(Date.now() - 1000 * 60 * 60 * 120).toISOString(),
-        description: "Patent Prior Art Search Advisory",
-        expert_name: "Dr. Rahul Kumar",
-        amount: 2476.82,
-        payment_method: "Net Banking (HDFC)",
-        status: "refunded"
-      }
-    ];
-
     /* ========================================================
        STATE
        ======================================================== */
@@ -654,22 +643,27 @@
     }
 
     /* ========================================================
-       LOAD DATA
+       LOAD DATA FROM SUPABASE
        ======================================================== */
     async function loadPaymentsFromSupabase() {
       try {
         let fetched = [];
 
-        if (supabase && currentUserId && !currentUserId.startsWith("guest_")) {
-          const { data, error } = await supabase
+        if (supabase) {
+          let query = supabase
             .from("payments")
             .select("*, profiles!payments_expert_id_fkey(full_name)")
-            .or(`user_id.eq.${currentUserId},expert_id.eq.${currentUserId}`)
             .order("created_at", { ascending: false });
+
+          if (currentUserId && !currentUserId.startsWith("guest_")) {
+            query = query.or(`user_id.eq.${currentUserId},expert_id.eq.${currentUserId}`);
+          }
+
+          const { data, error } = await query;
 
           if (!error && data && data.length > 0) {
             fetched = data.map(p => ({
-              id: p.provider_payment_id || p.id.slice(0, 10),
+              id: p.provider_payment_id || (p.id ? p.id.slice(0, 10) : "TXN-" + Math.floor(100000 + Math.random() * 900000)),
               created_at: p.created_at,
               description: p.description || "Consultation Fee",
               expert_name: p.profiles?.full_name || (p.expert_id ? "Verified Expert" : "AskExpert Escrow"),
@@ -680,16 +674,12 @@
           }
         }
 
-        if (fetched.length === 0) {
-          fetched = SEED_HISTORY;
-        }
-
         transactionsList = fetched;
         applyFilters();
 
       } catch (err) {
-        console.error("loadPayments error:", err);
-        transactionsList = SEED_HISTORY;
+        console.warn("loadPayments error:", err);
+        transactionsList = [];
         applyFilters();
       }
     }

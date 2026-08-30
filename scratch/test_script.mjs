@@ -1,5 +1,5 @@
 
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     "use strict";
 

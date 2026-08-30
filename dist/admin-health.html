@@ -11,26 +11,26 @@
 
   <style>
     /* =========================================================
-       ASKEXPERT - SYSTEM HEALTH & OBSERVABILITY STYLES
+       ASKEXPERT - SYSTEM HEALTH & OBSERVABILITY (CRIMSON)
        ========================================================= */
     :root {
-      --bg-1: #02050e;
-      --bg-2: #050d1e;
-      --bg-3: #0a1128;
-      --card-bg: rgba(10, 18, 36, 0.88);
+      --bg-1: #120306;
+      --bg-2: #21050b;
+      --bg-3: #180309;
+      --card-bg: rgba(24, 6, 12, 0.90);
       --card-inner: rgba(255, 255, 255, 0.035);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(239, 68, 68, 0.25);
+      --card-hover: rgba(244, 63, 94, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
-      --muted: #8499b5;
-      --cyan: #00d9ff;
-      --blue: #0088ff;
-      --purple: #7952ff;
-      --green: #20d889;
-      --gold: #ffb703;
-      --red: #ff4757;
+      --text: #fff1f2;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --blue: #60a5fa;
+      --purple: #f43f5e;
+      --green: #10b981;
+      --gold: #fbbf24;
+      --red: #ef4444;
       --radius: 20px;
       --sidebar-width: 260px;
     }
@@ -45,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(121, 82, 255, 0.12), transparent 45%),
-        radial-gradient(circle at 90% 90%, rgba(0, 217, 255, 0.08), transparent 40%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 60%, var(--bg-3));
+      background: var(--ae-mesh-crimson);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -641,10 +638,40 @@
 
     @media (max-width: 900px) {
       .admin-sidebar { display: none; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .health-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 10px 14px;
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .admin-main-wrap {
+        width: 100%;
+      }
+      .dashboard-body {
+        padding: 16px 12px;
+      }
+      .header-actions-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .glass-card {
+        padding: 14px 10px;
+      }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminHealth-DJc7_Zfj.js"></script>
+  <script type="module" crossorigin src="/assets/adminHealth-dWSugQ-L.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 

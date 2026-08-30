@@ -11,25 +11,25 @@
 
   <style>
     /* =========================================================
-       ASKEXPERT - REVIEW & RATING STYLES
+       ASKEXPERT - REVIEW & RATING STYLES (DEEP TEAL & AQUAMARINE)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.88);
+      --bg-1: #03141a;
+      --bg-2: #05212b;
+      --bg-3: #031821;
+      --card-bg: rgba(7, 26, 33, 0.90);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(13, 148, 136, 0.25);
+      --card-hover: rgba(6, 182, 212, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f0fdfa;
       --muted: #94a3b8;
-      --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --gold: #ffb703;
+      --cyan: #06b6d4;
+      --blue: #0ea5e9;
+      --purple: #14b8a6;
+      --green: #10b981;
+      --gold: #fbbf24;
       --red: #ff4757;
       --radius: 22px;
     }
@@ -44,10 +44,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 50% 10%, rgba(0, 217, 255, 0.12), transparent 45%),
-        radial-gradient(circle at 80% 80%, rgba(138, 92, 255, 0.12), transparent 40%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-teal);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -343,25 +340,41 @@
       animation: toastIn 0.3s ease;
     }
 
-    .toast-pill.show {
-      display: block;
-    }
-
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 0 14px;
+        height: 60px;
+      }
+      .brand {
+        font-size: 17px;
+      }
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+      }
+      .review-card {
+        padding: 22px 16px;
+      }
+      .actions-row {
+        flex-direction: column;
+      }
+      .actions-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
-  <script type="module" crossorigin src="/assets/review-ZnAGivMR.js"></script>
+  <script type="module" crossorigin src="/assets/review-BlFnjMlD.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 
   <!-- Topbar -->
   <header class="topbar">
     <a href="user-dashboard.html" class="brand">
-      <span class="brand-mark">AE</span>
-      <span>Ask<span>Expert</span></span>
+      <span class="brand-mark">A</span>
+      Ask<span>Expert</span>
     </a>
 
     <a href="user-dashboard.html" style="font-size: 13px; color: var(--muted); font-weight: 700;">
@@ -372,6 +385,15 @@
   <!-- Main Container -->
   <main class="container">
     
+    <!-- Hero Art Header Banner -->
+    <div style="width: 100%; height: 180px; border-radius: 20px; overflow: hidden; margin-bottom: 20px; border: 1.5px solid rgba(245, 158, 11, 0.35); position: relative; box-shadow: 0 12px 35px rgba(0,0,0,0.5);">
+      <img src="/assets/review_hero_art-DU4N2gGD.jpg" alt="Verified Client Feedback & Ratings" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="eager">
+      <div style="position: absolute; bottom: 12px; left: 14px; right: 14px; background: rgba(3, 11, 20, 0.88); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 6px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 750; color: #bad3eb; backdrop-filter: blur(10px);">
+        <span>⭐ Council Verified Feedback</span>
+        <span style="color: var(--gold);">100% Client Protected</span>
+      </div>
+    </div>
+
     <!-- Form Card -->
     <div class="review-card" id="reviewFormCard">
       
@@ -419,7 +441,7 @@
         <button type="button" class="btn btn-skip" id="skipReviewBtn">
           Skip
         </button>
-        <button type="button" class="btn btn-primary" id="submitReviewBtn">
+        <button type="button" class="btn btn-gold" id="submitReviewBtn">
           <span>✓ Submit Verified Review</span>
         </button>
       </div>

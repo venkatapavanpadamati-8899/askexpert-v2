@@ -11,23 +11,23 @@
 
   <style>
     /* =========================================================
-       ASKEXPERT - CONSULTATION REQUESTS STYLES
+       ASKEXPERT - CONSULTATION REQUESTS STYLES (CYBER SAPPHIRE)
        ========================================================= */
     :root {
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-bg: rgba(10, 20, 44, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(59, 130, 246, 0.22);
+      --card-hover: rgba(59, 130, 246, 0.5);
 
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
+      --blue: #3b82f6;
+      --purple: #6366f1;
       --green: #20d889;
       --gold: #ffb703;
       --red: #ff4757;
@@ -44,10 +44,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-sapphire);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -463,17 +460,42 @@
       animation: toastIn 0.3s ease;
     }
 
-    .toast-pill.show {
-      display: block;
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
     }
 
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .page-title {
+        font-size: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .req-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .req-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
-  <script type="module" crossorigin src="/assets/consultationRequests-D9PMI9Yj.js"></script>
+  <script type="module" crossorigin src="/assets/consultationRequests-BXqUxEM-.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 
@@ -481,7 +503,7 @@
   <header class="topbar">
     <div class="container navbar">
       <a href="index.html" class="brand">
-        <span class="brand-mark">AE</span>
+        <span class="brand-mark">A</span>
         Ask<span>Expert</span>
       </a>
       <nav class="nav-links">
@@ -514,7 +536,7 @@
       <div>
         <h1 class="page-title">
           <span>📥</span> Incoming Consultation Inquiries
-          <span class="count-badge" id="totalPendingBadge">2 Pending</span>
+          <span class="count-badge" id="totalPendingBadge">0 Pending</span>
         </h1>
         <p style="font-size: 13.5px; color: var(--muted); margin-top: 4px;">
           Review client questions and accept requests to open a private end-to-end encrypted consultation channel.
@@ -526,7 +548,7 @@
     <div class="filters-card">
       <div class="tabs-group">
         <button type="button" class="tab-btn active" data-filter="all">All Requests</button>
-        <button type="button" class="tab-btn" data-filter="pending">⏳ Pending Review (2)</button>
+        <button type="button" class="tab-btn" data-filter="pending" id="pendingTabBtn">⏳ Pending Review (0)</button>
         <button type="button" class="tab-btn" data-filter="accepted">✅ Accepted</button>
         <button type="button" class="tab-btn" data-filter="declined">❌ Declined</button>
       </div>

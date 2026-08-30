@@ -9,29 +9,30 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+
   <style>
     /* =========================================================
-       ASKEXPERT - EXPERTS DIRECTORY STYLES
+       ASKEXPERT - EXPERTS DIRECTORY (EMERALD AURORA THEME)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
-      --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --bg-mesh: var(--ae-mesh-aurora);
+      --card-bg: rgba(7, 24, 38, 0.94);
+      --card-inner: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(16, 185, 129, 0.20);
+      --card-hover: rgba(16, 185, 129, 0.55);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
       --muted: #94a3b8;
+
+      --emerald: #10b981;
+      --teal: #06b6d4;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --orange: #ff9d3c;
-      --gold: #ffb703;
-      --radius: 18px;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --gold: #f59e0b;
+      --radius: 20px;
     }
 
     * {
@@ -44,14 +45,12 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--bg-mesh);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -64,7 +63,7 @@
     }
 
     .container {
-      width: min(1200px, 94%);
+      width: min(1280px, 94%);
       margin: 0 auto;
     }
 
@@ -153,6 +152,49 @@
       transition: all 0.2s ease;
     }
 
+    .btn-profile-link {
+      padding: 10px 16px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--white);
+      transition: all 0.2s;
+    }
+
+    .btn-profile-link:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .btn-chat-link {
+      padding: 10px 18px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #00d9ff, #0077ff);
+      color: #031120 !important;
+      box-shadow: 0 6px 18px rgba(0, 217, 255, 0.35);
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-chat-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.55);
+      filter: brightness(1.08);
+    }
+
     .btn-primary {
       background: linear-gradient(135deg, var(--blue), var(--cyan));
       color: #031120;
@@ -175,41 +217,138 @@
     }
 
     /* ========================================================
-       HERO DIRECTORY BANNER
+       HERO DIRECTORY 3D GRID
        ======================================================== */
     .hero-banner {
-      padding: 32px 0 20px;
-      text-align: center;
+      padding: 40px 0 28px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-left {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 5px 14px;
-      border-radius: 20px;
-      background: rgba(0, 217, 255, 0.12);
-      border: 1px solid rgba(0, 217, 255, 0.3);
-      color: var(--cyan);
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--emerald);
       font-size: 12.5px;
-      font-weight: 750;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      width: fit-content;
     }
 
     .hero-title {
-      font-size: clamp(26px, 4vw, 36px);
+      font-size: clamp(28px, 3.6vw, 42px);
       font-weight: 900;
       color: var(--white);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.8px;
+      line-height: 1.18;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero-desc {
-      font-size: 14.5px;
-      color: #bad3eb;
-      max-width: 620px;
+      font-size: 15.5px;
+      color: var(--text-muted);
+      max-width: 580px;
+      line-height: 1.6;
+    }
+
+    .hero-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 12px;
+      background: rgba(7, 24, 38, 0.92);
+      border: 1.5px solid var(--card-border);
+      font-size: 13px;
+      font-weight: 700;
+      color: #f8fafc;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-badge span:first-child {
+      color: var(--emerald);
+      font-weight: 900;
+    }
+
+    /* 3D Biometric Shield Hero Card */
+    .hero-3d-card {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(7, 26, 42, 0.94), rgba(4, 18, 30, 0.96));
+      border: 1.5px solid rgba(16, 185, 129, 0.35);
+      box-shadow:
+        0 25px 70px -10px rgba(0, 0, 0, 0.75),
+        0 0 35px rgba(16, 185, 129, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .hero-3d-card img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-3d-card:hover img {
+      transform: scale(1.03);
+    }
+
+    .hero-3d-overlay {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      right: 14px;
+      padding: 9px 16px;
+      border-radius: 12px;
+      background: rgba(3, 16, 26, 0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #f8fafc;
     }
 
     /* ========================================================
@@ -526,34 +665,46 @@
     }
 
     .btn-profile-link {
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 12.5px;
+      padding: 10px 16px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 750;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       color: var(--white);
       transition: all 0.2s;
     }
 
     .btn-profile-link:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
     }
 
     .btn-chat-link {
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 12.5px;
+      padding: 10px 18px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      color: #031120;
-      box-shadow: 0 4px 12px rgba(0, 153, 255, 0.3);
+      background: linear-gradient(135deg, #00d9ff, #0077ff);
+      color: #031120 !important;
+      box-shadow: 0 6px 18px rgba(0, 217, 255, 0.35);
       transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
     .btn-chat-link:hover {
-      box-shadow: 0 6px 18px rgba(0, 217, 255, 0.5);
       transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.55);
+      filter: brightness(1.08);
     }
 
     /* Skeleton Loading Cards */
@@ -715,9 +866,50 @@
       border: 1px solid rgba(0, 217, 255, 0.2);
     }
 
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-actions .btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: 26px;
+        line-height: 1.25;
+      }
+      .hero-stats-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero-3d-card img {
+        height: 220px;
+      }
+      .experts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/experts-CQ2mCUgH.js"></script>
+  <script type="module" crossorigin src="/assets/experts-z07_vtmN.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 
@@ -745,13 +937,36 @@
   <!-- Main Container -->
   <main class="container">
 
-    <!-- Hero Directory Banner -->
+    <!-- Hero Directory Banner (3D Grid) -->
     <section class="hero-banner">
-      <div class="hero-badge">
-        <span>🛡️</span> 100% Background & Council Verified Specialists
+      <div class="hero-grid">
+        <div class="hero-left">
+          <div class="hero-badge">
+            <span>🛡️</span> 100% Background & Council Verified
+          </div>
+          <h1 class="hero-title">Connect with <span>Top Verified Experts</span></h1>
+          <p class="hero-desc">Discover certified advocates, chartered accountants, healthcare professionals, and cloud architects ready for 1-on-1 consultations.</p>
+          <div class="hero-stats-row">
+            <div class="stat-badge">
+              <span>10,000+</span> Specialists Active
+            </div>
+            <div class="stat-badge">
+              <span>★ 4.9/5</span> Client Rating
+            </div>
+            <div class="stat-badge">
+              <span>⚡ &lt; 15m</span> Avg Connect
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-3d-card" aria-hidden="true">
+          <img src="/assets/experts_hero_art-RfsFMPaZ.jpg" alt="AskExpert Verified Credential Trust Exchange" loading="eager">
+          <div class="hero-3d-overlay">
+            <span>● Biometric Trust Shield</span>
+            <span style="color: var(--emerald);">Council Authenticated</span>
+          </div>
+        </div>
       </div>
-      <h1 class="hero-title">Verified Domain Experts Directory</h1>
-      <p class="hero-desc">Connect with certified lawyers, chartered accountants, tech consultants, and doctors for encrypted 1-on-1 consultations.</p>
     </section>
 
     <!-- Controls Panel: Search, Categories & Filters -->
@@ -924,6 +1139,6 @@
 
   <!-- =======================================================
        SUPABASE EXPERTS DIRECTORY SCRIPT
-       ======================================================= -->
+       ======================================================= -->
 </body>
 </html>

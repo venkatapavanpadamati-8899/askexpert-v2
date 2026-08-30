@@ -3,9 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AskExpert | Redirecting to Dashboard...</title>
+  <title>AskExpert | Routing to Session...</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <style>
+    body {
+      background: var(--ae-mesh-cosmic);
+      color: #ffffff;
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(0, 217, 255, 0.2);
+      border-top-color: #00d9ff;
+      border-right-color: #7952ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
   <script type="module">
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     async function routeDashboard() {
       try {
@@ -37,7 +64,8 @@
     routeDashboard();
   </script>
 </head>
-<body style="background: #030712; color: #ffffff; font-family: sans-serif; display: grid; place-items: center; height: 100vh;">
-  <p>Redirecting to your dashboard...</p>
+<body>
+  <div class="spinner-ring"></div>
+  <p style="font-size: 14px; font-weight: 600; color: #bad3eb; letter-spacing: 0.5px;">Authenticating & Routing to Dashboard...</p>
 </body>
 </html>

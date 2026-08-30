@@ -14,25 +14,30 @@
        ASKEXPERT - QUESTIONS DIRECTORY STYLES
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
-      --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --bg-mesh: radial-gradient(at 15% 15%, rgba(0, 217, 255, 0.25) 0px, transparent 48%),
+                 radial-gradient(at 85% 18%, rgba(139, 92, 246, 0.28) 0px, transparent 48%),
+                 radial-gradient(at 50% 82%, rgba(59, 130, 246, 0.22) 0px, transparent 52%),
+                 radial-gradient(at 90% 85%, rgba(245, 158, 11, 0.18) 0px, transparent 42%),
+                 linear-gradient(135deg, #04091a 0%, #081636 50%, #110d33 100%);
+
+      --card-bg: rgba(11, 23, 50, 0.94);
+      --card-inner: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --card-hover: rgba(0, 217, 255, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
       --muted: #94a3b8;
+
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --orange: #ff9d3c;
-      --gold: #ffb703;
-      --red: #ff5f6d;
-      --radius: 18px;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --green: #10b981;
+      --orange: #f97316;
+      --gold: #f59e0b;
+      --red: #f43f5e;
+      --radius: 20px;
     }
 
     * {
@@ -45,15 +50,13 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--bg-mesh);
       background-attachment: fixed;
       line-height: 1.6;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -66,7 +69,7 @@
     }
 
     .container {
-      width: min(1200px, 94%);
+      width: min(1280px, 94%);
       margin: 0 auto;
     }
 
@@ -77,26 +80,28 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(4, 10, 22, 0.88);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      background: rgba(5, 12, 28, 0.88);
       border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
     .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 70px;
+      height: 72px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 850;
+      gap: 12px;
+      font-size: 21px;
+      font-weight: 900;
       color: var(--white);
+      letter-spacing: -0.5px;
     }
 
     .brand span:last-child {
@@ -104,27 +109,28 @@
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
       background: linear-gradient(135deg, var(--cyan), var(--blue));
       color: #030d1a;
       display: grid;
       place-items: center;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 900;
+      box-shadow: 0 0 15px rgba(0, 217, 255, 0.45);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .nav-links a {
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 13.5px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--muted);
       transition: all 0.2s ease;
@@ -133,7 +139,8 @@
     .nav-links a:hover,
     .nav-links a.active {
       color: var(--white);
-      background: rgba(0, 153, 255, 0.12);
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.25);
     }
 
     .nav-actions {
@@ -146,80 +153,192 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 18px;
-      border-radius: 11px;
-      font-size: 13.5px;
+      padding: 10px 20px;
+      border-radius: 13px;
+      font-size: 14px;
       font-weight: 750;
       cursor: pointer;
       border: none;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      color: #031120;
-      box-shadow: 0 4px 18px rgba(0, 153, 255, 0.35);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 50%, var(--purple) 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.35);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(0, 217, 255, 0.5);
+      box-shadow: 0 12px 30px rgba(0, 217, 255, 0.55);
     }
 
     /* ========================================================
-       HERO & SEARCH HEADER
+       HERO & SEARCH HEADER (LINEAR STYLE 3D GRID)
        ======================================================== */
     .hero-section {
-      padding: 36px 0 20px;
+      padding: 40px 0 24px;
     }
 
-    .hero-inner {
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-content {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
-    .hero-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 20px;
-      flex-wrap: wrap;
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(0, 217, 255, 0.12);
+      border: 1px solid rgba(0, 217, 255, 0.35);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      width: fit-content;
     }
 
-    .hero-title-row h1 {
-      font-size: 32px;
+    .hero-content h1 {
+      font-size: 40px;
       font-weight: 900;
-      letter-spacing: -0.8px;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
       color: var(--white);
     }
 
-    .hero-title-row p {
-      color: var(--muted);
-      font-size: 14.5px;
-      margin-top: 4px;
+    .hero-content h1 span {
+      background: linear-gradient(135deg, #00d9ff, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 580px;
     }
 
     .stats-strip {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 4px;
     }
 
     .stat-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      font-size: 12px;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 10px;
+      background: rgba(11, 24, 52, 0.85);
+      border: 1.5px solid var(--card-border);
+      font-size: 13px;
       font-weight: 700;
+      color: #f8fafc;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }
 
     .stat-badge span:first-child {
       color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .live-radar-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      position: relative;
+      display: inline-block;
+    }
+
+    .live-radar-dot::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      animation: liveRadarPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+
+    @keyframes liveRadarPulse {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    /* 3D Hero Artwork Card */
+    .hero-3d-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(12, 26, 56, 0.94), rgba(7, 18, 42, 0.96) 52%, rgba(16, 17, 52, 0.95));
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow:
+        0 30px 80px -10px rgba(0, 0, 0, 0.65),
+        0 0 35px rgba(0, 217, 255, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      animation: floatHeroCard 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatHeroCard {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .hero-3d-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-3d-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .hero-3d-card-badge {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      right: 16px;
+      padding: 10px 16px;
+      border-radius: 14px;
+      background: rgba(5, 14, 34, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #f8fafc;
     }
 
     /* ========================================================
@@ -227,26 +346,28 @@
        ======================================================== */
     .controls-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1.5px solid var(--card-border);
       border-radius: var(--radius);
-      padding: 18px 20px;
+      padding: 22px 24px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      gap: 16px;
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     .search-row {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
     .search-input-wrap {
       flex: 1;
-      min-width: 260px;
+      min-width: 280px;
       position: relative;
       display: flex;
       align-items: center;
@@ -254,70 +375,77 @@
 
     .search-icon {
       position: absolute;
-      left: 14px;
+      left: 16px;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 16px;
       pointer-events: none;
     }
 
     .search-input {
       width: 100%;
-      height: 44px;
-      padding: 0 38px 0 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      color: var(--white);
+      height: 48px;
+      padding: 0 42px 0 46px;
+      background: #0b1836;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      color: #ffffff;
       font-size: 14px;
+      font-weight: 500;
       outline: none;
-      transition: all 0.2s;
+      transition: all 0.25s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .search-input::placeholder {
+      color: #94a3b8;
     }
 
     .search-input:focus {
       border-color: var(--cyan);
-      background: rgba(0, 217, 255, 0.04);
-      box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
+      background: #0d2046;
+      box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.22), 0 8px 24px rgba(0, 217, 255, 0.16);
     }
 
     .search-clear {
       position: absolute;
-      right: 12px;
+      right: 14px;
       background: none;
       border: none;
       color: var(--muted);
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       display: none;
     }
 
     .filter-dropdown {
-      height: 44px;
-      padding: 0 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 13.5px;
-      font-weight: 600;
+      height: 48px;
+      padding: 0 16px;
+      background: #0b1836;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 650;
       outline: none;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s ease;
     }
 
     .filter-dropdown:focus {
       border-color: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.22);
     }
 
     .filter-dropdown option {
-      background: #0d1726;
-      color: var(--text);
+      background: #0b1836;
+      color: #ffffff;
     }
 
     /* Category Quick Chips */
     .chips-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: thin;
@@ -325,37 +453,38 @@
 
     .chip-btn {
       white-space: nowrap;
-      padding: 6px 13px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 650;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .chip-btn:hover {
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .chip-btn.active {
-      background: rgba(0, 217, 255, 0.14);
+      background: rgba(0, 217, 255, 0.18);
       border-color: var(--cyan);
       color: var(--cyan);
-      font-weight: 750;
+      box-shadow: 0 0 16px rgba(0, 217, 255, 0.35);
     }
 
     /* ========================================================
-       QUESTIONS GRID & CARDS
+       QUESTIONS GRID & CARDS (STAGGERED REVEAL)
        ======================================================== */
     .content-section {
-      padding: 16px 0 60px;
+      padding: 20px 0 70px;
       flex: 1;
     }
 
@@ -363,15 +492,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
     }
 
     .questions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+      gap: 22px;
     }
 
     @media (max-width: 480px) {
@@ -381,17 +511,31 @@
     }
 
     .question-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background: linear-gradient(145deg, rgba(12, 26, 56, 0.94), rgba(7, 18, 42, 0.96) 52%, rgba(16, 17, 52, 0.95));
+      border: 1.5px solid rgba(255, 255, 255, 0.13);
       border-radius: var(--radius);
-      padding: 22px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
       cursor: pointer;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
+      animation: questionCardEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--index, 0) * 45ms);
+    }
+
+    @keyframes questionCardEnter {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .question-card::before {
@@ -400,16 +544,16 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--gold), transparent);
       opacity: 0;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.3s ease;
     }
 
     .question-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 217, 255, 0.35);
-      box-shadow: 0 16px 40px rgba(0, 153, 255, 0.12);
+      transform: translateY(-5px) scale(1.01);
+      border-color: rgba(0, 217, 255, 0.5);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.65), 0 0 30px rgba(0, 217, 255, 0.22);
     }
 
     .question-card:hover::before {
@@ -496,9 +640,9 @@
     }
 
     .question-title {
-      font-size: 16.5px;
+      font-size: 17px;
       font-weight: 800;
-      color: var(--white);
+      color: #ffffff;
       margin-bottom: 8px;
       line-height: 1.4;
       display: -webkit-box;
@@ -506,12 +650,17 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
+      transition: color 0.25s ease;
+    }
+
+    .question-card:hover .question-title {
+      color: var(--cyan);
     }
 
     .question-snippet {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.6;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
@@ -520,14 +669,15 @@
     }
 
     .card-footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid rgba(255, 255, 255, 0.10);
       padding-top: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #94a3b8;
     }
 
     .card-footer-left {
@@ -644,18 +794,53 @@
     /* ========================================================
        FOOTER
        ======================================================== */
-    footer.bottom-bar {
-      margin-top: auto;
-      border-top: 1px solid var(--card-border);
-      background: rgba(3, 7, 18, 0.85);
-      padding: 20px 0;
-      font-size: 12.5px;
-      color: var(--muted);
-      text-align: center;
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-actions .btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-content h1 {
+        font-size: 26px;
+        line-height: 1.25;
+      }
+      .stats-strip {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero-3d-card img {
+        height: 220px;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+      .filter-dropdown {
+        width: 100%;
+      }
     }
   </style>
-  <script type="module" crossorigin src="/assets/questions-pPyFHea-.js"></script>
+  <script type="module" crossorigin src="/assets/questions-DDDhYZQN.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CSOVraqi.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
 
@@ -667,13 +852,13 @@
         Ask<span>Expert</span>
       </a>
       <nav class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
+        <a href="user-dashboard.html">Dashboard</a>
         <a href="questions.html" class="active">Questions</a>
         <a href="experts.html">Experts</a>
         <a href="chat.html">Chat</a>
       </nav>
       <div class="nav-actions">
-        <a class="btn btn-primary" href="ask-question.html">
+        <a class="btn btn-amber" href="ask-question.html">
           <span>+</span> Ask Question
         </a>
       </div>
@@ -685,21 +870,33 @@
     
     <!-- Hero & Search Header -->
     <section class="hero-section">
-      <div class="hero-inner">
-        <div class="hero-title-row">
-          <div>
-            <h1>Consultation Questions</h1>
-            <p>Browse live questions submitted to verified lawyers, CAs, doctors, and specialists</p>
-          </div>
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-eyebrow">✨ Global Verified Advisory Network</div>
+          <h1>Find Answers from <span>Top Verified Experts</span></h1>
+          <p>Browse live inquiries across Legal, Tax, Tech, Healthcare, and Finance. Get trusted solutions directly from certified specialists.</p>
           <div class="stats-strip">
             <div class="stat-badge">
               <span id="totalQuestionsCount">...</span> Total Questions
             </div>
             <div class="stat-badge">
-              <span style="color: var(--green);">● Live</span> Supabase Synced
+              <span class="live-radar-dot"></span> <span style="color: var(--green); margin-left: 4px;">Live</span> Real-time Sync
+            </div>
+            <div class="stat-badge">
+              <span>⚡</span> 15m Avg Response
             </div>
           </div>
         </div>
+
+        <!-- 3D Holographic Query Hub Card -->
+        <div class="hero-3d-card" aria-hidden="true">
+          <img src="/assets/questions_hero_art-D8Xes_Sz.jpg" alt="AskExpert 3D Holographic Inquiry Network" loading="eager">
+          <div class="hero-3d-card-badge">
+            <span>● 24/7 Verified Specialist Desk</span>
+            <span style="color: var(--cyan);">Supabase Connected</span>
+          </div>
+        </div>
+      </div>
 
         <!-- Search & Filters Card -->
         <div class="controls-card">

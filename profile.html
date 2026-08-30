@@ -8,29 +8,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - USER PROFILE STYLES
+       ASKEXPERT - USER PROFILE STYLES (ORCHID & NEON ROSE)
        ========================================================= */
     :root {
-      --bg-1: #030712;
-      --bg-2: #07152d;
-      --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --bg-1: #0f0417;
+      --bg-2: #1c082b;
+      --bg-3: #240a25;
+      --card-bg: rgba(22, 10, 36, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(168, 85, 247, 0.22);
+      --card-hover: rgba(168, 85, 247, 0.5);
 
       --white: #ffffff;
-      --text: #eaf6ff;
-      --muted: #94a3b8;
-      --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
-      --green: #20d889;
-      --orange: #ff9d3c;
-      --gold: #ffb703;
+      --text: #fdf4ff;
+      --muted: #cbd5e1;
+      --cyan: #38bdf8;
+      --blue: #818cf8;
+      --purple: #c084fc;
+      --green: #34d399;
+      --orange: #fb923c;
+      --gold: #fbbf24;
       --radius: 20px;
     }
 
@@ -44,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-orchid);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -205,19 +203,42 @@
        HERO PROFILE CARD
        ======================================================== */
     .hero-profile-card {
-      background: var(--card-bg);
+      background: linear-gradient(135deg, rgba(22, 10, 36, 0.94), rgba(14, 5, 24, 0.96));
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--card-border);
+      border: 1.5px solid rgba(168, 85, 247, 0.35);
       border-radius: var(--radius);
-      padding: 32px;
+      padding: 30px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 28px;
+      grid-template-columns: auto 1fr 220px auto;
+      gap: 24px;
       align-items: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(168, 85, 247, 0.15);
+    }
+
+    @media (max-width: 950px) {
+      .hero-profile-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .passport-art-thumb {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .passport-art-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .hero-profile-card::before {
@@ -533,6 +554,39 @@
       color: var(--muted);
       text-align: center;
     }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .nav-actions .btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .profile-hero {
+        padding: 18px 14px;
+      }
+      .info-fields-grid {
+        grid-template-columns: 1fr;
+      }
+      .glass-card {
+        padding: 16px 14px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -595,6 +649,12 @@
           <span id="profileCreatedDate">📅 Member since August 2026</span>
           <span>•</span>
           <span style="color: var(--green);">✅ Verified Account</span>
+        </div>
+      <div class="passport-art-thumb" aria-hidden="true">
+        <img src="./assets/images/profile_hero_art.jpg" alt="Verified Identity Passport" loading="eager">
+        <div style="position: absolute; bottom: 4px; left: 6px; right: 6px; background: rgba(14, 4, 22, 0.85); backdrop-filter: blur(6px); padding: 2px 6px; border-radius: 4px; font-size: 9.5px; color: #fdf4ff; display: flex; justify-content: space-between;">
+          <span style="color: #ec4899; font-weight: 700;">● Bio-ID Verified</span>
+          <span>Level 3</span>
         </div>
       </div>
 
@@ -744,7 +804,7 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     /* ========================================================
        STATE

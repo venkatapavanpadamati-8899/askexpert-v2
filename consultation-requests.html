@@ -8,26 +8,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - CONSULTATION REQUESTS STYLES
+       ASKEXPERT - CONSULTATION REQUESTS STYLES (CYBER SAPPHIRE)
        ========================================================= */
     :root {
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-bg: rgba(10, 20, 44, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(59, 130, 246, 0.22);
+      --card-hover: rgba(59, 130, 246, 0.5);
 
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
+      --blue: #3b82f6;
+      --purple: #6366f1;
       --green: #20d889;
       --gold: #ffb703;
       --red: #ff4757;
@@ -44,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-sapphire);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -463,13 +461,37 @@
       animation: toastIn 0.3s ease;
     }
 
-    .toast-pill.show {
-      display: block;
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
     }
 
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .page-title {
+        font-size: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .req-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .req-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -479,7 +501,7 @@
   <header class="topbar">
     <div class="container navbar">
       <a href="index.html" class="brand">
-        <span class="brand-mark">AE</span>
+        <span class="brand-mark">A</span>
         Ask<span>Expert</span>
       </a>
       <nav class="nav-links">
@@ -512,7 +534,7 @@
       <div>
         <h1 class="page-title">
           <span>📥</span> Incoming Consultation Inquiries
-          <span class="count-badge" id="totalPendingBadge">2 Pending</span>
+          <span class="count-badge" id="totalPendingBadge">0 Pending</span>
         </h1>
         <p style="font-size: 13.5px; color: var(--muted); margin-top: 4px;">
           Review client questions and accept requests to open a private end-to-end encrypted consultation channel.
@@ -524,7 +546,7 @@
     <div class="filters-card">
       <div class="tabs-group">
         <button type="button" class="tab-btn active" data-filter="all">All Requests</button>
-        <button type="button" class="tab-btn" data-filter="pending">⏳ Pending Review (2)</button>
+        <button type="button" class="tab-btn" data-filter="pending" id="pendingTabBtn">⏳ Pending Review (0)</button>
         <button type="button" class="tab-btn" data-filter="accepted">✅ Accepted</button>
         <button type="button" class="tab-btn" data-filter="declined">❌ Declined</button>
       </div>
@@ -564,7 +586,7 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     /* ========================================================
        STATE
@@ -576,11 +598,14 @@
     /* ========================================================
        INIT
        ======================================================== */
+    /* ========================================================
+       INIT
+       ======================================================== */
     async function initRequestsQueue() {
       await loadAuthSession();
       setupTabs();
       setupSearch();
-      setupActionButtons();
+      await loadConsultationRequests();
       setupRealtime();
     }
 
@@ -603,6 +628,94 @@
     }
 
     /* ========================================================
+       LOAD REQUESTS FROM SUPABASE
+       ======================================================== */
+    async function loadConsultationRequests() {
+      const grid = document.getElementById("requestsGrid");
+      const emptyEl = document.getElementById("emptyRequestsState");
+      if (!grid) return;
+
+      grid.innerHTML = `<div style="text-align: center; color: var(--muted); padding: 40px; grid-column: 1 / -1;">Loading consultation requests...</div>`;
+
+      if (!supabase || !currentExpertId) {
+        grid.innerHTML = "";
+        if (emptyEl) emptyEl.style.display = "flex";
+        updatePendingBadge();
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("consultation_requests")
+          .select("*, client:user_id(id, full_name, avatar_url)")
+          .eq("expert_id", currentExpertId)
+          .order("created_at", { ascending: false });
+
+        if (error || !data || data.length === 0) {
+          grid.innerHTML = "";
+          if (emptyEl) emptyEl.style.display = "flex";
+          updatePendingBadge();
+          return;
+        }
+
+        if (emptyEl) emptyEl.style.display = "none";
+        grid.innerHTML = data.map(req => {
+          const clientName = req.client?.full_name || "Client";
+          const clientInitial = clientName.charAt(0).toUpperCase() || "C";
+          const clientAvatar = req.client?.avatar_url;
+          const status = req.status || "pending";
+          const dateStr = new Date(req.created_at || Date.now()).toLocaleDateString([], {
+            month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+          });
+          const statusPillClass = status === "accepted" ? "accepted" : (status === "declined" ? "declined" : "pending");
+          const statusLabel = status === "accepted" ? "✓ Accepted" : (status === "declined" ? "✕ Declined" : "⏳ Pending Review");
+
+          return `
+            <div class="req-card ${status === 'accepted' ? 'status-accepted' : (status === 'declined' ? 'status-declined' : '')}" id="req-${escapeHTML(req.id)}" data-status="${escapeHTML(status)}">
+              <div class="req-header">
+                <div class="req-client-info">
+                  ${clientAvatar ? `<img src="${escapeHTML(clientAvatar)}" class="req-avatar" alt="${escapeHTML(clientName)}" />` : `<div class="req-avatar-fallback">${escapeHTML(clientInitial)}</div>`}
+                  <div>
+                    <h3 class="req-client-name">${escapeHTML(clientName)}</h3>
+                    <span class="req-time">${escapeHTML(dateStr)}</span>
+                  </div>
+                </div>
+                <span class="status-pill ${statusPillClass}">${statusLabel}</span>
+              </div>
+              <div class="req-topic">
+                <strong>${escapeHTML(req.topic || req.notes || "Consultation Request")}</strong>
+              </div>
+              <p class="req-message">${escapeHTML(req.message || req.description || "Client requested 1-on-1 expert advisory session.")}</p>
+              ${status === 'pending' ? `
+                <div class="req-actions">
+                  <button type="button" class="btn btn-secondary btn-decline" data-id="req-${escapeHTML(req.id)}" data-reqid="${escapeHTML(req.id)}">Decline</button>
+                  <button type="button" class="btn btn-primary btn-accept" data-id="req-${escapeHTML(req.id)}" data-reqid="${escapeHTML(req.id)}">Accept & Chat</button>
+                </div>
+              ` : `
+                <div class="req-actions">
+                  <a href="chat.html?expert=${encodeURIComponent(currentExpertId)}" class="btn btn-primary" style="width: 100%; justify-content: center;">Open Chat Channel</a>
+                </div>
+              `}
+            </div>
+          `;
+        }).join("");
+
+        setupActionButtons();
+        updatePendingBadge();
+
+      } catch (err) {
+        console.warn("loadConsultationRequests error:", err);
+        grid.innerHTML = "";
+        if (emptyEl) emptyEl.style.display = "flex";
+        updatePendingBadge();
+      }
+    }
+
+    function escapeHTML(str) {
+      return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    /* ========================================================
        FILTER TABS & SEARCH
        ======================================================== */
     function setupTabs() {
@@ -616,7 +729,7 @@
         });
       });
 
-      document.getElementById("resetFilterBtn").addEventListener("click", () => {
+      document.getElementById("resetFilterBtn")?.addEventListener("click", () => {
         tabs[0].click();
         document.getElementById("reqSearchInput").value = "";
         searchTerm = "";
@@ -626,10 +739,12 @@
 
     function setupSearch() {
       const input = document.getElementById("reqSearchInput");
-      input.addEventListener("input", (e) => {
-        searchTerm = e.target.value.toLowerCase().trim();
-        filterCards();
-      });
+      if (input) {
+        input.addEventListener("input", (e) => {
+          searchTerm = e.target.value.toLowerCase().trim();
+          filterCards();
+        });
+      }
     }
 
     function filterCards() {
@@ -652,7 +767,7 @@
       });
 
       const emptyEl = document.getElementById("emptyRequestsState");
-      emptyEl.style.display = visibleCount === 0 ? "flex" : "none";
+      if (emptyEl) emptyEl.style.display = visibleCount === 0 ? "flex" : "none";
     }
 
     /* ========================================================
@@ -663,7 +778,7 @@
       document.querySelectorAll(".btn-accept").forEach(btn => {
         btn.addEventListener("click", async () => {
           const cardId = btn.dataset.id;
-          const expertId = btn.dataset.expert || currentExpertId;
+          const reqId = btn.dataset.reqid;
           const card = document.getElementById(cardId);
 
           showToast("✓ Request accepted! Launching encrypted chat channel...");
@@ -680,18 +795,20 @@
 
           updatePendingBadge();
 
-          // Persist to Supabase if live
-          if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
+          // Persist to Supabase
+          if (supabase && reqId) {
             try {
               await supabase.from("consultation_requests").update({
                 status: "accepted",
                 updated_at: new Date().toISOString()
-              }).eq("expert_id", currentExpertId);
-            } catch (err) {}
+              }).eq("id", reqId);
+            } catch (err) {
+              console.warn("DB update error:", err);
+            }
           }
 
           setTimeout(() => {
-            window.location.href = `chat.html?expert=${encodeURIComponent(expertId)}`;
+            window.location.href = `chat.html?expert=${encodeURIComponent(currentExpertId)}`;
           }, 900);
         });
       });
@@ -700,6 +817,7 @@
       document.querySelectorAll(".btn-decline").forEach(btn => {
         btn.addEventListener("click", async () => {
           const cardId = btn.dataset.id;
+          const reqId = btn.dataset.reqid;
           const card = document.getElementById(cardId);
 
           if (card) {
@@ -714,13 +832,27 @@
             filterCards();
             updatePendingBadge();
           }
+
+          if (supabase && reqId) {
+            try {
+              await supabase.from("consultation_requests").update({
+                status: "declined",
+                updated_at: new Date().toISOString()
+              }).eq("id", reqId);
+            } catch (err) {
+              console.warn("DB update error:", err);
+            }
+          }
         });
       });
     }
 
     function updatePendingBadge() {
       const pendingCount = document.querySelectorAll('.req-card[data-status="pending"]').length;
-      document.getElementById("totalPendingBadge").textContent = `${pendingCount} Pending`;
+      const totalBadge = document.getElementById("totalPendingBadge");
+      if (totalBadge) totalBadge.textContent = `${pendingCount} Pending`;
+      const tabBadge = document.getElementById("pendingTabBtn");
+      if (tabBadge) tabBadge.textContent = `⏳ Pending Review (${pendingCount})`;
     }
 
     /* ========================================================

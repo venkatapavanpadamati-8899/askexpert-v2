@@ -8,26 +8,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - PROFESSIONAL EARNINGS STYLES
+       ASKEXPERT - PROFESSIONAL EARNINGS STYLES (CYBER SAPPHIRE)
        ========================================================= */
     :root {
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-bg: rgba(10, 20, 44, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(59, 130, 246, 0.22);
+      --card-hover: rgba(59, 130, 246, 0.5);
 
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
+      --blue: #3b82f6;
+      --purple: #6366f1;
       --green: #20d889;
       --gold: #ffb703;
       --red: #ff4757;
@@ -44,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(32, 216, 137, 0.1), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(0, 153, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-sapphire);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -264,18 +262,39 @@
       color: var(--white);
     }
 
-    /* Payout Banner Box */
+    /* 3D Specialist Payout Hero Banner */
     .payout-hero-box {
-      background: linear-gradient(135deg, rgba(32, 216, 137, 0.15), rgba(0, 153, 255, 0.1));
-      border: 1px solid rgba(32, 216, 137, 0.35);
+      background: linear-gradient(135deg, rgba(7, 21, 54, 0.94), rgba(4, 10, 28, 0.96));
+      border: 1px solid rgba(59, 130, 246, 0.35);
       border-radius: var(--radius);
-      padding: 28px 32px;
-      display: flex;
-      justify-content: space-between;
+      padding: 26px 32px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      gap: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(59, 130, 246, 0.15);
+      animation: pulseSapphire 6s infinite ease-in-out;
+    }
+
+    @media (max-width: 900px) {
+      .payout-hero-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .payout-art-thumb {
+      width: 100%;
+      height: 155px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(99, 102, 241, 0.4);
+      position: relative;
+    }
+
+    .payout-art-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .payout-balance-title {
@@ -502,13 +521,42 @@
       animation: toastIn 0.3s ease;
     }
 
-    .toast-pill.show {
-      display: block;
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
     }
 
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @media (max-width: 480px) {
+      .navbar {
+        height: auto;
+        padding: 10px 0;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+      .header-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .payout-btn-row {
+        flex-direction: column;
+      }
+      .payout-btn-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -518,7 +566,7 @@
   <header class="topbar">
     <div class="container navbar">
       <a href="index.html" class="brand">
-        <span class="brand-mark">AE</span>
+        <span class="brand-mark">A</span>
         Ask<span>Expert</span>
       </a>
       <nav class="nav-links">
@@ -562,21 +610,26 @@
       </button>
     </div>
 
-    <!-- Payout Balance Hero Banner -->
+    <!-- 3D Payout Balance Hero Banner -->
     <section class="payout-hero-box">
       <div>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(32, 216, 137, 0.12); border: 1px solid rgba(32, 216, 137, 0.3); color: var(--green); padding: 3px 10px; border-radius: 16px; font-size: 11px; font-weight: 800; margin-bottom: 8px;">
+          <span>✓</span> Auto-Settlement Active
+        </div>
         <span class="payout-balance-title">Available for Direct Payout</span>
-        <div class="payout-balance-val" id="availablePayoutAmount">₹36,500.00</div>
+        <div class="payout-balance-val" id="availablePayoutAmount">₹0.00</div>
         <div class="bank-account-pill">
           <span>🏦</span>
-          <span>Linked Payout Account: <strong>HDFC Bank ••••••4819</strong> (IFSC: HDFC0001824)</span>
+          <span>Linked Account: <strong>Bank Account via Verified KYC</strong></span>
         </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 6px; text-align: right;">
-        <span style="font-size: 12.5px; color: #bad3eb;">Next Auto-Settlement Cycle:</span>
-        <strong style="font-size: 14.5px; color: var(--white);">Tuesday, 10:00 AM IST</strong>
-        <span style="font-size: 11px; color: var(--muted);">Zero NEFT/IMPS bank transfer fees</span>
+      <div class="payout-art-thumb" aria-hidden="true">
+        <img src="./assets/images/professional_hero_art.jpg" alt="Specialist Earnings Telemetry" loading="eager">
+        <div style="position: absolute; bottom: 6px; left: 8px; right: 8px; background: rgba(4, 10, 24, 0.85); backdrop-filter: blur(8px); padding: 3px 8px; border-radius: 6px; font-size: 10px; color: #cbd5e1; display: flex; justify-content: space-between;">
+          <span style="color: #60a5fa; font-weight: 700;">● Settlement Cycle</span>
+          <span>Direct Payouts</span>
+        </div>
       </div>
     </section>
 
@@ -587,7 +640,7 @@
         <div class="stat-icon-wrap icon-green">💰</div>
         <div class="stat-info">
           <span>Total Net Earnings</span>
-          <strong id="statTotalNetEarnings">₹48,900.00</strong>
+          <strong id="statTotalNetEarnings">₹0.00</strong>
         </div>
       </div>
 
@@ -596,7 +649,7 @@
         <div class="stat-icon-wrap icon-blue">📅</div>
         <div class="stat-info">
           <span>Today's Earnings</span>
-          <strong id="statTodayEarnings">₹3,600.00</strong>
+          <strong id="statTodayEarnings">₹0.00</strong>
         </div>
       </div>
 
@@ -604,8 +657,8 @@
       <div class="stat-card">
         <div class="stat-icon-wrap icon-purple">📊</div>
         <div class="stat-info">
-          <span>This Month (Aug)</span>
-          <strong id="statMonthEarnings">₹48,900.00</strong>
+          <span>This Month</span>
+          <strong id="statMonthEarnings">₹0.00</strong>
         </div>
       </div>
 
@@ -614,7 +667,7 @@
         <div class="stat-icon-wrap icon-gold">⏳</div>
         <div class="stat-info">
           <span>Pending Settlement</span>
-          <strong id="pendingSettlementVal">₹12,400.00</strong>
+          <strong id="pendingSettlementVal">₹0.00</strong>
         </div>
       </div>
     </section>
@@ -650,59 +703,7 @@
             </tr>
           </thead>
           <tbody id="ledgerTableBody">
-            
-            <!-- Row 1 -->
-            <tr data-status="successful">
-              <td>Aug 22, 2026<br><small style="color: var(--muted);">16:45 PM</small></td>
-              <td><strong style="color: var(--cyan); font-family: monospace;">#TXN-849201</strong></td>
-              <td><strong>Aditya Sharma</strong><br><small style="color: var(--muted);">Corporate MCA Review</small></td>
-              <td>₹1,200.00</td>
-              <td style="color: var(--red);">- ₹120.00</td>
-              <td style="color: var(--red);">- ₹21.60</td>
-              <td><strong style="color: var(--green);">₹1,058.40</strong></td>
-              <td><span class="status-pill status-successful">● Successful</span></td>
-              <td><button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Tax invoice #INV-849201 generated.')">Invoice</button></td>
-            </tr>
-
-            <!-- Row 2 -->
-            <tr data-status="successful">
-              <td>Aug 22, 2026<br><small style="color: var(--muted);">14:10 PM</small></td>
-              <td><strong style="color: var(--cyan); font-family: monospace;">#TXN-849182</strong></td>
-              <td><strong>Ravi Kumar</strong><br><small style="color: var(--muted);">Cross-Border IP DTAA</small></td>
-              <td>₹1,500.00</td>
-              <td style="color: var(--red);">- ₹150.00</td>
-              <td style="color: var(--red);">- ₹27.00</td>
-              <td><strong style="color: var(--green);">₹1,323.00</strong></td>
-              <td><span class="status-pill status-successful">● Successful</span></td>
-              <td><button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Tax invoice #INV-849182 generated.')">Invoice</button></td>
-            </tr>
-
-            <!-- Row 3 (Payout) -->
-            <tr data-status="paid">
-              <td>Aug 20, 2026<br><small style="color: var(--muted);">11:00 AM</small></td>
-              <td><strong style="color: var(--purple); font-family: monospace;">#PAY-992014</strong></td>
-              <td><strong>Bank Settlement</strong><br><small style="color: var(--muted);">HDFC Bank ••••••4819</small></td>
-              <td>₹25,000.00</td>
-              <td style="color: var(--muted);">₹0.00</td>
-              <td style="color: var(--muted);">₹0.00</td>
-              <td><strong style="color: var(--cyan);">₹25,000.00</strong></td>
-              <td><span class="status-pill status-paid">✓ Paid to Bank</span></td>
-              <td><button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Bank settlement advice UTR #HDFCN26284920194')">Advice</button></td>
-            </tr>
-
-            <!-- Row 4 -->
-            <tr data-status="pending">
-              <td>Aug 19, 2026<br><small style="color: var(--muted);">18:30 PM</small></td>
-              <td><strong style="color: var(--cyan); font-family: monospace;">#TXN-848910</strong></td>
-              <td><strong>Pooja Hegde</strong><br><small style="color: var(--muted);">Trademark Class 42 Reply</small></td>
-              <td>₹1,200.00</td>
-              <td style="color: var(--red);">- ₹120.00</td>
-              <td style="color: var(--red);">- ₹21.60</td>
-              <td><strong style="color: var(--gold);">₹1,058.40</strong></td>
-              <td><span class="status-pill status-pending">⏳ Settlement Pending</span></td>
-              <td><button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Invoice will generate upon session settlement.')">Invoice</button></td>
-            </tr>
-
+            <tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted);">Loading earnings ledger from Supabase...</td></tr>
           </tbody>
         </table>
       </div>
@@ -762,7 +763,7 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
 
     /* ========================================================
        STATE
@@ -792,6 +793,10 @@
         }
       } catch (err) {
         console.warn("Auth session error:", err);
+      }
+      if (new URLSearchParams(window.location.search).get("preview") === "true") {
+        currentExpertId = "demo_expert_1";
+        return true;
       }
       window.location.href = "login.html";
       return false;
@@ -896,9 +901,18 @@
           if (totalEarnedEl) totalEarnedEl.textContent = `₹${netTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
           const availableEl = document.getElementById("availablePayoutAmount");
           if (availableEl) availableEl.textContent = `₹${netTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+        } else {
+          const tbody = document.getElementById("ledgerTableBody");
+          if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted);">No earnings or settlement records found yet.</td></tr>`;
+          }
         }
       } catch (err) {
         console.warn("loadLiveEarningsLedger error:", err);
+        const tbody = document.getElementById("ledgerTableBody");
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--muted);">No earnings records available.</td></tr>`;
+        }
       }
     }
 

@@ -8,27 +8,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
     /* =========================================================
-       ASKEXPERT - PROFESSIONAL VERIFICATION STYLES
+       ASKEXPERT - PROFESSIONAL VERIFICATION STYLES (CYBER SAPPHIRE)
        ========================================================= */
     :root {
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(13, 22, 41, 0.85);
+      --card-bg: rgba(10, 20, 44, 0.88);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-hover: rgba(0, 217, 255, 0.35);
+      --card-border: rgba(59, 130, 246, 0.22);
+      --card-hover: rgba(59, 130, 246, 0.5);
 
-      
       --white: #ffffff;
       --text: #eaf6ff;
       --muted: #94a3b8;
       --cyan: #00d9ff;
-      --blue: #0099ff;
-      --purple: #8a5cff;
+      --blue: #3b82f6;
+      --purple: #6366f1;
       --green: #20d889;
       --gold: #ffb703;
       --red: #ff4757;
@@ -45,10 +45,7 @@
     body {
       min-height: 100vh;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(0, 153, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(138, 92, 255, 0.12), transparent 32%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      background: var(--ae-mesh-sapphire);
       background-attachment: fixed;
       line-height: 1.6;
       display: flex;
@@ -516,13 +513,38 @@
       animation: toastIn 0.3s ease;
     }
 
-    .toast-pill.show {
-      display: block;
-    }
-
-    @keyframes toastIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @media (max-width: 480px) {
+      body {
+        padding: 12px 8px 40px;
+      }
+      .topbar {
+        padding: 8px 4px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .panel {
+        padding: 20px 14px;
+      }
+      .main-title {
+        font-size: 20px;
+        line-height: 1.3;
+      }
+      .stepper-nav {
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 8px;
+      }
+      .form-actions-row {
+        flex-direction: column;
+      }
+      .form-actions-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -851,8 +873,8 @@
        ======================================================= -->
   <script type="module">
     "use strict";
-    import { supabase } from "./assets/js/supabaseClient.js";
-    import { analyzeCertificateAuthenticity } from "./assets/js/aiCertificateVerifier.js";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
+    import { analyzeCertificateAuthenticity } from "./assets/js/ai/aiCertificateVerifier.js";
 
     /* ========================================================
        STATE
@@ -1145,24 +1167,22 @@
       const degreeFile = document.getElementById("vDegreeFile").files[0];
       const licenseFile = document.getElementById("vLicenseFile").files[0];
 
-      // Run AI Document & Certificate Verification Inspection
+      // Run Production-Grade AI Document & Certificate Verification Inspection
       const aiCheck = analyzeCertificateAuthenticity({
+        profileName: fullName,
         fileName: degreeFile ? degreeFile.name : (licenseFile ? licenseFile.name : degree),
         degree: degree,
         university: university,
+        specialization: profession,
         license: councilNo,
-        file: degreeFile || licenseFile
+        fileSize: (degreeFile?.size) || (licenseFile?.size) || 0
       });
 
-      if (!aiCheck.isGenuine) {
-        showToast("⚠️ AI Security Block: Document failed Government Authenticity Inspection. Please upload a clear PDF/JPG certificate.");
-        alert("⚠️ AI Security Alert: Uploaded document failed AI Government Authenticity Check.\n\nReason: File name or format appears unauthentic. Please upload an original clear PDF/JPG certificate.");
-        nextBtn.disabled = false;
-        nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
-        return;
+      if (aiCheck.riskScore > 50) {
+        showToast("ℹ️ AI Notice: Elevated risk factors identified. Application flagged for priority Admin manual review.");
+      } else {
+        showToast("✓ Pre-submission Check Passed: Document structure & registration syntax validated!");
       }
-
-      showToast("✓ Pre-submission Check Passed: Document format & registration syntax validated!");
 
       // File upload simulation to private storage
       const idFileInput = document.getElementById("vIdFile");
@@ -1186,8 +1206,11 @@
         degree_verified: false,
         council_verified: false,
         ai_score: aiCheck.score,
+        ai_risk_score: aiCheck.riskScore,
+        ai_risk_level: aiCheck.riskLevel,
         ai_status: aiCheck.status,
         ai_confidence: aiCheck.confidenceLabel,
+        ai_suspicious_points: aiCheck.suspiciousPoints,
         ai_badges: aiCheck.badges,
         created_at: new Date().toISOString()
       };

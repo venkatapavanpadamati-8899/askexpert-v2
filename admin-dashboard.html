@@ -683,7 +683,7 @@
             <span>🚨</span>
             <span>Disputes & Safety</span>
           </div>
-          <span class="badge-count badge-gold">4</span>
+          <span class="badge-count badge-gold" id="badgeOpenDisputes">0</span>
         </a>
 
         <a href="#errorPortalSection" id="navErrorPortal" class="nav-item">
@@ -1153,7 +1153,7 @@
             });
             return;
           }
-          tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; color:var(--red);">Error loading log: ${error.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; color:var(--red);">Error loading log: ${escapeHTML(error.message)}</td></tr>`;
           return;
         }
 
@@ -1400,12 +1400,12 @@
         }
 
         // 6. Pending Payouts (sum of pending amounts)
-        const { data: pendingPayments } = await supabase
-          .from("payments")
+        const { data: pendingPayouts } = await supabase
+          .from("payout_requests")
           .select("amount")
           .eq("status", "pending");
-        if (pendingPayments && pendingPayments.length > 0) {
-          const totalPending = pendingPayments.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0);
+        if (pendingPayouts && pendingPayouts.length > 0) {
+          const totalPending = pendingPayouts.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0);
           document.getElementById("valPendingPayouts").textContent = `₹${totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
         } else {
           document.getElementById("valPendingPayouts").textContent = "₹0.00";
@@ -1413,10 +1413,24 @@
 
         // 7. Render Real Activity Feed from Questions, Profiles, & Verifications
         await renderLiveActivityStream();
+
+        // 8. Open Disputes / Reports badge (real count)
+        try {
+          const { count: openReportsCount } = await supabase
+            .from("reports")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "open");
+          const disputesBadge = document.getElementById("badgeOpenDisputes");
+          if (disputesBadge && typeof openReportsCount === "number") {
+            disputesBadge.textContent = openReportsCount;
+          }
+        } catch (_) { /* silent — badge stays 0 */ }
+
       } catch (err) {
         console.warn("Metrics fetch error:", err);
       }
     }
+
 
     async function renderLiveActivityStream() {
       const feedEl = document.getElementById("activityFeed");
@@ -1425,7 +1439,7 @@
       try {
         const [{ data: recentQuestions }, { data: recentVerifs }, { data: recentUsers }] = await Promise.all([
           supabase.from("questions").select("id, title, category, created_at").order("created_at", { ascending: false }).limit(3),
-          supabase.from("professional_verifications").select("id, council_registration_number, verification_status, created_at").order("created_at", { ascending: false }).limit(3),
+          supabase.from("professional_verifications").select("id, council_registration_no, verification_status, created_at").order("created_at", { ascending: false }).limit(3),
           supabase.from("profiles").select("id, full_name, email, role, created_at").order("created_at", { ascending: false }).limit(3)
         ]);
 
@@ -1447,7 +1461,8 @@
           activities.push({
             type: "verification",
             icon: "🎓",
-            title: `Professional KYC: ${escapeHTML(v.council_registration_number || "Application")}`,
+            title: `Professional KYC: ${escapeHTML(v.council_registration_no || "Application")}`,
+
             subtitle: `Status: ${escapeHTML(v.verification_status || "pending")}`,
             link: "admin-professionals.html",
             linkText: "Review →",

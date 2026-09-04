@@ -25,7 +25,7 @@
   },
   {
     "step": 2,
-    "desc": "Admin dashboard shows live stats (totalUsers: 0)",
+    "desc": "Admin dashboard shows live stats (totalUsers: 29)",
     "result": "PASS",
     "details": ""
   },
@@ -85,7 +85,7 @@
   },
   {
     "step": 8,
-    "desc": "Demo OTP generated: 160216",
+    "desc": "Demo OTP generated: 387242",
     "result": "PASS",
     "details": ""
   },
@@ -115,7 +115,7 @@
   },
   {
     "step": 9,
-    "desc": "Demo OTP generated: 275919",
+    "desc": "Demo OTP generated: 754019",
     "result": "PASS",
     "details": ""
   },
@@ -151,7 +151,7 @@
   },
   {
     "step": 10,
-    "desc": "Payment succeeded — TXN: #TXN-441313",
+    "desc": "Payment succeeded — TXN: #TXN-919530",
     "result": "PASS",
     "details": ""
   },

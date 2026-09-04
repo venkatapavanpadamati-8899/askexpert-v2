@@ -1014,13 +1014,15 @@
               try {
                 await supabase.from("professional_verifications").upsert({
                   expert_id: data.user.id,
-                  council_registration_number: cleanAadhaar || ("AADHAAR-" + Math.floor(100000000000 + Math.random() * 900000000000)),
+                  council_registration_no: cleanAadhaar || ("AADHAAR-" + Math.floor(100000000000 + Math.random() * 900000000000)),
+                  degree_qualification: "Not Provided",
                   verification_status: "pending",
                   submitted_at: new Date().toISOString()
                 }, { onConflict: "expert_id" });
               } catch (verErr) {
                 console.warn("Verification record notice:", verErr);
               }
+
 
               showFormStatus("Expert registered successfully! Redirecting to login...", "success");
               createButton.textContent = "Registered ✓";

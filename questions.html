@@ -1243,10 +1243,10 @@
         });
 
         // Resolve Category Styling & Icon
-        const catInfo = resolveCategoryInfo(q.category || "General");
+        const catInfo = resolveCategoryInfo(q.category || (Array.isArray(q.tags) ? q.tags[0] : q.tags) || "General");
         const statusClass = (q.status || "open").toLowerCase();
         const statusLabel = statusClass === "answered" ? "✓ Answered" : (statusClass === "resolved" ? "Resolved" : "● Open");
-        const answersCount = q.answers_count || 0;
+        const answersCount = q.answers_count || q.answer_count || 0;
         const timeAgo = formatTimeAgo(q.created_at);
 
         card.innerHTML = `
@@ -1262,10 +1262,10 @@
 
             <div class="card-body">
               <h2 class="question-title">
-                ${escapeHTML(q.title || q.description || "Untitled Question")}
+                ${escapeHTML(q.title || q.description || q.body || "Untitled Question")}
               </h2>
               <p class="question-snippet">
-                ${escapeHTML(q.description || "Click to view details and verified answers.")}
+                ${escapeHTML(q.description || q.body || "Click to view details and verified answers.")}
               </p>
             </div>
           </div>

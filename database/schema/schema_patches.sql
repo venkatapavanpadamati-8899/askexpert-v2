@@ -19,11 +19,12 @@ CREATE INDEX IF NOT EXISTS idx_profiles_is_verified
 -- ----------------------------------------------------------------
 -- PATCH 2: Add moderation columns to questions table
 -- Needed by admin-questions.html Remove action
+-- NOTE: Must match main schema values: visible, flagged, under_review, removed, hidden
 -- ----------------------------------------------------------------
 ALTER TABLE questions
   ADD COLUMN IF NOT EXISTS moderation_status TEXT
-    CHECK (moderation_status IN ('active', 'flagged', 'removed'))
-    DEFAULT 'active',
+    CHECK (moderation_status IN ('visible', 'flagged', 'under_review', 'removed', 'hidden'))
+    DEFAULT 'visible',
   ADD COLUMN IF NOT EXISTS moderation_reason TEXT;
 
 -- Create index for moderation status filtering
@@ -129,6 +130,7 @@ END
 $$;
 
 -- answers: Authenticated users can insert answers
+-- NOTE: answers table has only user_id, NOT expert_id. RLS uses user_id only.
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -138,7 +140,7 @@ BEGIN
   ) THEN
     CREATE POLICY "Authenticated users can submit answers"
       ON answers FOR INSERT
-      WITH CHECK (auth.uid() = user_id OR auth.uid() = expert_id);
+      WITH CHECK (auth.uid() = user_id);
   END IF;
 END
 $$;

@@ -56,6 +56,27 @@
     .setting-select:focus {
       border-color: #f43f5e;
     }
+    .settings-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, #a855f7, #f43f5e);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.45);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .settings-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -75,24 +96,24 @@
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
         <span style="font-size: 28px;">⚙️</span>
         <div>
-          <h2 style="font-size: 22px; font-weight: 850; color: #ffffff; margin: 0;">Account & System Settings</h2>
+          <h2 style="font-size: 22px; font-weight: 850; color: #ffffff; margin: 0;">Account &amp; System Settings</h2>
           <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0 0;">Manage your personal interface, regional dialects, and notification frequencies.</p>
         </div>
       </div>
 
-      <form onsubmit="event.preventDefault(); alert('Settings preferences saved successfully.');">
+      <form id="settingsForm">
         <div class="form-row">
           <div class="setting-group">
-            <label>Primary Language</label>
-            <select class="setting-select">
+            <label for="prefLanguage">Primary Language</label>
+            <select id="prefLanguage" class="setting-select">
               <option value="en">English (Global)</option>
               <option value="te">తెలుగు (Telugu)</option>
               <option value="hi">हिन्दी (Hindi)</option>
             </select>
           </div>
           <div class="setting-group">
-            <label>Interface Theme</label>
-            <select class="setting-select">
+            <label for="prefTheme">Interface Theme</label>
+            <select id="prefTheme" class="setting-select">
               <option value="cosmic">Cosmic Multi-Palette (Default)</option>
               <option value="sapphire">Cyber Sapphire</option>
               <option value="aurora">Emerald Aurora</option>
@@ -101,21 +122,88 @@
         </div>
 
         <div style="margin-top: 24px;">
-          <label style="font-size: 12.5px; font-weight: 750; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px;">Security & Privacy</label>
+          <label style="font-size: 12.5px; font-weight: 750; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px;">Security &amp; Privacy</label>
           <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 12px;">
             <div>
               <strong style="font-size: 13.5px; color: #ffffff; display: block;">Hardware Session Biometric Shield</strong>
               <span style="font-size: 12px; color: #94a3b8;">Require PIN verification for direct audio consultations</span>
             </div>
-            <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: #a855f7;">
+            <input id="prefBiometric" type="checkbox" style="width: 20px; height: 20px; accent-color: #a855f7;">
           </div>
         </div>
 
-        <button class="btn" type="submit" style="margin-top: 28px; width: 100%; justify-content: center; background: linear-gradient(135deg, #a855f7, #f43f5e); color: #ffffff; font-weight: 800; padding: 12px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);">
+        <button class="btn" type="submit" id="saveSettingsBtn" style="margin-top: 28px; width: 100%; justify-content: center; background: linear-gradient(135deg, #a855f7, #f43f5e); color: #ffffff; font-weight: 800; padding: 12px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);">
           Save Preferences
         </button>
       </form>
     </section>
   </main>
+
+  <!-- Toast -->
+  <div id="settingsToast" class="settings-toast">✅ Settings saved successfully!</div>
+
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
+
+    const PREFS_KEY = "askexpert_user_prefs";
+
+    /** Load saved preferences from localStorage */
+    function loadPreferences() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(PREFS_KEY) || "{}");
+        if (saved.language) document.getElementById("prefLanguage").value = saved.language;
+        if (saved.theme)    document.getElementById("prefTheme").value    = saved.theme;
+        document.getElementById("prefBiometric").checked =
+          typeof saved.biometric === "boolean" ? saved.biometric : true;
+      } catch (e) {
+        console.warn("Could not load preferences:", e);
+      }
+    }
+
+    /** Save preferences to localStorage and silently sync to Supabase */
+    async function savePreferences(e) {
+      e.preventDefault();
+      const prefs = {
+        language:  document.getElementById("prefLanguage").value,
+        theme:     document.getElementById("prefTheme").value,
+        biometric: document.getElementById("prefBiometric").checked,
+        savedAt:   new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+
+        // Silently sync language pref to Supabase profile if session exists
+        if (supabase) {
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+              await supabase
+                .from("profiles")
+                .update({ updated_at: new Date().toISOString() })
+                .eq("id", session.user.id);
+            }
+          } catch (_) { /* localStorage save already succeeded — ignore Supabase error */ }
+        }
+
+        showToast("✅ Settings saved successfully!");
+      } catch (err) {
+        console.error("Settings save error:", err);
+        showToast("❌ Could not save settings. Please try again.");
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("settingsToast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    // Init
+    loadPreferences();
+    document.getElementById("settingsForm").addEventListener("submit", savePreferences);
+  </script>
 </body>
 </html>

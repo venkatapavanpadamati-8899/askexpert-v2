@@ -1028,10 +1028,14 @@
        ======================================================== */
     async function initDashboard() {
       setupLogout();
-      await loadAuthUser();
-      await loadDashboardStats();
-      await loadUserQuestions();
-      await loadVerifiedExpertsSidebar();
+      const isAuthed = await loadAuthUser();
+      if (!isAuthed) return;
+
+      await Promise.all([
+        loadDashboardStats(),
+        loadUserQuestions(),
+        loadVerifiedExpertsSidebar()
+      ]);
       setupSearch();
 
       document.getElementById("btnOpenReportIssue")?.addEventListener("click", openReportIssueModal);
@@ -1049,30 +1053,33 @@
       try {
         const { data: experts, error } = await supabase
           .from("profiles")
-          .select("*")
+          .select("id, full_name, username, headline, specialization, rating, avatar_url, role")
           .eq("role", "expert")
-          .eq("is_verified", true)
           .limit(3);
 
         if (error || !experts || experts.length === 0) {
-          container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No verified experts available</div>`;
+          container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No experts registered yet</div>`;
           return;
         }
 
         container.innerHTML = "";
         experts.forEach(exp => {
-          const name = exp.full_name || "Verified Expert";
+          const name = exp.full_name || exp.username || "Expert Specialist";
           const role = exp.headline || exp.specialization || "Specialist";
-          const rating = exp.rating ? parseFloat(exp.rating).toFixed(1) : "5.0";
-          const avatar = exp.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80";
+          const rating = exp.rating ? parseFloat(exp.rating).toFixed(1) : "–";
+          const initials = name.split(/\s+/).map(p => p[0]).join("").toUpperCase().slice(0, 2) || "EX";
+
+          const avatarHtml = exp.avatar_url
+            ? `<img src="${escapeHTML(exp.avatar_url)}" alt="${escapeHTML(name)}" class="expert-widget-avatar" />`
+            : `<div class="expert-widget-avatar" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#00d9ff,#7952ff);color:#fff;font-weight:700;font-size:12px;border-radius:50%;width:38px;height:38px;flex-shrink:0;">${escapeHTML(initials)}</div>`;
 
           const item = document.createElement("div");
           item.className = "expert-widget-item";
           item.innerHTML = `
-            <img src="${escapeHTML(avatar)}" alt="${escapeHTML(name)}" class="expert-widget-avatar" />
+            ${avatarHtml}
             <div class="expert-widget-info">
               <div class="expert-widget-name">${escapeHTML(name)}</div>
-              <div class="expert-widget-role">${escapeHTML(role)} • ★ ${rating}</div>
+              <div class="expert-widget-role">${escapeHTML(role)}${rating !== "–" ? ` • ★ ${rating}` : ""}</div>
             </div>
             <a href="chat.html?expert=${encodeURIComponent(exp.id)}" class="btn-chat-mini">Chat</a>
           `;
@@ -1080,7 +1087,7 @@
         });
       } catch (err) {
         console.warn("loadVerifiedExpertsSidebar error:", err);
-        container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No verified experts available</div>`;
+        container.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--muted); font-size: 12.5px;">No experts available</div>`;
       }
     }
 
@@ -1092,93 +1099,123 @@
       let userAvatarInitials = "U";
 
       try {
-          const { data: { session } } = await supabase.auth.getSession();
-          const storedUserId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
+        const { data: { session } } = await supabase.auth.getSession();
+        const storedUserId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
 
-          if (session && session.user) {
-            currentUser = session.user;
-            const meta = session.user.user_metadata || {};
-            displayName = meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
-            userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-          } else if (storedUserId) {
-            const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
-            currentUser = { id: storedUserId, email: profile?.email || "user@askexpert.com", user_metadata: profile || {} };
-            displayName = profile?.full_name || profile?.username || (profile?.email ? profile.email.split("@")[0] : "User");
-            userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-          } else if (new URLSearchParams(window.location.search).get("preview") === "true") {
-            displayName = "Aditya Sharma";
-            userAvatarInitials = "AS";
-          } else {
-            // Unauthenticated: redirect to login
-            const currentPath = window.location.pathname.split("/").pop() || "user-dashboard.html";
-            window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
-            return;
-          }
+        if (session && session.user) {
+          currentUser = session.user;
+          const meta = session.user.user_metadata || {};
+          displayName = meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
+          userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+        } else if (storedUserId) {
+          const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
+          currentUser = { id: storedUserId, email: profile?.email || "user@askexpert.com", user_metadata: profile || {} };
+          displayName = profile?.full_name || profile?.username || (profile?.email ? profile.email.split("@")[0] : "User");
+          userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+        } else {
+          // Unauthenticated: redirect to login
+          const currentPath = window.location.pathname.split("/").pop() || "user-dashboard.html";
+          window.location.replace("login.html?redirect=" + encodeURIComponent(currentPath));
+          return false;
+        }
       } catch (err) {
         console.warn("Auth session check:", err);
+        return false;
       }
 
       // Update UI
       document.getElementById("topUserName").textContent = displayName;
       document.getElementById("welcomeUserName").textContent = displayName.split(" ")[0];
       document.getElementById("topUserAvatar").textContent = userAvatarInitials;
+      return true;
     }
 
     /* ========================================================
-       LOAD DASHBOARD METRICS & STATS
+       LOAD DASHBOARD METRICS & STATS (REAL SUPABASE DATA ONLY)
        ======================================================== */
     async function loadDashboardStats() {
       let totalQuestions = 0;
       let totalAnswers = 0;
+      let activeChats = 0;
+      let walletBalance = 0;
 
-      if (supabase) {
+      if (supabase && currentUser?.id) {
         try {
-          const { count: qCount } = await supabase.from("questions").select("*", { count: "exact", head: true });
-          if (qCount !== null) totalQuestions = qCount;
+          // 1. My Questions: Count only current user's questions
+          const { count: qCount } = await supabase
+            .from("questions")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", currentUser.id);
+          if (qCount !== null && typeof qCount === "number") totalQuestions = qCount;
 
-          const { count: aCount } = await supabase.from("answers").select("*", { count: "exact", head: true });
-          if (aCount !== null) totalAnswers = aCount;
+          // 2. Answers received on my questions
+          const { data: myQIds } = await supabase
+            .from("questions")
+            .select("id")
+            .eq("user_id", currentUser.id);
+
+          if (myQIds && myQIds.length > 0) {
+            const ids = myQIds.map(q => q.id);
+            const { count: aCount } = await supabase
+              .from("answers")
+              .select("*", { count: "exact", head: true })
+              .in("question_id", ids);
+            if (aCount !== null && typeof aCount === "number") totalAnswers = aCount;
+          }
+
+          // 3. Active consultations / chats
+          const { count: cCount } = await supabase
+            .from("conversations")
+            .select("*", { count: "exact", head: true })
+            .or(`user_id.eq.${currentUser.id},expert_id.eq.${currentUser.id}`)
+            .eq("status", "active");
+          if (cCount !== null && typeof cCount === "number") activeChats = cCount;
+
+          // 4. Wallet balance from successful payments
+          const { data: payments } = await supabase
+            .from("payments")
+            .select("amount, status")
+            .eq("user_id", currentUser.id)
+            .eq("status", "successful");
+          if (payments && payments.length > 0) {
+            walletBalance = payments.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0);
+          }
         } catch (err) {
           console.warn("Stats count error:", err);
         }
       }
 
-      if (totalQuestions === 0) {
-        const local = JSON.parse(localStorage.getItem("askexpert_questions") || "[]");
-        totalQuestions = local.length || 0;
-        totalAnswers = 0;
-      }
-
+      // Display real database counts only — zero fake fallbacks
       document.getElementById("statQuestions").textContent = totalQuestions;
       document.getElementById("statAnswers").textContent = totalAnswers;
+      document.getElementById("statChats").textContent = activeChats;
+      document.getElementById("statWallet").textContent = `₹${walletBalance.toLocaleString()}`;
+      const sideWallet = document.getElementById("sideWalletBalance");
+      if (sideWallet) sideWallet.textContent = `₹${walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
       document.getElementById("navQuestionsCount").textContent = totalQuestions;
     }
 
     /* ========================================================
-       LOAD USER INQUIRIES
+       LOAD USER INQUIRIES (CURRENT USER ONLY — NO UNKNOWN PEOPLE)
        ======================================================== */
     async function loadUserQuestions() {
       const listContainer = document.getElementById("myQuestionsList");
+      if (!listContainer) return;
 
       try {
         let questions = [];
 
-        if (supabase) {
+        if (supabase && currentUser?.id) {
           const { data, error } = await supabase
             .from("questions")
             .select("*")
+            .eq("user_id", currentUser.id)
             .order("created_at", { ascending: false })
             .limit(5);
 
-          if (!error && data && data.length > 0) {
+          if (!error && data) {
             questions = data;
           }
-        }
-
-        if (questions.length === 0) {
-          myQuestions = [];
-          renderQuestionsList([]);
-          return;
         }
 
         myQuestions = questions;
@@ -1186,6 +1223,7 @@
 
       } catch (err) {
         console.error("loadUserQuestions error:", err);
+        renderQuestionsList([]);
       }
     }
 
@@ -1193,7 +1231,7 @@
       const listContainer = document.getElementById("myQuestionsList");
       listContainer.innerHTML = "";
 
-      if (items.length === 0) {
+      if (!items || items.length === 0) {
         listContainer.innerHTML = `
           <div style="text-align: center; padding: 30px; color: var(--muted); font-size: 13.5px;">
             <p>You haven't asked any questions yet.</p>
@@ -1222,7 +1260,7 @@
           </div>
           <div class="q-dashboard-title">${escapeHTML(q.title || "Inquiry")}</div>
           <div class="q-item-footer">
-            <span>✨ ${q.answers_count || 1} Verified Answer(s)</span>
+            <span>✨ ${q.answers_count || 0} Verified Answer(s)</span>
             <span>Asked ${dateStr}</span>
           </div>
         `;

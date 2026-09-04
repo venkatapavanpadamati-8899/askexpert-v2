@@ -1247,9 +1247,9 @@ Specifically, we have international client vendor contracts up for renewal. We n
 
     function renderQuestionUI(q) {
       document.getElementById("qTitle").textContent = q.title || "Question Inquiry";
-      document.getElementById("qDescription").textContent = q.description || q.title || "";
-      document.getElementById("breadcrumbCategory").textContent = q.category || q.profession || "General";
-      document.getElementById("qCategoryBadge").textContent = "⚖️ " + (q.category || q.profession || "General");
+      document.getElementById("qDescription").textContent = q.description || q.body || q.title || "";
+      document.getElementById("breadcrumbCategory").textContent = q.category || (Array.isArray(q.tags) ? q.tags[0] : q.tags) || q.profession || "General";
+      document.getElementById("qCategoryBadge").textContent = "⚖️ " + (q.category || (Array.isArray(q.tags) ? q.tags[0] : q.tags) || q.profession || "General");
       document.getElementById("qLanguageBadge").textContent = "🌐 " + (q.language || "English");
       
       const st = (q.status || "open").toLowerCase();
@@ -1314,7 +1314,7 @@ Specifically, we have international client vendor contracts up for renewal. We n
         };
 
         const timeStr = ans.created_at ? formatTimeAgo(ans.created_at) : "Recently";
-        const cleanContent = escapeHTML(ans.content).replace(/\n/g, "<br>");
+        const cleanContent = escapeHTML(ans.content || ans.body || "").replace(/\n/g, "<br>");
         const mediaHTML = ans.media_url ? `
           <div style="margin: 12px 0;">
             <a href="${escapeHTML(ans.media_url)}" target="_blank" class="attachment-pill" style="display: inline-flex;">
@@ -1484,6 +1484,7 @@ Specifically, we have international client vendor contracts up for renewal. We n
         author_headline: currentUserRole === "expert" ? "Verified Domain Specialist" : "Community Member",
         author_avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
         content: content,
+        body: content,
         media_url: mediaUrl,
         helpful_count: 0
       };

@@ -1,0 +1,332 @@
+{
+  "profiles": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "email",
+      "full_name",
+      "username",
+      "avatar_url",
+      "phone",
+      "role",
+      "headline",
+      "specialization",
+      "bio",
+      "experience_years",
+      "languages",
+      "skills",
+      "category",
+      "location",
+      "consultation_fee",
+      "rating",
+      "reviews_count",
+      "is_verified",
+      "is_blocked",
+      "is_demo",
+      "availability_status",
+      "account_status",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": [
+      "wallet_balance"
+    ]
+  },
+  "professional_verifications": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "expert_id",
+      "council_registration_no",
+      "council_registration_number",
+      "degree_qualification",
+      "id_document_path",
+      "verification_status",
+      "identity_verified",
+      "degree_verified",
+      "council_verified",
+      "rejection_reason",
+      "submitted_at",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": []
+  },
+  "questions": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "user_id",
+      "title",
+      "body",
+      "tags",
+      "status",
+      "answer_count",
+      "moderation_status",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": [
+      "description",
+      "category",
+      "language",
+      "answers_count",
+      "moderation_reason",
+      "moderated_by",
+      "moderated_at"
+    ]
+  },
+  "answers": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "question_id",
+      "expert_id",
+      "is_accepted",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": [
+      "user_id",
+      "author_name",
+      "author_role",
+      "author_avatar",
+      "author_headline",
+      "content",
+      "media_url",
+      "helpful_count"
+    ]
+  },
+  "conversations": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "user_id",
+      "expert_id",
+      "status",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": [
+      "professional_id"
+    ]
+  },
+  "messages": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "conversation_id",
+      "sender_id",
+      "sender_role",
+      "content",
+      "message_type",
+      "media_url",
+      "media_metadata",
+      "status",
+      "created_at"
+    ],
+    "missingCols": [
+      "recipient_id"
+    ]
+  },
+  "consultation_requests": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "question_id",
+      "user_id",
+      "expert_id",
+      "offered_amount",
+      "status",
+      "message",
+      "created_at",
+      "updated_at"
+    ],
+    "missingCols": [
+      "professional_id"
+    ]
+  },
+  "payments": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "user_id",
+      "expert_id",
+      "conversation_id",
+      "amount",
+      "currency",
+      "payment_method",
+      "provider",
+      "provider_payment_id",
+      "status",
+      "description",
+      "created_at"
+    ],
+    "missingCols": []
+  },
+  "payout_requests": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "expert_id",
+      "amount",
+      "status",
+      "payout_reference",
+      "notes",
+      "created_at",
+      "processed_at"
+    ],
+    "missingCols": []
+  },
+  "notifications": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "user_id",
+      "type",
+      "title",
+      "message",
+      "is_read",
+      "created_at"
+    ],
+    "missingCols": [
+      "recipient_id",
+      "related_id"
+    ]
+  },
+  "reports": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "reporter_id",
+      "reported_user_id",
+      "question_id",
+      "reason",
+      "status",
+      "resolution_notes",
+      "created_at",
+      "resolved_at"
+    ],
+    "missingCols": [
+      "message_id",
+      "resolved_by"
+    ]
+  },
+  "consultation_sessions": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "user_id",
+      "expert_id",
+      "status",
+      "created_at"
+    ],
+    "missingCols": [
+      "request_id",
+      "scheduled_start",
+      "scheduled_end",
+      "actual_start",
+      "actual_end",
+      "session_type",
+      "session_rate",
+      "total_amount",
+      "escrow_payment_id",
+      "notes",
+      "updated_at"
+    ]
+  },
+  "reviews": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "session_id",
+      "expert_id",
+      "user_id",
+      "rating",
+      "created_at"
+    ],
+    "missingCols": [
+      "review_text"
+    ]
+  },
+  "session_events": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "session_id",
+      "event_type",
+      "created_at"
+    ],
+    "missingCols": [
+      "actor_id",
+      "payload"
+    ]
+  },
+  "system_health": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "status"
+    ],
+    "missingCols": [
+      "metric_name",
+      "metric_value",
+      "details",
+      "recorded_at"
+    ]
+  },
+  "audit_logs": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "actor_id",
+      "resource_type",
+      "ip_address"
+    ],
+    "missingCols": [
+      "action_type",
+      "target_table",
+      "record_id",
+      "details",
+      "user_agent",
+      "created_at"
+    ]
+  },
+  "system_errors": {
+    "exists": false,
+    "error": "Could not find the table 'public.system_errors' in the schema cache"
+  },
+  "error_fix_proposals": {
+    "exists": false,
+    "error": "Could not find the table 'public.error_fix_proposals' in the schema cache"
+  },
+  "domains": {
+    "exists": true,
+    "existingCols": [
+      "id",
+      "name",
+      "slug",
+      "description",
+      "icon",
+      "color",
+      "created_at"
+    ],
+    "missingCols": []
+  },
+  "issue_reports": {
+    "exists": false,
+    "error": "Could not find the table 'public.issue_reports' in the schema cache"
+  },
+  "ai_fix_proposals": {
+    "exists": false,
+    "error": "Could not find the table 'public.ai_fix_proposals' in the schema cache"
+  },
+  "admin_approvals": {
+    "exists": false,
+    "error": "Could not find the table 'public.admin_approvals' in the schema cache"
+  },
+  "privacy_settings": {
+    "exists": false,
+    "error": "Could not find the table 'public.privacy_settings' in the schema cache"
+  }
+}

@@ -537,7 +537,7 @@
         let targetPassword = password;
 
         // Hidden Admin Login & Smart Role Shortcuts
-        if (targetEmail === "admin" || targetEmail === "admin@askexpert.com" || targetEmail === "admin_audit" || targetEmail === "venkatapavanpadamati1@gmail.com") {
+        if (targetEmail === "admin" || targetEmail === "admin@askexpert.com" || targetEmail === "admin_audit") {
           targetEmail = "admin.audit@askexpert.com";
           if (!targetPassword || targetPassword.toLowerCase().includes("admin") || targetPassword.toLowerCase().includes("123") || targetPassword === "password") {
             targetPassword = "AdminSecurity123!";

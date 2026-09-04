@@ -775,19 +775,20 @@
       }
 
       if (!userId) {
-        userId = localStorage.getItem("askexpert_guest_user_id") || crypto.randomUUID();
-        localStorage.setItem("askexpert_guest_user_id", userId);
+        userId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
       }
 
       let insertedId = "q_" + Date.now();
-      if (supabase) {
+      if (supabase && userId && !userId.startsWith("admin-")) {
         try {
           const insertPayload = {
             user_id: userId,
             title: questionTitle,
+            description: desc,
             body: desc,
-            status: "open",
-            tags: [profession]
+            category: profession || "General",
+            language: lang || "English",
+            status: "open"
           };
           const { data, error } = await supabase.from("questions").insert(insertPayload).select().single();
 

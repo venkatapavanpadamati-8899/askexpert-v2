@@ -1035,10 +1035,12 @@
     async function loadExpertStats() {
       if (!supabase || !currentExpertId || currentExpertId.startsWith("1111")) return;
       try {
+        // answers table has no expert_id column; count answers for questions
+        // answered by this expert using user_id (expert answers as user)
         const { count: ansCount } = await supabase
           .from("answers")
           .select("*", { count: "exact", head: true })
-          .eq("expert_id", currentExpertId);
+          .eq("user_id", currentExpertId);
         const statAnsweredEl = document.getElementById("statAnswered");
         if (statAnsweredEl) statAnsweredEl.textContent = (ansCount || 0).toString();
 
@@ -1081,15 +1083,25 @@
           if (!currentExpertId.startsWith("1111")) {
             const { data: reviews, error } = await supabase
               .from("reviews")
-              .select("*, profiles!reviews_user_id_fkey(full_name)")
+              .select("id, rating, review_text, created_at, user_id")
               .eq("expert_id", currentExpertId)
               .order("created_at", { ascending: false })
               .limit(3);
 
             if (!error && reviews && reviews.length > 0) {
+              // Fetch reviewer names separately to avoid FK hint issues
+              const userIds = reviews.map(r => r.user_id).filter(Boolean);
+              let userNames = {};
+              if (userIds.length > 0) {
+                const { data: reviewers } = await supabase
+                  .from("profiles")
+                  .select("id, full_name")
+                  .in("id", userIds);
+                (reviewers || []).forEach(u => { userNames[u.id] = u.full_name; });
+              }
               feed.innerHTML = "";
               reviews.forEach(r => {
-                const name = (r.profiles && r.profiles.full_name) || "Verified Client";
+                const name = userNames[r.user_id] || "Verified Client";
                 const stars = "★".repeat(Math.min(5, Math.max(1, r.rating || 5)));
                 const card = document.createElement("div");
                 card.style.padding = "10px";
@@ -1232,12 +1244,6 @@
             document.getElementById("topExpertName").textContent = name;
             document.getElementById("welcomeName").textContent = lastName;
             document.getElementById("topAvatarInitial").textContent = initials;
-          } else if (new URLSearchParams(window.location.search).get("preview") === "true") {
-            currentExpertId = "expert_demo_1";
-            document.getElementById("topExpertName").textContent = "Adv. Vikram Rao";
-            document.getElementById("welcomeName").textContent = "Vikram";
-            document.getElementById("topAvatarInitial").textContent = "VR";
-            return;
           } else {
             // Unauthenticated: redirect to login
             const currentPath = window.location.pathname.split("/").pop() || "professional-dashboard.html";

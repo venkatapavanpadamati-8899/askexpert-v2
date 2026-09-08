@@ -661,7 +661,7 @@
             <span>🎓</span>
             <span>Professionals & KYC</span>
           </div>
-          <span class="badge-count" id="badgePendingVerif">37</span>
+          <span class="badge-count" id="badgePendingVerif" style="display: none;">0</span>
         </a>
 
         <a href="admin-questions.html" class="nav-item">
@@ -1360,7 +1360,11 @@
 
         const actualPending = typeof pendingCount === "number" ? pendingCount : 0;
         document.getElementById("valPendingKYC").textContent = actualPending;
-        document.getElementById("badgePendingVerif").textContent = actualPending;
+        const badgeEl = document.getElementById("badgePendingVerif");
+        if (badgeEl) {
+          badgeEl.textContent = actualPending;
+          badgeEl.style.display = actualPending > 0 ? "inline-block" : "none";
+        }
         const heroPendingCountEl = document.getElementById("heroPendingCount");
         if (heroPendingCountEl) heroPendingCountEl.textContent = actualPending;
 

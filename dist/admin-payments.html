@@ -598,8 +598,8 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminPayments-DuROeZ1I.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CAePQGat.js">
+  <script type="module" crossorigin src="/assets/adminPayments-Cy4FSKsj.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
   <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
@@ -640,7 +640,7 @@
             <span>🎓</span>
             <span>Professionals & KYC</span>
           </div>
-          <span class="badge-count">37</span>
+          <span class="badge-count" id="sidebarBadgePending" style="display: none;">0</span>
         </a>
 
         <a href="admin-questions.html" class="nav-item">
@@ -682,8 +682,8 @@
         <span>💳</span> Financial Control Center & Payout Settlements
       </h1>
 
-      <div style="font-size: 12px; color: var(--muted);">
-        Platform Revenue (10% Net): <strong style="color: var(--green);">₹4,82,090.00</strong>
+      <div style="font-size: 12px; color: var(--muted);" id="headerRevenueNet">
+        Platform Revenue (10% Net): <strong style="color: var(--green);">₹0.00</strong>
       </div>
     </header>
 
@@ -738,7 +738,7 @@
           <span>💳</span> Consultation Transactions
         </button>
         <button type="button" class="module-tab-btn" id="tabPayoutRequests">
-          <span>💸</span> Professional Payout Requests (5)
+          <span>💸</span> Professional Payout Requests (0)
         </button>
       </div>
 
@@ -749,9 +749,9 @@
         <div class="filters-card">
           <div class="tabs-group">
             <button type="button" class="tab-btn active" data-filter="all">All Transactions</button>
-            <button type="button" class="tab-btn" data-filter="successful">Successful (3,214)</button>
-            <button type="button" class="tab-btn" data-filter="pending">Pending (18)</button>
-            <button type="button" class="tab-btn" data-filter="refunded">Refunded (12)</button>
+            <button type="button" class="tab-btn" data-filter="successful">Successful (0)</button>
+            <button type="button" class="tab-btn" data-filter="pending">Pending (0)</button>
+            <button type="button" class="tab-btn" data-filter="refunded">Refunded (0)</button>
           </div>
 
           <div class="search-box">
@@ -796,7 +796,7 @@
             <h2 style="font-size: 17px; font-weight: 850; color: var(--white);">
               <span>💸</span> Verified Professional Payout Queue
             </h2>
-            <span style="font-size: 12px; color: var(--gold);">5 Pending Bank Settlements</span>
+            <span id="payoutQueueSub" style="font-size: 12px; color: var(--gold);">0 Pending Bank Settlements</span>
           </div>
 
           <div class="table-wrap">
@@ -894,55 +894,5 @@
   <!-- =======================================================
        SUPABASE ADMIN PAYMENTS SCRIPT
        ======================================================= -->
-</body>
-</html>
-
-    /* ========================================================
-       INIT
-       ======================================================== */
-    async function initAdminPayments() {
-      const isAuth = await verifyAdminAccess();
-      if (!isAuth) return;
-      setupModuleTabs();
-      setupFilters();
-      setupSearch();
-      setupActionHandlers();
-      setupLogout();
-    }
-
-    async function verifyAdminAccess() {
-      try {
-        if (!supabase) {
-          window.location.replace("admin-login.html");
-          return false;
-        }
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError || !session || !session.user) {
-          window.location.replace("admin-login.html");
-          return false;
-        }
-
-        const { data: prof, error: profError } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        if (profError || !prof || prof.role !== "admin") {
-          await supabase.auth.signOut();
-          window.location.replace("admin-login.html");
-          return false;
-        }
-
-        return true;
-      } catch (err) {
-        console.error("Admin verification error:", err);
-        window.location.replace("admin-login.html");
-        return false;
-      }
-    }
-
-
-  </script>
 </body>
 </html>

@@ -711,7 +711,7 @@
             <span>🎓</span>
             <span>Professionals & KYC</span>
           </div>
-          <span class="badge-count" id="badgePendingVerif">37</span>
+          <span class="badge-count" id="badgePendingVerif" style="display: none;">0</span>
         </a>
 
         <a href="admin-questions.html" class="nav-item">
@@ -733,7 +733,7 @@
             <span>🚨</span>
             <span>Disputes & Safety</span>
           </div>
-          <span class="badge-count badge-gold">4</span>
+          <span class="badge-count badge-gold" id="badgeDisputes" style="display: none;">0</span>
         </a>
       </nav>
     </div>
@@ -870,48 +870,14 @@
             <h2 class="panel-title">
               <span>🚨</span> Real-Time Security & Diagnostic Alerts
             </h2>
-            <span class="badge-count badge-gold" id="alertsCountBadge">4 Active</span>
+            <span class="badge-count" id="alertsCountBadge" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">0 Active</span>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 10px;" id="alertsContainer">
-            <!-- Alert 1: Payment Verification Defense -->
-            <div class="alert-item">
-              <div class="alert-icon">🛡️</div>
-              <div class="alert-content">
-                <strong>Anti-Replay Defense Triggered</strong>
-                <p>Duplicate payment verification rejected for provider reference #TXN-948102 (Status 200 Idempotent).</p>
-                <small>14 mins ago • payment-verify</small>
-              </div>
-            </div>
-
-            <!-- Alert 2: Failed Sandbox Attempt -->
-            <div class="alert-item">
-              <div class="alert-icon">⚠️</div>
-              <div class="alert-content">
-                <strong>Signature Validation Mismatch</strong>
-                <p>Client probe with tampered HMAC signature rejected by payment gateway gateway handler.</p>
-                <small>42 mins ago • payment-webhook</small>
-              </div>
-            </div>
-
-            <!-- Alert 3: Storage Access Violation Blocked -->
-            <div class="alert-item">
-              <div class="alert-icon">🔒</div>
-              <div class="alert-content">
-                <strong>KYC Bucket Direct Access Blocked</strong>
-                <p>Unauthenticated GET to /storage/v1/object/public/private-verifications/ denied (HTTP 400).</p>
-                <small>1 hour ago • Supabase Storage</small>
-              </div>
-            </div>
-
-            <!-- Alert 4: Consultation Dispute Escalation -->
-            <div class="alert-item">
-              <div class="alert-icon">⚖️</div>
-              <div class="alert-content">
-                <strong>Consultation Escrow Frozen</strong>
-                <p>Dispute logged on session #ses_8192; expert settlement hold activated pending admin adjudication.</p>
-                <small>2 hours ago • session-dispute</small>
-              </div>
+            <div style="text-align: center; padding: 28px 16px; color: var(--muted); font-size: 13px;">
+              <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+              <strong style="color: var(--green); display: block; margin-bottom: 4px;">Zero Security Violations Active</strong>
+              <span>All infrastructure endpoints, zero-trust policies, and edge gateways operating cleanly with no active threats.</span>
             </div>
           </div>
         </div>
@@ -999,60 +965,7 @@
       { name: "process-refund", desc: "Escrow Refund Reversal Engine", endpoint: "/functions/v1/process-refund", target: "Admin Finance" }
     ];
 
-    const SEED_AUDIT_LOGS = [
-      {
-        id: "aud_9101",
-        timestamp: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
-        actor_role: "client",
-        action: "payment_verified",
-        resource_type: "payment",
-        resource_id: "pay_sandbox_99812",
-        status: "successful",
-        metadata: { order_id: "ord_test_88124", gross_amount: 1200, fee: 99, signature: "sha256_hmac_valid", expert: "Adv. Vikram Rao" }
-      },
-      {
-        id: "aud_9102",
-        timestamp: new Date(Date.now() - 18 * 60 * 1000).toISOString(),
-        actor_role: "gateway",
-        action: "webhook_received",
-        resource_type: "webhook_event",
-        resource_id: "evt_rzp_981249",
-        status: "successful",
-        metadata: { event: "payment.captured", provider_id: "TXN-948102", duplicate: false }
-      },
-      {
-        id: "aud_9103",
-        timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-        actor_role: "client",
-        action: "order_created",
-        resource_type: "order",
-        resource_id: "ord_test_88124",
-        status: "created",
-        metadata: { base_fee: 1200, platform_fee: 99, gst: 233.82, total: 1532.82 }
-      },
-      {
-        id: "aud_9104",
-        timestamp: new Date(Date.now() - 110 * 60 * 1000).toISOString(),
-        actor_role: "admin",
-        action: "refund_processed",
-        resource_type: "refund",
-        resource_id: "ref_882910",
-        status: "completed",
-        metadata: { reason: "Expert missed scheduled slot", amount_refunded: 1532.82, disputed_session: "ses_7129" }
-      },
-      {
-        id: "aud_9105",
-        timestamp: new Date(Date.now() - 190 * 60 * 1000).toISOString(),
-        actor_role: "admin",
-        action: "payout_approved",
-        resource_type: "payout",
-        resource_id: "po_hdfc_4819",
-        status: "settled",
-        metadata: { expert_id: "11111111-1111-1111-1111-111111111111", net_payout: 36500.00, bank_ref: "UTR-HDFC09281" }
-      }
-    ];
-
-    let auditLogsList = [...SEED_AUDIT_LOGS];
+    let auditLogsList = [];
     let autoRefreshTimer = null;
     let isAutoRefresh = true;
 
@@ -1066,10 +979,64 @@
       renderAuditLogsTable();
       setupAuditFilterTabs();
       setupActions();
+      await loadRealTelemetryAuditLogs();
       await runFullDiagnostics();
       startAutoRefresh();
       setupRealtimeSubscriptions();
     });
+
+    async function loadRealTelemetryAuditLogs() {
+      try {
+        const logs = [];
+        const { data: recentPayments } = await supabase
+          .from("payments")
+          .select("id, amount, status, payment_method, created_at, user:user_id(full_name), expert:expert_id(full_name)")
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (recentPayments && recentPayments.length > 0) {
+          recentPayments.forEach(p => {
+            logs.push({
+              id: "pay_" + p.id.slice(0, 8),
+              timestamp: p.created_at,
+              actor_role: "client",
+              action: p.status === "successful" ? "payment_verified" : (p.status === "refunded" ? "refund_processed" : "order_created"),
+              resource_type: "payment",
+              resource_id: "TXN-" + p.id.slice(0, 8).toUpperCase(),
+              status: p.status,
+              metadata: { gross_amount: p.amount, method: p.payment_method, client: p.user?.full_name, expert: p.expert?.full_name }
+            });
+          });
+        }
+
+        const { data: recentReports } = await supabase
+          .from("reports")
+          .select("id, priority, status, report_type, reason, created_at, reporter:reporter_id(full_name)")
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (recentReports && recentReports.length > 0) {
+          recentReports.forEach(r => {
+            logs.push({
+              id: "rep_" + String(r.id).slice(0, 8),
+              timestamp: r.created_at,
+              actor_role: "compliance",
+              action: "dispute_flagged",
+              resource_type: "report",
+              resource_id: "REP-" + String(r.id).slice(0, 8).toUpperCase(),
+              status: r.status,
+              metadata: { type: r.report_type, reason: r.reason, priority: r.priority, reporter: r.reporter?.full_name }
+            });
+          });
+        }
+
+        logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        auditLogsList = logs;
+        renderAuditLogsTable();
+      } catch (e) {
+        console.warn("loadRealTelemetryAuditLogs error:", e);
+      }
+    }
 
     async function verifyAdminAccess() {
       try {
@@ -1217,6 +1184,25 @@
         heroTitle.textContent = "🟡 Supabase Pre-Flight: Edge Functions Ready for Deploy";
       }
 
+      // 5. Update sidebar badges dynamically
+      supabase.from("professional_verifications").select("*", { count: "exact", head: true }).eq("verification_status", "pending")
+        .then(({ count }) => {
+          const pb = document.getElementById("badgePendingVerif");
+          if (pb) {
+            pb.textContent = count || 0;
+            pb.style.display = (count && count > 0) ? "inline-block" : "none";
+          }
+        }).catch(() => {});
+
+      supabase.from("reports").select("*", { count: "exact", head: true }).eq("status", "open")
+        .then(({ count }) => {
+          const db = document.getElementById("badgeDisputes");
+          if (db) {
+            db.textContent = count || 0;
+            db.style.display = (count && count > 0) ? "inline-block" : "none";
+          }
+        }).catch(() => {});
+
       btn.disabled = false;
       btn.innerHTML = `<span>▶</span> Run Full Health Diagnostic`;
       showToast("✓ Infrastructure diagnostic cycle completed!");
@@ -1260,7 +1246,7 @@
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--muted); padding: 24px;">No audit events for this filter.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--muted); padding: 24px;">No system audit events recorded yet. Production telemetry active.</td></tr>`;
         return;
       }
 

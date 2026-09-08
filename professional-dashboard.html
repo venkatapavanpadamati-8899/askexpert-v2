@@ -1212,18 +1212,29 @@
 
           if (session && session.user) {
             currentExpertId = session.user.id;
-            const meta = session.user.user_metadata || {};
+            const { data: profCheck } = await supabase
+              .from("profiles")
+              .select("id, role, is_verified, is_blocked, full_name, username")
+              .eq("id", currentExpertId)
+              .maybeSingle();
 
-            // Role guard
-            if (meta.role === "user") {
+            const userRole = profCheck?.role || session.user.user_metadata?.role || "expert";
+
+            // Role & Verification guard
+            if (userRole === "user") {
               window.location.replace("user-dashboard.html");
               return;
-            } else if (meta.role === "admin") {
+            } else if (userRole === "admin") {
               window.location.replace("admin-dashboard.html");
               return;
             }
 
-            const name = (meta.full_name || "Verified Expert").trim();
+            if (profCheck && (userRole === "expert" || userRole === "professional") && profCheck.is_verified !== true) {
+              window.location.replace("professional-verification.html");
+              return;
+            }
+
+            const name = (profCheck?.full_name || session.user.user_metadata?.full_name || "Verified Expert").trim();
             const nameParts = name.split(/\s+/);
             const firstName = nameParts[0] || name;
             const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : firstName;
@@ -1235,6 +1246,12 @@
           } else if (storedUserId && (storedUserRole === "expert" || storedUserRole === "professional" || storedUserRole === "admin")) {
             currentExpertId = storedUserId;
             const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
+            
+            if (profile && profile.role === "expert" && profile.is_verified !== true) {
+              window.location.replace("professional-verification.html");
+              return;
+            }
+
             const name = profile?.full_name || profile?.username || "Verified Expert";
             const nameParts = name.split(/\s+/);
             const firstName = nameParts[0] || name;

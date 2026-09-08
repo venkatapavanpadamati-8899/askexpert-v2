@@ -14,6 +14,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         login: resolve(__dirname, 'login.html'),
         register: resolve(__dirname, 'register.html'),
+        authCallback: resolve(__dirname, 'auth-callback.html'),
         forgotPassword: resolve(__dirname, 'forgot-password.html'),
         resetPassword: resolve(__dirname, 'reset-password.html'),
         dashboard: resolve(__dirname, 'dashboard.html'),

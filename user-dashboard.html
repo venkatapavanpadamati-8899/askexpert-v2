@@ -1102,13 +1102,35 @@
         const { data: { session } } = await supabase.auth.getSession();
         const storedUserId = sessionStorage.getItem("askexpert_user_id") || localStorage.getItem("askexpert_user_id");
 
+        let activeRole = "user";
         if (session && session.user) {
           currentUser = session.user;
+          const { data: profile } = await supabase.from("profiles").select("id, role, full_name, username, email").eq("id", session.user.id).maybeSingle();
+          activeRole = profile?.role || session.user.user_metadata?.role || "user";
+
+          if (activeRole === "expert" || activeRole === "professional") {
+            window.location.replace("professional-dashboard.html");
+            return false;
+          } else if (activeRole === "admin") {
+            window.location.replace("admin-dashboard.html");
+            return false;
+          }
+
           const meta = session.user.user_metadata || {};
-          displayName = meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
+          displayName = profile?.full_name || meta.full_name || meta.name || session.user.email.split("@")[0] || "User";
           userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
         } else if (storedUserId) {
           const { data: profile } = await supabase.from("profiles").select("*").eq("id", storedUserId).maybeSingle();
+          activeRole = profile?.role || sessionStorage.getItem("askexpert_user_role") || "user";
+
+          if (activeRole === "expert" || activeRole === "professional") {
+            window.location.replace("professional-dashboard.html");
+            return false;
+          } else if (activeRole === "admin") {
+            window.location.replace("admin-dashboard.html");
+            return false;
+          }
+
           currentUser = { id: storedUserId, email: profile?.email || "user@askexpert.com", user_metadata: profile || {} };
           displayName = profile?.full_name || profile?.username || (profile?.email ? profile.email.split("@")[0] : "User");
           userAvatarInitials = displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);

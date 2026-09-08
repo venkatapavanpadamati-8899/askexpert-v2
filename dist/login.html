@@ -71,7 +71,7 @@
       -webkit-backdrop-filter: blur(20px);
       border-radius: 28px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 36px 26px;
+      padding: 34px 26px;
       width: min(440px, 92%);
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
       text-align: center;
@@ -108,7 +108,7 @@
       color: #f1f5f9;
       font-size: 14.5px;
       line-height: 1.45;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       text-align: center;
     }
 
@@ -117,7 +117,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 13px;
     }
 
     .input-wrapper {
@@ -148,7 +148,7 @@
 
     .form-input {
       width: 100%;
-      height: 52px;
+      height: 50px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.22);
       border: 1px solid rgba(255, 255, 255, 0.18);
@@ -185,7 +185,7 @@
     /* Buttons */
     .btn-login-main {
       width: 100%;
-      height: 52px;
+      height: 50px;
       border-radius: 14px;
       background: #0099ff;
       color: #ffffff;
@@ -195,7 +195,7 @@
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(0, 153, 255, 0.35);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      margin-top: 4px;
+      margin-top: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -211,12 +211,74 @@
       cursor: not-allowed;
     }
 
+    /* Divider */
+    .divider-row {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 8px 0 6px;
+      width: 100%;
+    }
+
+    .divider-row::before,
+    .divider-row::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .divider-row span {
+      padding: 0 12px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Google Button */
+    .btn-google {
+      width: 100%;
+      height: 48px;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #1f2937;
+      font-size: 15px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-google:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #f8fafc;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-google:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-google svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
     .btn-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 10px;
       width: 100%;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     .btn-secondary {
@@ -244,10 +306,6 @@
       background: #00c853;
     }
 
-    .btn-ask-orange {
-      background: #ff7300;
-    }
-
     /* Status Message */
     .status-message {
       display: none;
@@ -257,7 +315,7 @@
       font-size: 13px;
       line-height: 1.4;
       text-align: center;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .status-message.show {
@@ -326,8 +384,8 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/login-CYxnGuh-.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-CAePQGat.js">
+  <script type="module" crossorigin src="/assets/login-50buk753.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
 </head>
 
 <body>
@@ -405,15 +463,31 @@
           Login
         </button>
 
-        <!-- Register Button Row (Centered) -->
-        <div class="btn-row" style="display: flex; justify-content: center; width: 100%; margin-top: 8px;">
+        <!-- Divider -->
+        <div class="divider-row">
+          <span>OR</span>
+        </div>
+
+        <!-- Google Login Button -->
+        <button type="button" id="googleLoginButton" class="btn-google">
+          <svg viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <!-- Register Button Row -->
+        <div class="btn-row" style="display: flex; justify-content: center; width: 100%; margin-top: 4px;">
           <button type="button" id="registerButton" class="btn-secondary btn-register-green" style="width: 100%;">
             Register
           </button>
         </div>
 
-        <!-- Forgot Password Link (Highlighted & Centered) -->
-        <div style="text-align: center; width: 100%; margin-top: 16px;">
+        <!-- Forgot Password Link -->
+        <div style="text-align: center; width: 100%; margin-top: 14px;">
           <a href="forgot-password.html" style="color: #00d9ff; font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 10px; background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.3); box-shadow: 0 0 12px rgba(0, 217, 255, 0.15); transition: all 0.2s ease;">
             <span>🔑</span> Forgot Password?
           </a>

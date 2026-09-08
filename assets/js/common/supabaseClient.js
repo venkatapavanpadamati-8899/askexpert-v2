@@ -28,9 +28,11 @@ export const supabase = (SUPABASE_URL && SUPABASE_ANON_KEY)
     })
   : null;
 
-// Also attach to window for legacy inline scripts
+// Also attach to window for legacy inline scripts and global client access
 if (typeof window !== 'undefined') {
   window.askexpertSupabase = supabase;
+  window.askExpertSupabase = supabase;
+  window.supabase = supabase;
 }
 
 export default supabase;

@@ -605,7 +605,7 @@
             <span>🎓</span>
             <span>Professionals & KYC</span>
           </div>
-          <span class="badge-count">37</span>
+          <span class="badge-count" id="sidebarBadgePending" style="display: none;">0</span>
         </a>
 
         <a href="admin-questions.html" class="nav-item active">
@@ -794,6 +794,14 @@
       setupSearch();
       setupModalHandlers();
       setupLogout();
+      supabase.from("professional_verifications").select("*", { count: "exact", head: true }).eq("verification_status", "pending")
+        .then(({ count }) => {
+          const pb = document.getElementById("sidebarBadgePending");
+          if (pb) {
+            pb.textContent = count || 0;
+            pb.style.display = (count && count > 0) ? "inline-block" : "none";
+          }
+        }).catch(() => {});
       await loadQuestionsFromSupabase();
     }
 

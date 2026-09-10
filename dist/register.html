@@ -445,7 +445,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/register-D5t39KA7.js"></script>
+  <script type="module" crossorigin src="/assets/register-BaKYiwdG.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
 </head>
 
@@ -511,8 +511,8 @@
         </button>
 
         <!-- Demo OTP Display Box (For Quick Testing) -->
-        <div id="demoOtpBox" class="demo-otp-box">
-          <span>⚡ Demo OTP: <strong id="demoOtpCode">------</strong></span>
+        <div id="demoOtpBox" class="demo-otp-box" style="display:none;">
+          <span>⚡ Development Demo OTP: <strong id="demoOtpCode"></strong></span>
           <button type="button" id="autoFillOtpButton" class="demo-otp-btn">Auto-fill</button>
         </div>
 
@@ -523,7 +523,7 @@
         <div class="input-wrapper">
           <span class="input-icon">🔑</span>
           <input type="text" id="otp" name="otp" class="form-input" placeholder="Enter OTP" inputmode="numeric"
-            maxlength="6" />
+            maxlength="6" autocomplete="one-time-code" />
         </div>
 
         <!-- Verify OTP Button (Green) -->
@@ -584,7 +584,7 @@
         <!-- Terms Checkbox (Internal Support) -->
         <input type="checkbox" id="terms" checked style="display: none;" />
 
-        <!-- Register Button (Blue) -->
+        <!-- Primary Register Button (Blue) -->
         <button type="submit" id="createButton" class="btn-full btn-blue">
           Register
         </button>
@@ -592,13 +592,10 @@
         <!-- Form Status Message -->
         <div id="formStatus" class="status-box" role="alert" aria-live="polite"></div>
 
-        <!-- Bottom Button Row -->
-        <div class="bottom-button-row">
-          <button type="button" onclick="document.getElementById('fullName').focus();" class="btn-row-item btn-green">
-            Register
-          </button>
-          <a href="login.html" class="btn-row-item btn-blue">
-            Login
+        <!-- Sign In Navigation Link -->
+        <div class="login-nav-row" style="width: 100%; margin-top: 4px; text-align: center;">
+          <a href="login.html" class="btn-full btn-blue" style="text-decoration: none; font-size: 15px; height: 46px;">
+            Sign In
           </a>
         </div>
 

@@ -449,18 +449,6 @@
         let email = emailInput.value.trim().toLowerCase();
         let password = passInput.value;
 
-        if (email === "admin" || email === "admin@askexpert.com" || email === "admin_audit") {
-          email = "admin.audit@askexpert.com";
-          if (!password || password.toLowerCase().includes("admin") || password.toLowerCase().includes("123") || password === "password") {
-            password = "AdminSecurity123!";
-          }
-        } else if (email === "venkatapavanpadamati@gmail.com" || email === "venkatapavanpadamati1@gmail.com") {
-          email = "venkatapavanpadamati1@gmail.com";
-          if (!password || password.toLowerCase().includes("pavan") || password.toLowerCase().includes("123") || password === "password") {
-            password = "Pavan@123";
-          }
-        }
-
         if (!email || !password) {
           showToast("Please provide both admin email and security key.", true);
           return;

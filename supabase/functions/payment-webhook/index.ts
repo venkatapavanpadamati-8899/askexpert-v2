@@ -14,7 +14,21 @@ serve(async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const body = await req.json();
+    const rawBody = await req.text();
+    const webhookSecret = Deno.env.get("RAZORPAY_WEBHOOK_SECRET");
+    const suppliedSignature = req.headers.get("x-razorpay-signature") || "";
+    if (!webhookSecret || !suppliedSignature) {
+      return new Response(JSON.stringify({ error: "Missing webhook signature" }), { status: 401 });
+    }
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(webhookSecret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(rawBody));
+    const expectedSignature = Array.from(new Uint8Array(signature)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    const supplied = new TextEncoder().encode(suppliedSignature);
+    const expected = new TextEncoder().encode(expectedSignature);
+    let mismatch = supplied.length ^ expected.length;
+    for (let index = 0; index < Math.max(supplied.length, expected.length); index++) mismatch |= (supplied[index] || 0) ^ (expected[index] || 0);
+    if (mismatch !== 0) return new Response(JSON.stringify({ error: "Invalid webhook signature" }), { status: 401 });
+    const body = JSON.parse(rawBody);
     const event = body.event || body.type;
     const payload = body.payload || body.data;
 

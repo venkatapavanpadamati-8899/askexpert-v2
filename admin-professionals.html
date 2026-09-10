@@ -729,6 +729,21 @@
         </div>
       </div>
 
+      <!-- Uploaded Verification Documents (Private Storage Signed URLs) -->
+      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>📁</span> Uploaded KYC Documents (Private Storage • 1-Hr Signed URLs)
+          </strong>
+          <span style="font-size: 11px; color: var(--cyan); background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.25); padding: 2px 8px; border-radius: 6px;">
+            🔒 Private Bucket Protected
+          </span>
+        </div>
+        <div id="kycDocsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+          <!-- Dynamically populated document cards -->
+        </div>
+      </div>
+
       <!-- AI Certificate Risk Analysis & Suspicious Element Assessment Box -->
       <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-top: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -976,6 +991,7 @@
             degree_qualification, created_at, rejection_reason,
             ai_score, ai_ocr_text, ai_confidence, verification_attempts,
             manual_verification_requested,
+            id_document_path, degree_document_path, license_document_path,
             expert:expert_id(
               id, full_name, email, phone, specialization,
               experience_years, headline
@@ -1112,6 +1128,9 @@
               data-aiscore="${escapeHTML(aiScore)}"
               data-attempts="${escapeHTML(p.verification_attempts || (isManual ? 2 : 1))}"
               data-manual="${escapeHTML(isManual ? 'true' : 'false')}"
+              data-id-path="${escapeHTML(p.id_document_path || '')}"
+              data-degree-path="${escapeHTML(p.degree_document_path || '')}"
+              data-license-path="${escapeHTML(p.license_document_path || '')}"
             >Review Application</button>
           </td>
         </tr>`;
@@ -1292,6 +1311,12 @@
                   : `"Uploaded official UIDAI Aadhaar verification proof for Expert registration."`);
           }
 
+          // Load Private KYC Document Previews (1-Hour Signed URLs)
+          const idPath = btn.dataset.idPath || "";
+          const degreePath = btn.dataset.degreePath || "";
+          const licensePath = btn.dataset.licensePath || "";
+          loadKycDocumentsPreview({ idPath, degreePath, licensePath });
+
           document.getElementById("reviewModal").classList.add("show");
         });
       });
@@ -1299,6 +1324,94 @@
       document.getElementById("closeReviewModalBtn")?.addEventListener("click", () => {
         document.getElementById("reviewModal").classList.remove("show");
       });
+    }
+
+    /* ========================================================
+       LOAD PRIVATE KYC DOCUMENT PREVIEWS VIA SIGNED URLS
+       ======================================================== */
+    async function loadKycDocumentsPreview({ idPath, degreePath, licensePath }) {
+      const container = document.getElementById("kycDocsList");
+      if (!container) return;
+      container.innerHTML = `<div style="grid-column: 1 / -1; padding: 12px; color: var(--cyan); font-size: 11.5px; text-align: center;">⏳ Generating secure 1-hour signed URLs from private storage...</div>`;
+
+      const docDefs = [
+        { label: "Government ID / Aadhaar", path: idPath, icon: "🪪" },
+        { label: "Degree Certificate", path: degreePath, icon: "🎓" },
+        { label: "Professional License", path: licensePath, icon: "📜" }
+      ];
+
+      const cardsHtml = await Promise.all(docDefs.map(async doc => {
+        if (!doc.path) {
+          return `
+            <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.12); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span style="font-size: 11.5px; font-weight: 700; color: var(--muted); display: flex; align-items: center; gap: 5px;">
+                  ${doc.icon} ${escapeHTML(doc.label)}
+                </span>
+                <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 6px;">⚠️ Document not provided</span>
+              </div>
+              <span style="margin-top: 10px; font-size: 10px; color: #64748b; font-style: italic;">No file path in application</span>
+            </div>
+          `;
+        }
+
+        try {
+          const { data, error } = await supabase.storage
+            .from("kyc-documents")
+            .createSignedUrl(doc.path, 3600);
+
+          if (error || !data?.signedUrl) {
+            throw error || new Error("Failed to create signed URL");
+          }
+
+          const signedUrl = data.signedUrl;
+          const isPdf = doc.path.toLowerCase().endsWith(".pdf");
+          const filename = doc.path.split("/").pop() || "document";
+
+          return `
+            <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span style="font-size: 11.5px; font-weight: 750; color: var(--white); display: flex; align-items: center; gap: 5px;">
+                  ${doc.icon} ${escapeHTML(doc.label)}
+                </span>
+                <span style="display: block; font-size: 10.5px; color: var(--cyan); font-family: monospace; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHTML(filename)}">
+                  📄 ${escapeHTML(filename)}
+                </span>
+                ${!isPdf ? `
+                  <div style="margin-top: 8px; border-radius: 6px; overflow: hidden; max-height: 90px; background: #000; border: 1px solid rgba(255,255,255,0.08); text-align: center;">
+                    <img src="${signedUrl}" alt="${escapeHTML(doc.label)}" style="max-height: 90px; max-width: 100%; object-fit: contain; cursor: pointer;" onclick="window.open('${signedUrl}', '_blank')" />
+                  </div>
+                ` : `
+                  <div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 11px; color: #cbd5e1; display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 16px;">📑</span> PDF Document
+                  </div>
+                `}
+              </div>
+              <div style="margin-top: 10px; display: flex; gap: 6px;">
+                <a href="${signedUrl}" target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: rgba(0, 217, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none;">
+                  🔍 View
+                </a>
+                <a href="${signedUrl}" download target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--white); padding: 5px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-decoration: none;">
+                  ⬇️ Download
+                </a>
+              </div>
+            </div>
+          `;
+        } catch (err) {
+          console.warn("Failed to sign KYC document:", doc.path, err);
+          return `
+            <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 10px;">
+              <span style="font-size: 11.5px; font-weight: 750; color: #fca5a5; display: flex; align-items: center; gap: 5px;">
+                ${doc.icon} ${escapeHTML(doc.label)}
+              </span>
+              <span style="display: block; font-size: 11px; color: #f87171; margin-top: 6px;">⚠️ Signed URL generation failed</span>
+              <span style="display: block; font-size: 10px; color: #94a3b8; margin-top: 4px; font-family: monospace;">${escapeHTML(err.message || 'Storage policy rejection')}</span>
+            </div>
+          `;
+        }
+      }));
+
+      container.innerHTML = cardsHtml.join("");
     }
 
     /* ========================================================

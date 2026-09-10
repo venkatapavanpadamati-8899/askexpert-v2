@@ -39,7 +39,9 @@ serve(async (req: Request) => {
     }
 
     // 2. Parse Verification Payload
-    const { order_id, payment_id, gateway_signature, transaction_ref } = await req.json();
+    const { order_id, payment_id, gateway_signature, transaction_ref } = await req.json() as {
+      order_id?: string; payment_id?: string; gateway_signature?: string; transaction_ref?: string;
+    };
 
     if (!order_id && !payment_id) {
       return new Response(JSON.stringify({ error: "Missing order_id or payment_id" }), {
@@ -65,6 +67,12 @@ serve(async (req: Request) => {
       });
     }
 
+    if (paymentRecord.user_id !== user.id || paymentRecord.provider !== "razorpay") {
+      return new Response(JSON.stringify({ error: "Payment does not belong to this account" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Guard against Replay / Double-Credit Attacks
     if (paymentRecord.status === "successful") {
       return new Response(
@@ -80,9 +88,23 @@ serve(async (req: Request) => {
       );
     }
 
-    // 4. Server-Side Signature / Gateway Verification
-    // (In production, verify HMAC SHA256 of order_id + "|" + transaction_ref with GATEWAY_SECRET)
-    const isSignatureValid = true; // Verified cryptographically by Gateway Engine
+    // 4. Server-side Razorpay callback signature verification.
+    const gatewaySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
+    if (!gatewaySecret || !order_id || !transaction_ref || !gateway_signature || order_id !== paymentRecord.provider_payment_id) {
+      return new Response(JSON.stringify({ error: "Incomplete or invalid gateway verification data" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(gatewaySecret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${order_id}|${transaction_ref}`));
+    const expectedSignature = Array.from(new Uint8Array(signature)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    const supplied = new TextEncoder().encode(gateway_signature);
+    const expected = new TextEncoder().encode(expectedSignature);
+    let mismatch = supplied.length ^ expected.length;
+    for (let index = 0; index < Math.max(supplied.length, expected.length); index++) {
+      mismatch |= (supplied[index] || 0) ^ (expected[index] || 0);
+    }
+    const isSignatureValid = mismatch === 0;
 
     if (!isSignatureValid) {
       await supabaseClient

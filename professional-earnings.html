@@ -978,20 +978,34 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = "<span>⏳</span> Submitting Payout Request...";
 
-        const refCode = `PAY-${Date.now()}`;
+        let refCode = `PAY-${Date.now()}`;
+        let newBalance = null;
 
-        // Persist to Supabase public.payout_requests
+        // Persist to Supabase via atomic request_payout RPC (locks profile, reserves/debits balance, records ledger)
         if (supabase && currentExpertId && !currentExpertId.startsWith("1111")) {
           try {
-            await supabase.from("payout_requests").insert({
-              expert_id: currentExpertId,
-              amount: amt,
-              status: "pending",
-              notes: "Requested via professional workspace portal",
-              payout_reference: refCode
+            const { data, error } = await supabase.rpc("request_payout", {
+              p_expert_id: currentExpertId,
+              p_amount: amt,
+              p_notes: "Requested via professional workspace portal"
             });
+
+            if (error || !data?.success) {
+              const errMsg = data?.message || error?.message || "Failed to submit payout request";
+              showToast(`⚠️ ${errMsg}`, true);
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = "<span>💸</span> Confirm & Submit Payout Request";
+              return;
+            }
+
+            refCode = data.payout_reference || refCode;
+            newBalance = data.new_wallet_balance;
           } catch (err) {
-            console.warn("DB payout request warning:", err);
+            console.error("DB payout request error:", err);
+            showToast(`⚠️ ${err.message || "Failed to submit payout request"}`, true);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "<span>💸</span> Confirm & Submit Payout Request";
+            return;
           }
         }
 
@@ -1012,6 +1026,11 @@
             <td><button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="alert('Payout request #${refCode} pending approval')">Advice</button></td>
           `;
           tbody.prepend(tr);
+        }
+
+        if (newBalance !== null) {
+          const availableEl = document.getElementById("availablePayoutAmount");
+          if (availableEl) availableEl.textContent = `₹${parseFloat(newBalance).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
         }
 
         showToast(`✓ Payout request for ₹${amt.toLocaleString("en-IN")} submitted for processing!`);

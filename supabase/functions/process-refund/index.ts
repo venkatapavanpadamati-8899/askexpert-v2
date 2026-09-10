@@ -38,6 +38,13 @@ serve(async (req: Request) => {
       });
     }
 
+    const { data: admin } = await supabaseClient.rpc("is_admin");
+    if (!admin) {
+      return new Response(JSON.stringify({ error: "Administrator access required" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { payment_id, refund_amount, reason } = await req.json();
 
     if (!payment_id) {
@@ -61,8 +68,26 @@ serve(async (req: Request) => {
       });
     }
 
-    // Gateway Refund Simulation (In production, execute Razorpay/Cashfree Refund API call)
-    const refundRef = `rfnd_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    if (payment.provider !== "razorpay" || !payment.provider_payment_id) {
+      return new Response(JSON.stringify({ error: "This payment cannot be refunded through the configured provider" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const keyId = Deno.env.get("RAZORPAY_KEY_ID");
+    const keySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
+    if (!keyId || !keySecret) throw new Error("Payment gateway is not configured");
+    const amount = Math.round(Number(refund_amount || payment.amount) * 100);
+    if (!Number.isFinite(amount) || amount <= 0 || amount > Math.round(Number(payment.amount) * 100)) {
+      return new Response(JSON.stringify({ error: "Invalid refund amount" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+    const gatewayResponse = await fetch(`https://api.razorpay.com/v1/payments/${payment.provider_payment_id}/refund`, {
+      method: "POST",
+      headers: { "Authorization": `Basic ${btoa(`${keyId}:${keySecret}`)}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ amount, notes: { reason: reason || "Dispute settlement" } }),
+    });
+    if (!gatewayResponse.ok) throw new Error("Gateway rejected refund");
+    const gatewayRefund = await gatewayResponse.json();
+    const refundRef = gatewayRefund.id;
 
     // Transition Payment to Refunded
     await supabaseClient

@@ -1603,16 +1603,24 @@
        ENCRYPTED CALL MODAL
        ======================================================= -->
   <div class="call-modal" id="callModal">
-    <div class="call-card">
+    <div class="call-card" id="callCard" style="width: min(720px, 95vw); max-width: 100%; transition: all 0.3s ease;">
       <div class="call-avatar" id="callAvatarEl">VR</div>
       <h2 id="callTitle">Adv. Vikram Rao</h2>
-      <div class="call-status" id="callStatus">🔒 Encrypted Voice Call Connecting...</div>
-      <div style="font-size: 10px; color: var(--green); margin-top: 4px;">Phone numbers masked on both sides</div>
+      <div class="call-status" id="callStatus">🔒 Initializing Encrypted Video/Audio Room...</div>
+      <div style="font-size: 10px; color: var(--green); margin-top: 4px;">Hardware Encrypted • Zero Interception</div>
 
-      <div class="call-controls">
-        <button class="call-control" type="button" title="Mute">🔇</button>
-        <button class="call-control" type="button" title="Speaker">🔊</button>
-        <button class="call-control end" type="button" id="endCallButton" title="End Call">📞</button>
+      <!-- Container for Live Daily.co Video Room Iframe -->
+      <div id="videoRoomFrameContainer" style="display: none; width: 100%; height: 420px; border-radius: 12px; overflow: hidden; margin-top: 14px; border: 1px solid rgba(0, 217, 255, 0.35); background: #000;">
+      </div>
+
+      <!-- Call Error / Missing Configuration Notice -->
+      <div id="callErrorNotice" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 12px; margin-top: 14px; font-size: 11.5px; color: #fca5a5; text-align: left;">
+      </div>
+
+      <div class="call-controls" id="callControls" style="margin-top: 16px;">
+        <button class="call-control end" type="button" id="endCallButton" title="Leave & Close Call" style="width: auto; padding: 0 20px; border-radius: 24px; font-size: 13px; font-weight: 750;">
+          📞 Leave Call
+        </button>
       </div>
     </div>
   </div>
@@ -1998,7 +2006,7 @@
         document.querySelectorAll(".message-row").forEach(row => row.remove());
 
         if (msgs && msgs.length > 0) {
-          msgs.forEach(msg => renderMessageRow(msg));
+          for (const msg of msgs) renderMessageRow(await prepareMessageForDisplay(msg));
         } else {
           // Render welcoming verified greeting
           renderInitialGreeting(currentExpert);
@@ -2030,7 +2038,7 @@
           (payload) => {
             const newMsg = payload.new;
             if (!document.getElementById(`msg-${newMsg.id}`)) {
-              renderMessageRow(newMsg);
+              prepareMessageForDisplay(newMsg).then(renderMessageRow);
               scrollToBottom();
             }
           }
@@ -2075,6 +2083,20 @@
     /* ========================================================
        MESSAGE RENDERING
        ======================================================== */
+    async function prepareMessageForDisplay(msg) {
+      // New records store a private object path in media_url. Legacy absolute URLs
+      // are left intact so existing conversations remain readable during rollout.
+      if (!supabase || !msg.media_url || /^https?:\/\//i.test(msg.media_url)) return msg;
+      const { data, error } = await supabase.storage
+        .from("chat-attachments")
+        .createSignedUrl(msg.media_url, 60 * 60);
+      if (error || !data?.signedUrl) {
+        console.warn("Unable to create attachment URL:", error);
+        return { ...msg, media_url: null };
+      }
+      return { ...msg, media_url: data.signedUrl };
+    }
+
     function renderMessageRow(msg) {
       if (document.getElementById(`msg-${msg.id}`)) return;
 
@@ -2238,7 +2260,7 @@
     });
 
     /* ========================================================
-       ATTACHMENTS (SUPABASE STORAGE: chat-media)
+       ATTACHMENTS (SUPABASE STORAGE: chat-attachments)
        ======================================================== */
     attachButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -2344,7 +2366,7 @@
       previewContent.innerHTML = "";
       Object.values(fileInputs).forEach(input => (input.value = ""));
 
-      // 1. Handle File Upload to Supabase Storage ('chat-media')
+      // 1. Handle File Upload to Supabase Storage ('chat-attachments')
       if (fileToSend) {
         await uploadAndSendFile(fileToSend);
       }
@@ -2410,7 +2432,8 @@
 
       const fileExt = file.name.split(".").pop() || "bin";
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const storagePath = `${activeConversationId}/${Date.now()}_${sanitizedName}`;
+      // Private object path: conversation / authenticated sender / filename.
+      const storagePath = `${activeConversationId}/${currentUserId}/${Date.now()}_${sanitizedName}`;
 
       const tempId = "tmp_file_" + Date.now();
       const optimisticUrl = URL.createObjectURL(file);
@@ -2437,9 +2460,9 @@
       if (!supabase) return;
 
       try {
-        // Upload to Supabase Storage bucket 'chat-media'
+        // Upload to the private bucket. Never persist a public URL for chat media.
         const { data: uploadData, error: uploadErr } = await supabase.storage
-          .from("chat-media")
+          .from("chat-attachments")
           .upload(storagePath, file, {
             cacheControl: "3600",
             upsert: false
@@ -2450,10 +2473,10 @@
           return;
         }
 
-        // Get Public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from("chat-media")
-          .getPublicUrl(storagePath);
+        const { data: signed, error: signedUrlError } = await supabase.storage
+          .from("chat-attachments")
+          .createSignedUrl(storagePath, 60 * 60);
+        if (signedUrlError || !signed?.signedUrl) throw signedUrlError || new Error("Could not create attachment URL");
 
         // Insert into 'messages' table
         const { data: insertedMsg, error: insertErr } = await supabase
@@ -2464,11 +2487,13 @@
             sender_role: currentUserRole,
             content: file.name,
             message_type: msgType,
-            media_url: publicUrl,
+            // Store the private object path; participant-only signed URLs are generated on read.
+            media_url: storagePath,
             media_metadata: {
               name: file.name,
               size: file.size,
-              mime: file.type
+              mime: file.type,
+              signed_url: signed.signedUrl
             },
             status: "sent"
           })
@@ -2558,21 +2583,105 @@
     });
 
     /* ========================================================
-       VOICE & VIDEO CALL MODAL
+       VOICE & VIDEO CALL MODAL (DAILY.CO SERVER-SIDE ROOM)
        ======================================================== */
-    document.getElementById("voiceCallButton").addEventListener("click", () => openCall("Encrypted Voice Call"));
-    document.getElementById("videoCallButton").addEventListener("click", () => openCall("Encrypted Video Call"));
+    document.getElementById("voiceCallButton").addEventListener("click", () => openCall("audio"));
+    document.getElementById("videoCallButton").addEventListener("click", () => openCall("video"));
 
-    function openCall(type) {
+    async function openCall(mode) {
+      const isVideo = mode === "video";
+      const callTypeLabel = isVideo ? "Encrypted Video Call" : "Encrypted Voice Call";
+
       callModal.classList.add("show");
-      callTitle.textContent = currentExpert.name;
-      callAvatarEl.textContent = currentExpert.avatar;
-      callStatus.textContent = `${type} connecting with ${currentExpert.name}...`;
+      callTitle.textContent = currentExpert.name || "Consultation Participant";
+      callAvatarEl.textContent = currentExpert.avatar || "AE";
+      callAvatarEl.style.display = "flex";
+
+      const frameContainer = document.getElementById("videoRoomFrameContainer");
+      const errorNotice = document.getElementById("callErrorNotice");
+
+      frameContainer.style.display = "none";
+      frameContainer.innerHTML = "";
+      errorNotice.style.display = "none";
+      errorNotice.innerHTML = "";
+
+      callStatus.textContent = `🔒 Initializing ${callTypeLabel} room...`;
+
+      if (!activeConversationId) {
+        showCallError("No active consultation conversation selected.");
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.functions.invoke("video-room", {
+          body: {
+            conversation_id: activeConversationId,
+            mode: mode
+          }
+        });
+
+        if (error || !data?.success) {
+          const errMsg = data?.error || error?.message || "Failed to initialize video room";
+          showCallError(errMsg, data?.code);
+          return;
+        }
+
+        // Successfully received Daily.co Room URL and secure meeting token
+        callStatus.textContent = `✓ Connected to ${callTypeLabel} (Hardware Encrypted)`;
+        callAvatarEl.style.display = isVideo ? "none" : "flex";
+
+        // Embed Daily.co prebuilt iframe
+        const iframe = document.createElement("iframe");
+        iframe.src = `${data.room_url}?t=${data.token}`;
+        iframe.allow = "camera; microphone; fullscreen; display-capture; autoplay";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        iframe.style.borderRadius = "12px";
+
+        frameContainer.innerHTML = "";
+        frameContainer.appendChild(iframe);
+        frameContainer.style.display = "block";
+
+      } catch (err) {
+        console.error("openCall error:", err);
+        showCallError(err.message || "Failed to establish secure call connection.");
+      }
     }
 
-    document.getElementById("endCallButton").addEventListener("click", () => callModal.classList.remove("show"));
+    function showCallError(msg, code) {
+      callStatus.textContent = "⚠️ Call Initialization Blocked";
+      const errorNotice = document.getElementById("callErrorNotice");
+      if (errorNotice) {
+        errorNotice.style.display = "block";
+        if (code === "PROVIDER_UNCONFIGURED") {
+          errorNotice.innerHTML = `
+            <strong>Video Provider Setup Required:</strong><br>
+            ${escapeHTML(msg)}<br>
+            <span style="font-size: 10.5px; color: #cbd5e1; margin-top: 4px; display: block;">
+              To enable live video/audio calling, configure <code>DAILY_API_KEY</code> in Supabase Dashboard → Edge Functions → Secrets.
+            </span>
+          `;
+        } else {
+          errorNotice.innerHTML = `<strong>Notice:</strong> ${escapeHTML(msg)}`;
+        }
+      }
+    }
+
+    function closeAndTearDownCall() {
+      const frameContainer = document.getElementById("videoRoomFrameContainer");
+      if (frameContainer) {
+        frameContainer.innerHTML = "";
+        frameContainer.style.display = "none";
+      }
+      callModal.classList.remove("show");
+      callAvatarEl.style.display = "flex";
+      callStatus.textContent = "Call Ended";
+    }
+
+    document.getElementById("endCallButton").addEventListener("click", closeAndTearDownCall);
     callModal.addEventListener("click", (e) => {
-      if (e.target === callModal) callModal.classList.remove("show");
+      if (e.target === callModal) closeAndTearDownCall();
     });
 
     /* ========================================================
@@ -2653,6 +2762,9 @@
         const review = document.getElementById("sessionReviewText").value.trim();
         confirmEndSessionBtn.disabled = true;
         confirmEndSessionBtn.textContent = "Finalizing...";
+
+        // Terminate any running video room iframe immediately
+        closeAndTearDownCall();
 
         try {
           // Call Supabase Edge Function session-end

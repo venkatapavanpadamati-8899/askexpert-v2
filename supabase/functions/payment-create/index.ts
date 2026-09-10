@@ -70,8 +70,31 @@ serve(async (req: Request) => {
     const gstAmount = Math.round((baseFee + platformFee) * gstRate * 100) / 100;
     const totalAmount = Math.round((baseFee + platformFee + gstAmount) * 100) / 100;
 
-    // 4. Generate Unique Gateway Order ID
-    const orderId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    // 4. Create a real Razorpay order. No client-created transaction can credit a consultation.
+    const razorpayKeyId = Deno.env.get("RAZORPAY_KEY_ID");
+    const razorpayKeySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
+    if (!razorpayKeyId || !razorpayKeySecret) {
+      return new Response(JSON.stringify({ error: "Payment gateway is not configured" }), {
+        status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const receipt = `askexpert_${crypto.randomUUID()}`;
+    const gatewayResponse = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${btoa(`${razorpayKeyId}:${razorpayKeySecret}`)}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: Math.round(totalAmount * 100), currency: "INR", receipt, notes: { user_id: user.id, expert_id } }),
+    });
+    if (!gatewayResponse.ok) {
+      console.error("Razorpay order creation failed:", await gatewayResponse.text());
+      return new Response(JSON.stringify({ error: "Could not initialize payment gateway" }), {
+        status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const gatewayOrder = await gatewayResponse.json();
+    const orderId = gatewayOrder.id as string;
 
     // 5. Insert Pending Transaction into public.payments Table
     const { data: paymentRecord, error: paymentError } = await supabaseClient
@@ -83,7 +106,7 @@ serve(async (req: Request) => {
         amount: totalAmount,
         currency: "INR",
         payment_method: payment_method,
-        provider: "AskExpert_Gateway_Engine",
+        provider: "razorpay",
         provider_payment_id: orderId,
         status: "pending",
         description: `Encrypted consultation booking with ${expertProfile?.full_name || "Specialist"}`,
@@ -105,6 +128,7 @@ serve(async (req: Request) => {
         success: true,
         order_id: orderId,
         payment_id: paymentRecord.id,
+        razorpay_key_id: razorpayKeyId,
         amount: totalAmount,
         currency: "INR",
         breakdown: {

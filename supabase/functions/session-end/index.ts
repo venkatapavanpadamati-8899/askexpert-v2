@@ -48,102 +48,69 @@ serve(async (req: Request) => {
       });
     }
 
-    // 3. Locate Active Session
-    let query = supabaseClient.from("consultation_sessions").select("*");
-    if (session_id) {
-      query = query.eq("id", session_id);
-    } else {
-      query = query.eq("conversation_id", conversation_id).eq("status", "active").order("created_at", { ascending: false }).limit(1);
+    // 3. Locate Target Session ID
+    let targetSessionId = session_id;
+    if (!targetSessionId && conversation_id) {
+      const { data: convSession, error: convError } = await supabaseClient
+        .from("consultation_sessions")
+        .select("id")
+        .eq("conversation_id", conversation_id)
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (convError || !convSession) {
+        return new Response(JSON.stringify({ error: "Active consultation session not found for conversation" }), {
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      targetSessionId = convSession.id;
     }
 
-    const { data: session, error: fetchError } = await query.maybeSingle();
+    // 4. Call Atomic Settlement RPC
+    // Row-locked (FOR UPDATE), participant-authorized, idempotent, wallet credited once
+    const cleanRating = rating && rating >= 1 && rating <= 5 ? Math.round(Number(rating)) : null;
+    const cleanComment = comment ? String(comment).slice(0, 1000) : null;
 
-    if (fetchError || !session) {
-      return new Response(JSON.stringify({ error: "Active consultation session not found" }), {
-        status: 404,
+    const { data: rpcResult, error: rpcError } = await supabaseClient.rpc("settle_consultation_session", {
+      p_session_id: targetSessionId,
+      p_caller_id: user.id,
+      p_rating: cleanRating,
+      p_comment: cleanComment,
+    });
+
+    if (rpcError) {
+      console.error("Atomic settlement RPC error:", rpcError);
+      return new Response(JSON.stringify({ error: rpcError.message || "Failed to execute atomic settlement" }), {
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // 4. Update Session Status to 'completed' & Record End Timestamp
-    const now = new Date().toISOString();
-    const { error: updateError } = await supabaseClient
-      .from("consultation_sessions")
-      .update({
-        status: "completed",
-        ended_at: now,
-      })
-      .eq("id", session.id);
-
-    if (updateError) {
-      console.error("Session update error:", updateError);
-    }
-
-    // 5. Update Conversation Status to 'closed'
-    if (session.conversation_id) {
-      await supabaseClient
-        .from("conversations")
-        .update({ status: "closed" })
-        .eq("id", session.conversation_id);
-    }
-
-    // 6. Process Client Rating & Review (if provided)
-    if (rating && rating >= 1 && rating <= 5) {
-      await supabaseClient.from("reviews").insert({
-        session_id: session.id,
-        user_id: user.id,
-        expert_id: session.expert_id,
-        rating: Math.min(5, Math.max(1, parseInt(String(rating), 10))),
-        comment: comment || null,
+    if (!rpcResult || !rpcResult.success) {
+      const statusCode = rpcResult?.error === "FORBIDDEN" ? 403 : (rpcResult?.error === "SESSION_NOT_FOUND" ? 404 : 400);
+      return new Response(JSON.stringify({
+        error: rpcResult?.message || "Settlement failed",
+        code: rpcResult?.error || "SETTLEMENT_ERROR"
+      }), {
+        status: statusCode,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
-
-      // Recalculate Expert Rating in public.profiles
-      const { data: expertReviews } = await supabaseClient
-        .from("reviews")
-        .select("rating")
-        .eq("expert_id", session.expert_id);
-
-      if (expertReviews && expertReviews.length > 0) {
-        const avgRating = expertReviews.reduce((sum, r) => sum + r.rating, 0) / expertReviews.length;
-        await supabaseClient
-          .from("profiles")
-          .update({
-            rating: Math.round(avgRating * 100) / 100,
-            reviews_count: expertReviews.length,
-          })
-          .eq("id", session.expert_id);
-      }
     }
-
-    // 7. Log Session Completion Event
-    await supabaseClient.from("session_events").insert({
-      session_id: session.id,
-      event_type: "session_completed",
-      triggered_by: user.id,
-      metadata: {
-        ended_at: now,
-        expert_net_earnings: session.expert_net_earnings,
-        rating: rating || null,
-      },
-    });
-
-    // 8. Emit Completion Notification to Expert
-    await supabaseClient.from("notifications").insert({
-      user_id: session.expert_id,
-      type: "session_completed",
-      title: "✅ Consultation Completed",
-      message: `Your consultation has concluded. Net earnings of ₹${session.expert_net_earnings} have been finalized into your balance.`,
-      related_id: session.conversation_id,
-      is_read: false,
-    });
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Consultation session successfully finalized and earnings settled",
-        session_id: session.id,
-        expert_net_earnings: session.expert_net_earnings,
-        ended_at: now,
+        message: rpcResult.already_settled
+          ? "Consultation session was already finalized"
+          : "Consultation session successfully finalized and wallet credited atomically",
+        session_id: targetSessionId,
+        expert_net_earnings: rpcResult.expert_net_earnings,
+        new_wallet_balance: rpcResult.new_wallet_balance ?? rpcResult.current_wallet_balance,
+        ended_at: rpcResult.ended_at || new Date().toISOString(),
+        already_settled: Boolean(rpcResult.already_settled),
       }),
       {
         status: 200,

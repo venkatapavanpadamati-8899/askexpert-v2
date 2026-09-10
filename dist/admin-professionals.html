@@ -547,7 +547,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminProfessionals-Cjs5pTTY.js"></script>
+  <script type="module" crossorigin src="/assets/adminProfessionals-CfmGiEO5.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
   <link rel="modulepreload" crossorigin href="/assets/aiCertificateVerifier-CcBrbPKY.js">
   <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
@@ -729,6 +729,21 @@
         <div style="grid-column: 1 / -1;">
           <span style="color: var(--muted); display: block; font-size: 11px;">Highest Degree & Institution</span>
           <strong style="color: var(--white);" id="modalDegree">LL.M Corporate Law (NLSIU Bangalore)</strong>
+        </div>
+      </div>
+
+      <!-- Uploaded Verification Documents (Private Storage Signed URLs) -->
+      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>📁</span> Uploaded KYC Documents (Private Storage • 1-Hr Signed URLs)
+          </strong>
+          <span style="font-size: 11px; color: var(--cyan); background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.25); padding: 2px 8px; border-radius: 6px;">
+            🔒 Private Bucket Protected
+          </span>
+        </div>
+        <div id="kycDocsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+          <!-- Dynamically populated document cards -->
         </div>
       </div>
 

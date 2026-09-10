@@ -1079,8 +1079,19 @@
     }
 
     /* ========================================================
-       SERVER-VERIFIED & DIRECT SUPABASE RESILIENT PAYMENT
+       SERVER-VERIFIED RAZORPAY PAYMENT
        ======================================================== */
+    function loadRazorpayCheckout() {
+      if (window.Razorpay) return Promise.resolve();
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("Unable to load the payment gateway"));
+        document.head.appendChild(script);
+      });
+    }
+
     function setupPaymentSimulation() {
       const modal = document.getElementById("checkoutModal");
       const payNowBtn = document.getElementById("payNowBtn");
@@ -1099,7 +1110,6 @@
         successState.style.display = "none";
         failedState.style.display = "none";
 
-        const generatedTxnId = "TXN-" + Math.floor(100000 + Math.random() * 900000);
         let paymentSucceeded = false;
 
         try {
@@ -1110,66 +1120,30 @@
             user = session?.user;
           }
 
-          // 1. Try Supabase Edge Function invoke if online
-          if (supabase && user && activeExpert && activeExpert.id && !activeExpert.id.startsWith("expert_default")) {
-            try {
-              const { data: createData, error: createError } = await supabase.functions.invoke("payment-create", {
-                body: {
-                  expert_id: activeExpert.id,
-                  payment_method: selectedMethod,
-                  consultation_type: "standard"
-                }
-              });
-
-              if (!createError && createData?.success) {
-                const { order_id, payment_id } = createData;
-                await new Promise(r => setTimeout(r, 1000));
-                const { data: verifyData, error: verifyError } = await supabase.functions.invoke("payment-verify", {
-                  body: {
-                    order_id,
-                    payment_id,
-                    gateway_signature: "sig_" + Math.random().toString(36).substring(2),
-                    transaction_ref: generatedTxnId
-                  }
-                });
-                if (!verifyError && verifyData?.success) {
-                  paymentSucceeded = true;
-                }
-              }
-            } catch (edgeErr) {
-              console.warn("Edge function not reachable, using direct database payment ledger:", edgeErr);
-            }
+          if (!supabase || !user || !activeExpert?.id || activeExpert.id.startsWith("expert_default")) {
+            throw new Error("Please sign in and select a verified expert before paying.");
           }
-
-          // 2. Direct Supabase Database Ledger Fallback
-          if (!paymentSucceeded && supabase) {
-            await new Promise(r => setTimeout(r, 1000));
-            const totalAmount = parseFloat(document.getElementById("breakdownTotal").textContent.replace(/[^\d.]/g, "")) || 1279;
-            
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-            const validUserId = (user?.id && isUUID.test(user.id)) ? user.id : null;
-            const validExpertId = (activeExpert?.id && isUUID.test(activeExpert.id)) ? activeExpert.id : null;
-
-            try {
-              await supabase.from("payments").insert({
-                user_id: validUserId,
-                expert_id: validExpertId,
-                amount: totalAmount,
-                currency: "INR",
-                payment_method: selectedMethod,
-                provider: "AskExpert_Secure_Gateway",
-                provider_payment_id: generatedTxnId,
-                status: "successful",
-                description: `Encrypted consultation booking with ${activeExpert.name}`
-              });
-            } catch (dbErr) {
-              console.warn("Direct payment DB record notice:", dbErr);
-            }
-            paymentSucceeded = true;
-          } else if (!paymentSucceeded) {
-            await new Promise(r => setTimeout(r, 1000));
-            paymentSucceeded = true;
-          }
+          const { data: createData, error: createError } = await supabase.functions.invoke("payment-create", {
+            body: { expert_id: activeExpert.id, payment_method: selectedMethod, consultation_type: "standard" }
+          });
+          if (createError || !createData?.success) throw createError || new Error(createData?.error || "Could not start checkout");
+          await loadRazorpayCheckout();
+          const gatewayResult = await new Promise((resolve, reject) => {
+            const checkout = new window.Razorpay({
+              key: createData.razorpay_key_id, amount: Math.round(Number(createData.amount) * 100),
+              currency: createData.currency, name: "AskExpert", description: `Consultation with ${activeExpert.name}`,
+              order_id: createData.order_id, handler: resolve,
+              modal: { ondismiss: () => reject(new Error("Payment was cancelled")) }
+            });
+            checkout.open();
+          });
+          const { data: verifyData, error: verifyError } = await supabase.functions.invoke("payment-verify", {
+            body: { order_id: gatewayResult.razorpay_order_id, payment_id: createData.payment_id,
+              gateway_signature: gatewayResult.razorpay_signature, transaction_ref: gatewayResult.razorpay_payment_id }
+          });
+          if (verifyError || !verifyData?.success) throw verifyError || new Error(verifyData?.error || "Payment verification failed");
+          paymentSucceeded = true;
+          const generatedTxnId = gatewayResult.razorpay_payment_id;
 
           if (paymentSucceeded) {
             document.getElementById("successTxnId").textContent = "#" + generatedTxnId;

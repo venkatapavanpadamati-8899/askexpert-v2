@@ -864,29 +864,25 @@
 
     // Check Auth & Admin Clearance
     async function checkAdminClearance() {
-      const storedRole = sessionStorage.getItem("askexpert_user_role");
       const storedEmail = sessionStorage.getItem("askexpert_user_email");
-
       if (storedEmail) {
         document.getElementById("adminSidebarEmail").textContent = storedEmail;
       }
 
-      if (storedRole !== "admin") {
-        if (supabase) {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session) {
-            window.location.href = "admin-login.html";
-            return;
-          }
-          const { data: profile } = await supabase.from("profiles").select("role").eq("id", session.user.id).single();
-          if (!profile || profile.role !== "admin") {
-            window.location.href = "admin-login.html";
-            return;
-          }
-        } else {
+      if (supabase) {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session?.user) {
           window.location.href = "admin-login.html";
           return;
         }
+        const { data: profile, error: profError } = await supabase.from("profiles").select("role").eq("id", session.user.id).maybeSingle();
+        if (profError || !profile || profile.role !== "admin") {
+          window.location.href = "admin-login.html";
+          return;
+        }
+      } else {
+        window.location.href = "admin-login.html";
+        return;
       }
     }
 

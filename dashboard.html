@@ -36,28 +36,47 @@
 
     async function routeDashboard() {
       try {
-        let role = sessionStorage.getItem("askexpert_user_role");
-        if (!role && supabase) {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            const { data: prof } = await supabase
-              .from("profiles")
-              .select("role")
-              .eq("id", session.user.id)
-              .maybeSingle();
-            if (prof?.role) role = prof.role;
-          }
+        if (!supabase) {
+          window.location.replace("login.html");
+          return;
         }
+
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session?.user) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role, is_verified, account_status, is_blocked")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (prof?.account_status === "suspended" || prof?.account_status === "blocked" || prof?.is_blocked === true) {
+          await supabase.auth.signOut();
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          window.location.replace("login.html");
+          return;
+        }
+
+        const role = prof?.role || "user";
 
         if (role === "admin") {
           window.location.replace("admin-dashboard.html");
         } else if (role === "expert" || role === "professional") {
-          window.location.replace("professional-dashboard.html");
+          if (prof?.is_verified !== true) {
+            window.location.replace("professional-verification.html");
+          } else {
+            window.location.replace("professional-dashboard.html");
+          }
         } else {
           window.location.replace("user-dashboard.html");
         }
       } catch (e) {
-        window.location.replace("user-dashboard.html");
+        window.location.replace("login.html");
       }
     }
 

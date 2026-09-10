@@ -1184,16 +1184,34 @@
         showToast("✓ Pre-submission Check Passed: Document structure & registration syntax validated!");
       }
 
-      // File upload simulation to private storage
+      // Upload all KYC files to the private, owner-namespaced bucket.
       const idFileInput = document.getElementById("vIdFile");
-      let uploadedDocPath = `private-verifications/${currentUserId}/${Date.now()}_id.pdf`;
+      const uploadKycFile = async (file, label) => {
+        if (!supabase || !file || !currentUserId || currentUserId.startsWith("expert_")) return null;
+        const extension = (file.name.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "");
+        const path = `${currentUserId}/${Date.now()}_${label}.${extension}`;
+        const { error } = await supabase.storage.from("kyc-documents").upload(path, file, {
+          cacheControl: "31536000", upsert: false, contentType: file.type
+        });
+        if (error) throw error;
+        return path;
+      };
 
-      if (supabase && idFileInput.files[0]) {
-        try {
-          await supabase.storage.from("chat-media").upload(uploadedDocPath, idFileInput.files[0]);
-        } catch (err) {
-          console.warn("Storage upload warn:", err);
-        }
+      let uploadedDocPath = null;
+      let uploadedDegreePath = null;
+      let uploadedLicensePath = null;
+      try {
+        [uploadedDocPath, uploadedDegreePath, uploadedLicensePath] = await Promise.all([
+          uploadKycFile(idFileInput.files[0], "identity"),
+          uploadKycFile(degreeFile, "degree"),
+          uploadKycFile(licenseFile, "license")
+        ]);
+      } catch (uploadError) {
+        console.error("KYC upload failed:", uploadError);
+        showToast("Could not securely upload your documents. Please try again.");
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
+        return;
       }
 
       const verifRecord = {
@@ -1201,6 +1219,8 @@
         council_registration_no: councilNo,
         degree_qualification: degree,
         id_document_path: uploadedDocPath,
+        degree_document_path: uploadedDegreePath,
+        license_document_path: uploadedLicensePath,
         verification_status: "pending",
         identity_verified: false,
         degree_verified: false,

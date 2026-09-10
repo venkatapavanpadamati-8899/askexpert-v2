@@ -407,6 +407,21 @@
       <h1 class="card-title">Ask Expert</h1>
       <p class="card-subtitle">Ask questions from verified professionals</p>
 
+      <!-- Existing Session Alert Box (Hidden by default, shown only if active session detected) -->
+      <div id="alreadySignedInBox" style="display: none; width: 100%; margin-bottom: 18px; padding: 14px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); text-align: center;">
+        <p style="margin: 0 0 10px 0; color: #93c5fd; font-weight: 600; font-size: 14px;">
+          ✓ You are already signed in.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" id="continueDashboardBtn" class="btn-login-main" style="padding: 10px 16px; font-size: 14px; height: auto;">
+            Continue to Dashboard
+          </button>
+          <button type="button" id="signOutOtherBtn" class="btn-secondary" style="padding: 9px 16px; font-size: 13.5px; height: auto; justify-content: center; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #e2e8f0;">
+            Sign Out and Use Another Account
+          </button>
+        </div>
+      </div>
+
       <form id="loginForm" novalidate onsubmit="return false;">
         <!-- Email Input -->
         <div class="input-wrapper">
@@ -611,24 +626,11 @@
         let targetEmail = rawInput.toLowerCase();
         let targetPassword = password;
 
-        // Hidden Admin Login & Smart Role Shortcuts
-        if (targetEmail === "admin" || targetEmail === "admin@askexpert.com" || targetEmail === "admin_audit") {
-          targetEmail = "admin.audit@askexpert.com";
-          if (!targetPassword || targetPassword.toLowerCase().includes("admin") || targetPassword.toLowerCase().includes("123") || targetPassword === "password") {
-            targetPassword = "AdminSecurity123!";
-          }
-        } else if (targetEmail === "expert" || targetEmail === "expert@askexpert.com" || targetEmail === "expert_audit") {
-          targetEmail = "expert.audit@askexpert.com";
-          if (!targetPassword || targetPassword.toLowerCase().includes("expert") || targetPassword.toLowerCase().includes("123") || targetPassword === "password") {
-            targetPassword = "ExpertSecurity123!";
-          }
-        } else if (targetEmail === "user" || targetEmail === "user@askexpert.com" || targetEmail === "user_audit") {
-          targetEmail = "user.audit@askexpert.com";
-          if (!targetPassword || targetPassword.toLowerCase().includes("user") || targetPassword.toLowerCase().includes("123") || targetPassword === "password") {
-            targetPassword = "UserSecurity123!";
-          }
-        } else if (!targetEmail.includes("@")) {
+        if (!targetEmail.includes("@")) {
           // Resolve custom username to email from profiles table
+          if (!supabase) {
+            throw new Error("Authentication service unavailable. Please check connection.");
+          }
           const { data: profile } = await supabase
             .from("profiles")
             .select("email, role")
@@ -642,77 +644,86 @@
           }
         }
 
-        if (supabase) {
-          // Perform Real Supabase Auth Login
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email: targetEmail,
-            password: targetPassword
-          });
-
-          if (error) {
-            console.error("[Supabase Auth Error]", error);
-
-            // If admin account fallback
-            if (rawInput.toLowerCase().includes("admin") || targetEmail.includes("admin")) {
-              sessionStorage.setItem("askexpert_user_id", "admin-authorized");
-              sessionStorage.setItem("askexpert_user_role", "admin");
-              localStorage.setItem("askexpert_user_role", "admin");
-              showStatus("Admin authorization verified! Redirecting...", "success");
-              setTimeout(function () {
-                window.location.replace("admin-dashboard.html");
-              }, 400);
-              return;
-            }
-
-            if (error.message && error.message.includes("Invalid login credentials")) {
-              throw new Error("Invalid email or password. Please check your credentials.");
-            } else if (error.message && error.message.includes("Email not confirmed")) {
-              throw new Error("Your email address is not yet confirmed. Please check your inbox.");
-            }
-            throw error;
-          }
-
-          // Determine User Role from profiles or user_metadata
-          let userRole = data.user?.user_metadata?.role || "user";
-          if (targetEmail.includes("admin")) {
-            userRole = "admin";
-          } else {
-            const { data: userProfile } = await supabase
-              .from("profiles")
-              .select("role")
-              .eq("id", data.user.id)
-              .maybeSingle();
-
-            if (userProfile?.role) {
-              userRole = userProfile.role;
-            }
-          }
-
-          sessionStorage.setItem("askexpert_user_id", data.user.id);
-          sessionStorage.setItem("askexpert_user_role", userRole);
-          localStorage.setItem("askexpert_user_id", data.user.id);
-          localStorage.setItem("askexpert_user_role", userRole);
-
-          showStatus("Login successful! Redirecting...", "success");
-
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectUrl = urlParams.get("redirect");
-
-          setTimeout(function () {
-            if (redirectUrl) {
-              window.location.replace(redirectUrl);
-            } else if (userRole === "admin") {
-              window.location.replace("admin-dashboard.html");
-            } else if (userRole === "expert" || userRole === "professional") {
-              window.location.replace("professional-dashboard.html");
-            } else {
-              window.location.replace("user-dashboard.html");
-            }
-          }, 400);
-          return;
+        if (!supabase) {
+          throw new Error("Supabase client is not available. Please check connection.");
         }
 
-        throw new Error("Supabase client is not available. Please check connection.");
+        // Perform Real Supabase Auth Login
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: targetEmail,
+          password: targetPassword
+        });
+
+        if (error) {
+          console.error("[Supabase Auth Error]", error);
+
+          if (error.message && error.message.includes("Invalid login credentials")) {
+            throw new Error("Invalid email or password. Please check your credentials.");
+          } else if (error.message && error.message.includes("Email not confirmed")) {
+            throw new Error("Your email address is not yet confirmed. Please check your inbox.");
+          }
+          throw error;
+        }
+
+        if (!data || !data.user) {
+          throw new Error("Authentication failed. No authenticated user returned.");
+        }
+
+        // Retrieve Authoritative Profile Record from Supabase database
+        const { data: userProfile, error: profileError } = await supabase
+          .from("profiles")
+          .select("id, role, is_verified, account_status, is_blocked")
+          .eq("id", data.user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("[Profile Load Error]", profileError);
+        }
+
+        // Account status check (suspended or blocked accounts receive no protected access)
+        if (
+          userProfile?.account_status === "suspended" ||
+          userProfile?.account_status === "blocked" ||
+          userProfile?.is_blocked === true
+        ) {
+          await supabase.auth.signOut();
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          throw new Error("Your account has been suspended or restricted. Please contact support.");
+        }
+
+        // Resolve trusted role strictly from database profile
+        const trustedRole = userProfile?.role || "user";
+
+        // Store session cache for UI continuity (never for privileged authorization)
+        sessionStorage.setItem("askexpert_user_id", data.user.id);
+        sessionStorage.setItem("askexpert_user_role", trustedRole);
+        localStorage.setItem("askexpert_user_id", data.user.id);
+        localStorage.setItem("askexpert_user_role", trustedRole);
+
+        showStatus("Login successful! Redirecting...", "success");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get("redirect");
+
+        setTimeout(function () {
+          // Prevent open redirect vulnerabilities: only allow relative paths
+          if (redirectUrl && !redirectUrl.startsWith("http") && !redirectUrl.startsWith("//") && !redirectUrl.startsWith("\\")) {
+            window.location.replace(redirectUrl);
+          } else if (trustedRole === "admin") {
+            window.location.replace("admin-dashboard.html");
+          } else if (trustedRole === "expert" || trustedRole === "professional") {
+            if (userProfile && userProfile.is_verified !== true) {
+              window.location.replace("professional-verification.html");
+            } else {
+              window.location.replace("professional-dashboard.html");
+            }
+          } else {
+            window.location.replace("user-dashboard.html");
+          }
+        }, 400);
+        return;
 
       } catch (error) {
         console.error("AskExpert Login Error:", error);
@@ -804,6 +815,71 @@
         executeLogin();
       }
     });
+
+    /* ========================================================
+       EXISTING SESSION CHECK (USER-CONTROLLED, NO AUTO-REDIRECT)
+       ======================================================== */
+    async function checkExistingSession() {
+      if (!supabase) return;
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session?.user) {
+          return; // No active session, keep login form fully visible
+        }
+
+        // Validate account status & authoritative role from database
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id, role, full_name, is_verified, account_status, is_blocked")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profile?.account_status === "suspended" || profile?.account_status === "blocked" || profile?.is_blocked === true) {
+          await supabase.auth.signOut();
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          return;
+        }
+
+        const role = profile?.role || "user";
+        let targetDashboard = "user-dashboard.html";
+        if (role === "admin") {
+          targetDashboard = "admin-dashboard.html";
+        } else if (role === "expert" || role === "professional") {
+          targetDashboard = (profile && profile.is_verified === true) ? "professional-dashboard.html" : "professional-verification.html";
+        }
+
+        // Display user-controlled banner giving full control
+        const existingSessionBox = document.getElementById("alreadySignedInBox");
+        if (existingSessionBox) {
+          existingSessionBox.style.display = "block";
+          const continueBtn = document.getElementById("continueDashboardBtn");
+          if (continueBtn) {
+            continueBtn.onclick = function () {
+              window.location.replace(targetDashboard);
+            };
+          }
+          const signOutBtn = document.getElementById("signOutOtherBtn");
+          if (signOutBtn) {
+            signOutBtn.onclick = async function () {
+              signOutBtn.disabled = true;
+              signOutBtn.textContent = "Signing out...";
+              await supabase.auth.signOut();
+              sessionStorage.clear();
+              localStorage.removeItem("askexpert_user_id");
+              localStorage.removeItem("askexpert_user_role");
+              existingSessionBox.style.display = "none";
+              clearStatus();
+            };
+          }
+        }
+      } catch (err) {
+        console.error("Existing session validation error:", err);
+      }
+    }
+
+    checkExistingSession();
   </script>
 
 </body>

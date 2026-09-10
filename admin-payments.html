@@ -1265,12 +1265,11 @@
         if (!pendingRefundData?.id) { showToast("No payment ID found.", true); return; }
 
         try {
-          const { error } = await supabase
-            .from("payments")
-            .update({ status: "refunded", description: `REFUND: ${reason}` })
-            .eq("id", pendingRefundData.id);
-
-          if (error) throw error;
+          // Refunds are executed and recorded only by the server-side gateway function.
+          const { data, error } = await supabase.functions.invoke("process-refund", {
+            body: { payment_id: pendingRefundData.id, refund_amount: Number(String(pendingRefundData.amount).replace(/[^\d.]/g, "")), reason }
+          });
+          if (error || !data?.success) throw error || new Error(data?.error || "Refund was rejected");
 
           document.getElementById("refundModal").classList.remove("show");
           showToast(`✓ Refund executed for ${pendingRefundData.txn} (${pendingRefundData.amount}).`);
@@ -1291,31 +1290,53 @@
           const payoutId = btn.dataset.payout;
           const name     = btn.dataset.name;
           const isApprove = btn.classList.contains("action-approve");
-          const newStatus = isApprove ? "paid" : "rejected";
+          const action   = isApprove ? "approve" : "reject";
+
+          btn.disabled = true;
+          const originalText = btn.textContent;
+          btn.textContent = isApprove ? "Disbursing..." : "Rejecting...";
 
           try {
-            const { error } = await supabase
-              .from("payout_requests")
-              .update({ status: newStatus, processed_at: new Date().toISOString() })
-              .eq("id", payoutId);
+            // Payout disbursals are executed via the secure server-side process-payout function
+            const { data, error } = await supabase.functions.invoke("process-payout", {
+              body: { payout_id: payoutId, action: action }
+            });
 
-            if (error) throw error;
+            if (error || !data?.success) {
+              const errMsg = data?.error || error?.message || "Payout processing failed";
+              throw new Error(errMsg);
+            }
 
-            showToast(isApprove
-              ? `✓ Payout of ${btn.dataset.amount} approved for ${name}!`
-              : `✕ Payout request rejected.`);
+            const finalStatus = data.status || (isApprove ? "paid" : "rejected");
+            const isPaid = finalStatus === "paid";
+            const isProcessing = finalStatus === "processing";
+
+            showToast(isPaid
+              ? `✓ Payout of ${btn.dataset.amount} disbursed for ${name}! (UTR: ${data.utr || data.provider_payout_id || 'Processed'})`
+              : (isProcessing
+                  ? `⏳ Payout queued with provider: ${data.message || 'Processing'}`
+                  : `✕ Payout request rejected and funds restored.`));
 
             const row = document.querySelector(`tr[data-payout-id="${payoutId}"]`);
             if (row) {
               const badge = row.querySelector(".status-badge");
               if (badge) {
-                badge.className  = `status-badge ${isApprove ? "status-successful" : "status-failed"}`;
-                badge.textContent = isApprove ? "✓ Disbursed (Paid)" : "✕ Rejected";
+                badge.className  = `status-badge ${isPaid ? "status-successful" : (isProcessing ? "status-pending" : "status-failed")}`;
+                badge.textContent = isPaid ? "✓ Disbursed (Paid)" : (isProcessing ? "⏳ Processing" : "✕ Rejected");
               }
-              row.querySelectorAll(".btn-action").forEach(b => b.remove());
+              if (!isProcessing) {
+                row.querySelectorAll(".btn-action").forEach(b => b.remove());
+              } else {
+                btn.disabled = false;
+                btn.textContent = originalText;
+              }
             }
+            await loadPayoutsFromSupabase();
+            await loadPaymentMetrics();
           } catch (err) {
-            showToast(`⚠️ Failed: ${err.message}`, true);
+            btn.disabled = false;
+            btn.textContent = originalText;
+            showToast(`⚠️ Payout failed: ${err.message}`, true);
           }
         });
       });

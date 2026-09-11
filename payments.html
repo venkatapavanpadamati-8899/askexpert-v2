@@ -830,8 +830,8 @@
       <!-- 3. Failed State -->
       <div id="modalFailedState" style="display: none;">
         <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 71, 87, 0.2); border: 2px solid var(--red); color: var(--red); display: grid; place-items: center; font-size: 28px; margin: 0 auto 16px;">✕</div>
-        <h3 style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Cancelled or Failed</h3>
-        <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Bank gateway timed out or transaction was cancelled by user. No amount was debited.</p>
+        <h3 id="paymentFailureTitle" style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Not Completed</h3>
+        <p id="paymentFailureMessage" style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">The payment was not completed. You can try again when you are ready.</p>
         <button type="button" id="retryPaymentBtn" class="btn btn-primary" style="justify-content: center; width: 100%;">
           <span>🔄</span> Try Again
         </button>
@@ -876,7 +876,7 @@
     async function initPayments() {
       setupMethodSelectors();
       setupQuickRecharge();
-      setupPaymentSimulation();
+      setupPaymentCheckout();
 
       try {
         await loadAuthUser();
@@ -1092,7 +1092,7 @@
       });
     }
 
-    function setupPaymentSimulation() {
+    function setupPaymentCheckout() {
       const modal = document.getElementById("checkoutModal");
       const payNowBtn = document.getElementById("payNowBtn");
       const openTopupBtn = document.getElementById("openTopupBtn");
@@ -1103,14 +1103,34 @@
       const pendingState = document.getElementById("modalPendingState");
       const successState = document.getElementById("modalSuccessState");
       const failedState = document.getElementById("modalFailedState");
+      const failureTitle = document.getElementById("paymentFailureTitle");
+      const failureMessage = document.getElementById("paymentFailureMessage");
+      let checkoutInProgress = false;
+
+      function showPaymentFailure(error) {
+        const message = String(error?.message || error || "Payment could not be completed.");
+        const cancelled = /cancelled|canceled|dismissed/i.test(message);
+        const verificationPending = /verification|network|timeout|timed out/i.test(message);
+
+        failureTitle.textContent = cancelled ? "Payment Cancelled" : "Payment Needs Attention";
+        failureMessage.textContent = cancelled
+          ? "You cancelled checkout. No booking was confirmed."
+          : verificationPending
+            ? "We could not confirm the payment yet. If money was debited, do not retry immediately—check Payment History or contact support with the Razorpay payment ID."
+            : message;
+        pendingState.style.display = "none";
+        successState.style.display = "none";
+        failedState.style.display = "block";
+      }
 
       payNowBtn.addEventListener("click", async () => {
+        if (checkoutInProgress) return;
+        checkoutInProgress = true;
+        payNowBtn.disabled = true;
         modal.classList.add("open");
         pendingState.style.display = "block";
         successState.style.display = "none";
         failedState.style.display = "none";
-
-        let paymentSucceeded = false;
 
         try {
           // Check session
@@ -1135,6 +1155,9 @@
               order_id: createData.order_id, handler: resolve,
               modal: { ondismiss: () => reject(new Error("Payment was cancelled")) }
             });
+            checkout.on("payment.failed", (response) => {
+              reject(new Error(response?.error?.description || "The payment was declined by the bank or payment provider."));
+            });
             checkout.open();
           });
           const { data: verifyData, error: verifyError } = await supabase.functions.invoke("payment-verify", {
@@ -1142,30 +1165,26 @@
               gateway_signature: gatewayResult.razorpay_signature, transaction_ref: gatewayResult.razorpay_payment_id }
           });
           if (verifyError || !verifyData?.success) throw verifyError || new Error(verifyData?.error || "Payment verification failed");
-          paymentSucceeded = true;
           const generatedTxnId = gatewayResult.razorpay_payment_id;
 
-          if (paymentSucceeded) {
-            document.getElementById("successTxnId").textContent = "#" + generatedTxnId;
-            pendingState.style.display = "none";
-            successState.style.display = "block";
-            showToast("✓ Payment processed and consultation unlocked!");
-            await loadRecentReceipts();
-            await loadWalletBalance();
+          document.getElementById("successTxnId").textContent = "#" + generatedTxnId;
+          pendingState.style.display = "none";
+          successState.style.display = "block";
+          showToast("✓ Payment processed and consultation unlocked!");
+          await loadRecentReceipts();
+          await loadWalletBalance();
 
-            if (startChatBtn && activeExpert.id) {
-              startChatBtn.onclick = () => {
-                window.location.href = `chat.html?expert=${encodeURIComponent(activeExpert.id)}`;
-              };
-            }
-          } else {
-            pendingState.style.display = "none";
-            failedState.style.display = "block";
+          if (startChatBtn && activeExpert.id) {
+            startChatBtn.onclick = () => {
+              window.location.href = `chat.html?expert=${encodeURIComponent(activeExpert.id)}`;
+            };
           }
         } catch (err) {
           console.error("Payment execution error:", err);
-          pendingState.style.display = "none";
-          failedState.style.display = "block";
+          showPaymentFailure(err);
+        } finally {
+          checkoutInProgress = false;
+          payNowBtn.disabled = false;
         }
       });
 
@@ -1180,6 +1199,7 @@
       });
 
       retryBtn.addEventListener("click", () => {
+        failedState.style.display = "none";
         payNowBtn.click();
       });
     }

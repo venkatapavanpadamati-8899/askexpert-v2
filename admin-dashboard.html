@@ -1301,20 +1301,17 @@
     }
 
     /* ========================================================
-       VERIFY ADMIN ACCESS
+       VERIFY ADMIN ACCESS (STRICT ZERO-BYPASS ENFORCEMENT)
        ======================================================== */
     async function verifyAdminAccess() {
-      if (new URLSearchParams(window.location.search).get("preview") === "true") {
-        return true;
-      }
       try {
         if (!supabase) {
-          window.location.replace("login.html");
+          window.location.replace("admin-login.html");
           return false;
         }
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError || !session || !session.user) {
-          window.location.replace("login.html");
+          window.location.replace("admin-login.html");
           return false;
         }
 
@@ -1329,14 +1326,14 @@
           sessionStorage.clear();
           localStorage.removeItem("askexpert_user_id");
           localStorage.removeItem("askexpert_user_role");
-          window.location.replace("login.html");
+          window.location.replace("admin-login.html");
           return false;
         }
 
         return true;
       } catch (err) {
         console.error("Admin verification error:", err);
-        window.location.replace("login.html");
+        window.location.replace("admin-login.html");
         return false;
       }
     }

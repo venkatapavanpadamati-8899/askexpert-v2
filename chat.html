@@ -1770,12 +1770,6 @@
         console.warn("Supabase auth session check:", e);
       }
 
-      if (new URLSearchParams(window.location.search).get("preview") === "true") {
-        currentUserId = "demo_client_preview";
-        currentUserRole = "user";
-        return;
-      }
-
       // No authenticated session — redirect to login
       const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
       window.location.replace(`login.html?redirect=${redirectUrl}`);
@@ -1802,18 +1796,6 @@
       const { data: dbProfile, error: profErr } = await query.limit(1).maybeSingle();
 
       if (profErr || !dbProfile) {
-        if (new URLSearchParams(window.location.search).get("preview") === "true") {
-          return {
-            id: "expert_demo_1",
-            name: "Dr. Elara Vance, MD",
-            role: "Senior Consultant in Clinical Neurology",
-            license: "MED-IN-84920",
-            quals: "MBBS, MD (Neurology), AIIMS",
-            avatar: "EV",
-            rating: "4.9",
-            fee: "₹1,500"
-          };
-        }
         renderInvalidExpertState("Specified recipient was not found or is unavailable.");
         return null;
       }

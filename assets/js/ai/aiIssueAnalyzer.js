@@ -77,6 +77,10 @@ export async function analyzeIssueAndGenerateProposal(report) {
     rollbackInstructions = "Discard diff hunk using git restore.";
   }
 
+  // Rule-based diagnostic relevance score (derived from keyword match depth, not simulated ML)
+  const matchedTokens = (lowerText.match(/\b(chat|message|voice|otp|login|register|auth|payment|refund|payout|question)\b/g) || []).length;
+  const diagnosticScore = Math.min(90, Math.max(40, 40 + (matchedTokens * 12)));
+
   const proposalRecord = {
     report_id: report.id,
     root_cause_analysis: rootCause,
@@ -84,7 +88,7 @@ export async function analyzeIssueAndGenerateProposal(report) {
     affected_files: affectedFiles,
     risk_level: riskLevel,
     rollback_instructions: rollbackInstructions,
-    ai_confidence_score: 96.50,
+    ai_confidence_score: diagnosticScore,
     status: "pending_review"
   };
 

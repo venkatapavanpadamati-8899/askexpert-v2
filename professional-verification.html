@@ -1150,9 +1150,9 @@
     async function submitVerificationForm() {
       const nextBtn = document.getElementById("nextStepBtn");
       nextBtn.disabled = true;
-      nextBtn.innerHTML = "<span>🤖</span> Running AI Certificate Authenticity Check...";
+      nextBtn.innerHTML = "<span>📄</span> Validating Document Format & Registration Syntax...";
 
-      showToast("🤖 Vision AI: Inspecting certificate seals & statutory registration...");
+      showToast("Validating document structure & statutory council format...");
 
       const fullName = document.getElementById("vFullName").value.trim();
       const email = document.getElementById("vEmail").value.trim();
@@ -1167,7 +1167,7 @@
       const degreeFile = document.getElementById("vDegreeFile").files[0];
       const licenseFile = document.getElementById("vLicenseFile").files[0];
 
-      // Run Production-Grade AI Document & Certificate Verification Inspection
+      // Run Statutory Format & Integrity Pre-Check
       const aiCheck = analyzeCertificateAuthenticity({
         profileName: fullName,
         fileName: degreeFile ? degreeFile.name : (licenseFile ? licenseFile.name : degree),
@@ -1179,9 +1179,9 @@
       });
 
       if (aiCheck.riskScore > 50) {
-        showToast("ℹ️ AI Notice: Elevated risk factors identified. Application flagged for priority Admin manual review.");
+        showToast("ℹ️ Notice: Non-standard document format or council syntax. Flagged for Admin manual review.");
       } else {
-        showToast("✓ Pre-submission Check Passed: Document structure & registration syntax validated!");
+        showToast("✓ Pre-submission syntax validated. Proceeding with secure document upload...");
       }
 
       // Upload all KYC files to the private, owner-namespaced bucket.

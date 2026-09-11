@@ -1113,35 +1113,6 @@ Specifically, we have international client vendor contracts up for renewal. We n
        INITIALIZATION
        ======================================================== */
     async function initPage() {
-      if (urlParams.get("preview")) {
-        currentQuestion = {
-          id: "preview-101",
-          title: "Statutory Compliance Renewal & Cross-Border Vendor Agreements",
-          category: "Legal & Regulatory",
-          language: "English",
-          status: "answered",
-          created_at: new Date().toISOString(),
-          author_name: "Aditya Sharma",
-          author_role: "Client Member",
-          content: "We are preparing our corporate statutory compliance filings and international client agreement renewals. Need guidance on IP indemnity and arbitration dispute resolutions under Indian Corporate Law."
-        };
-        renderQuestionUI(currentQuestion);
-        renderAnswersUI([{
-          id: "ans-101",
-          author_name: "Adv. Vikram Rao",
-          profiles: {
-            full_name: "Adv. Vikram Rao",
-            headline: "Senior Corporate Attorney",
-            rating: 4.9
-          },
-          content: "Under Section 134 of the Companies Act, your board report and IP indemnity clauses require standard bilateral indemnification. Ensure the dispute resolution is seated under the Arbitration and Conciliation Act (amended) with an institutional seat in Mumbai or New Delhi.",
-          created_at: new Date().toISOString()
-        }]);
-        const countHeader = document.getElementById("answersCount");
-        if (countHeader) countHeader.textContent = "1";
-        return;
-      }
-
       if (!currentQuestionId) {
         renderNotFound("No question ID provided in the URL.");
         return;

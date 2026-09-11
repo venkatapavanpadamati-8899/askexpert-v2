@@ -794,10 +794,6 @@
       } catch (err) {
         console.warn("Auth session error:", err);
       }
-      if (new URLSearchParams(window.location.search).get("preview") === "true") {
-        currentExpertId = "demo_expert_1";
-        return true;
-      }
       window.location.href = "login.html";
       return false;
     }

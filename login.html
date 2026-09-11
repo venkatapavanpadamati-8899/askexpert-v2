@@ -407,21 +407,6 @@
       <h1 class="card-title">Ask Expert</h1>
       <p class="card-subtitle">Ask questions from verified professionals</p>
 
-      <!-- Existing Session Alert Box (Hidden by default, shown only if active session detected) -->
-      <div id="alreadySignedInBox" style="display: none; width: 100%; margin-bottom: 18px; padding: 14px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); text-align: center;">
-        <p style="margin: 0 0 10px 0; color: #93c5fd; font-weight: 600; font-size: 14px;">
-          ✓ You are already signed in.
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button type="button" id="continueDashboardBtn" class="btn-login-main" style="padding: 10px 16px; font-size: 14px; height: auto;">
-            Continue to Dashboard
-          </button>
-          <button type="button" id="signOutOtherBtn" class="btn-secondary" style="padding: 9px 16px; font-size: 13.5px; height: auto; justify-content: center; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #e2e8f0;">
-            Sign Out and Use Another Account
-          </button>
-        </div>
-      </div>
-
       <form id="loginForm" novalidate onsubmit="return false;">
         <!-- Email Input -->
         <div class="input-wrapper">
@@ -817,7 +802,7 @@
     });
 
     /* ========================================================
-       EXISTING SESSION CHECK (USER-CONTROLLED, NO AUTO-REDIRECT)
+       EXISTING SESSION CHECK (AUTO-REDIRECT AFTER DATABASE VALIDATION)
        ======================================================== */
     async function checkExistingSession() {
       if (!supabase) return;
@@ -850,30 +835,16 @@
           targetDashboard = (profile && profile.is_verified === true) ? "professional-dashboard.html" : "professional-verification.html";
         }
 
-        // Display user-controlled banner giving full control
-        const existingSessionBox = document.getElementById("alreadySignedInBox");
-        if (existingSessionBox) {
-          existingSessionBox.style.display = "block";
-          const continueBtn = document.getElementById("continueDashboardBtn");
-          if (continueBtn) {
-            continueBtn.onclick = function () {
-              window.location.replace(targetDashboard);
-            };
-          }
-          const signOutBtn = document.getElementById("signOutOtherBtn");
-          if (signOutBtn) {
-            signOutBtn.onclick = async function () {
-              signOutBtn.disabled = true;
-              signOutBtn.textContent = "Signing out...";
-              await supabase.auth.signOut();
-              sessionStorage.clear();
-              localStorage.removeItem("askexpert_user_id");
-              localStorage.removeItem("askexpert_user_role");
-              existingSessionBox.style.display = "none";
-              clearStatus();
-            };
-          }
-        }
+        // A valid, active session should never remain on the login page.
+        // The target is determined only from the authoritative database profile.
+        const requestedPath = new URLSearchParams(window.location.search).get("redirect");
+        const safeRequestedPath = requestedPath &&
+          !requestedPath.startsWith("http") &&
+          !requestedPath.startsWith("//") &&
+          !requestedPath.startsWith("\\")
+          ? requestedPath
+          : null;
+        window.location.replace(safeRequestedPath || targetDashboard);
       } catch (err) {
         console.error("Existing session validation error:", err);
       }

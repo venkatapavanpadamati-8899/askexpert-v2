@@ -594,7 +594,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/payments-BWRfSXed.js"></script>
+  <script type="module" crossorigin src="/assets/payments-BPf9IS_n.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
   <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
@@ -832,8 +832,8 @@
       <!-- 3. Failed State -->
       <div id="modalFailedState" style="display: none;">
         <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 71, 87, 0.2); border: 2px solid var(--red); color: var(--red); display: grid; place-items: center; font-size: 28px; margin: 0 auto 16px;">✕</div>
-        <h3 style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Cancelled or Failed</h3>
-        <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Bank gateway timed out or transaction was cancelled by user. No amount was debited.</p>
+        <h3 id="paymentFailureTitle" style="font-size: 20px; font-weight: 900; color: var(--white); margin-bottom: 6px;">Payment Not Completed</h3>
+        <p id="paymentFailureMessage" style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">The payment was not completed. You can try again when you are ready.</p>
         <button type="button" id="retryPaymentBtn" class="btn btn-primary" style="justify-content: center; width: 100%;">
           <span>🔄</span> Try Again
         </button>

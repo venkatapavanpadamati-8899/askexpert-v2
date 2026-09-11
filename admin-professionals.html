@@ -817,7 +817,7 @@
           <span>📩</span> APPLICANT MANUAL APPEAL MESSAGE TO ADMIN
         </strong>
         <p id="modalAppealMessageText" style="font-size: 12.5px; color: var(--white); font-weight: 600; margin-top: 4px;">
-          "My uploaded B.Tech & Bar Council degrees are 100% genuine government verified documents. An upload error occurred, please manually inspect and approve my application."
+          "Please inspect my uploaded documents and let me know if a clearer or replacement file is required."
         </p>
       </div>
 
@@ -1090,8 +1090,8 @@
         const exp     = prof.experience_years ? `${prof.experience_years} Years` : (prof.years_experience ? `${prof.years_experience} Years` : "—");
         const email   = prof.email || "";
         const phone   = prof.phone || "";
-        const ocrText = p.ai_ocr_text || `GOVERNMENT OF INDIA (UIDAI)\nAadhaar Number: ${license}\nName: ${name}\nVerification Integrity: ${p.ai_score || 85}%`;
-        const aiScore = p.ai_score || 85;
+        const ocrText = p.ai_ocr_text || "No OCR text is available. Review the private documents using the signed previews.";
+        const aiScore = Number.isFinite(Number(p.ai_score)) ? Number(p.ai_score) : null;
 
         return `<tr data-status="${escapeHTML(status)}" id="row-${escapeHTML(p.id)}">
           <td>
@@ -1200,7 +1200,7 @@
           const spec = btn.dataset.spec || "Professional Specialist";
           const exp = btn.dataset.exp || "5 Years";
           const degree = btn.dataset.degree || "Certified Aadhaar Proof";
-          const rawOcr = btn.dataset.ocr || `GOVERNMENT OF INDIA (UIDAI)\nAadhaar Number: ${license}\nName: ${name}\nStatus: Verified`;
+          const rawOcr = btn.dataset.ocr || "No OCR text is available. Inspect the private document previews before making a decision.";
           const isManual = btn.dataset.manual === "true";
           const attempts = btn.dataset.attempts || (isManual ? "2" : "1");
 
@@ -1438,33 +1438,16 @@
         // Supabase Database Update: Sets is_verified = true
         if (supabase && activeAppUserId) {
           try {
-            await supabase.from("professional_verifications").update({
-              verification_status: "approved",
-              identity_verified: true,
-              degree_verified: true,
-              council_verified: true
-            }).eq("expert_id", activeAppUserId);
-
-            await supabase.from("profiles").update({
-              role: "expert",
-              is_verified: true,
-              is_blocked: false
-            }).eq("id", activeAppUserId);
-
-            // Record immutable audit trail
-            await supabase.from("audit_logs").insert({
-              action_type: "PROFESSIONAL_VERIFICATION_APPROVED",
-              target_table: "professional_verifications",
-              record_id: activeAppUserId,
-              details: {
-                applicant_name: name,
-                admin_decision: "APPROVED",
-                statutory_checklist: { identity: chkId, degree: chkDeg, council: chkCou },
-                audit_disclaimer: "Manual Admin verification performed on UIDAI Aadhaar proof."
-              }
+            const { error } = await supabase.rpc("admin_review_professional_verification", {
+              p_expert_id: activeAppUserId,
+              p_decision: "APPROVED",
+              p_reason: null
             });
+            if (error) throw error;
           } catch (e) {
             console.warn("DB update warning:", e);
+            showToast("Approval was not saved. Please retry after the secure verification migration is deployed.", true);
+            return;
           }
         }
 
@@ -1503,28 +1486,16 @@
 
         if (supabase && activeAppUserId) {
           try {
-            await supabase.from("professional_verifications").update({
-              verification_status: "rejected",
-              rejection_reason: reason
-            }).eq("expert_id", activeAppUserId);
-
-            await supabase.from("profiles").update({
-              is_verified: false
-            }).eq("id", activeAppUserId);
-
-            // Record immutable audit trail
-            await supabase.from("audit_logs").insert({
-              action_type: "PROFESSIONAL_VERIFICATION_REJECTED",
-              target_table: "professional_verifications",
-              record_id: activeAppUserId,
-              details: {
-                applicant_name: name,
-                rejection_reason: reason,
-                admin_decision: "REJECTED"
-              }
+            const { error } = await supabase.rpc("admin_review_professional_verification", {
+              p_expert_id: activeAppUserId,
+              p_decision: "REJECTED",
+              p_reason: reason
             });
+            if (error) throw error;
           } catch (e) {
             console.warn("DB rejection update warning:", e);
+            showToast("Rejection was not saved. Please retry after the secure verification migration is deployed.", true);
+            return;
           }
         }
 
@@ -1548,10 +1519,17 @@
 
         if (supabase && activeAppUserId) {
           try {
-            await supabase.from("professional_verifications").update({
-              verification_status: "resubmission_requested"
-            }).eq("expert_id", activeAppUserId);
-          } catch (e) {}
+            const { error } = await supabase.rpc("admin_review_professional_verification", {
+              p_expert_id: activeAppUserId,
+              p_decision: "RESUBMISSION_REQUIRED",
+              p_reason: "Administrator requested replacement documents."
+            });
+            if (error) throw error;
+          } catch (e) {
+            console.warn("DB resubmission warning:", e);
+            showToast("Resubmission request was not saved. Please retry after the secure verification migration is deployed.", true);
+            return;
+          }
         }
       });
 

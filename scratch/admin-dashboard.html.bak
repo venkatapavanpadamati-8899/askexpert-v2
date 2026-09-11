@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AskExpert - Administrative Command Center & Governance Dashboard. Monitor platform analytics, verify professional credentials, and moderate live consultations." />
+  <title>AskExpert | Admin Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+
+  <style>
+    /* =========================================================
+       ASKEXPERT - ADMIN COMMAND CENTER (CRIMSON & CYBER CARBON)
+       ========================================================= */
+    :root {
+      --bg-1: #120306;
+      --bg-2: #21050b;
+      --bg-3: #180309;
+      --card-bg: rgba(24, 6, 12, 0.90);
+      --card-inner: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(239, 68, 68, 0.25);
+      --card-hover: rgba(244, 63, 94, 0.5);
+
+      --white: #ffffff;
+      --text: #fff1f2;
+      --muted: #94a3b8;
+      --cyan: #38bdf8;
+      --blue: #60a5fa;
+      --purple: #f43f5e;
+      --green: #10b981;
+      --gold: #fbbf24;
+      --red: #ef4444;
+      --radius: 20px;
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--ae-mesh-crimson);
+      background-attachment: fixed;
+      line-height: 1.6;
+      display: flex;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    /* ========================================================
+       ADMIN SIDEBAR
+       ======================================================== */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      z-index: 90;
+      flex-shrink: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030a16;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: 0 0 20px rgba(121, 82, 255, 0.4);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 850;
+      color: var(--white);
+    }
+
+    .brand-title span {
+      color: var(--cyan);
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--white);
+      background: linear-gradient(90deg, rgba(121, 82, 255, 0.25), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(121, 82, 255, 0.4);
+    }
+
+    .badge-count {
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .badge-gold {
+      background: var(--gold);
+      color: #030a16;
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 750;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 107, 107, 0.18);
+      border-color: rgba(255, 107, 107, 0.4);
+    }
+
+    /* ========================================================
+       MAIN DASHBOARD AREA
+       ======================================================== */
+    .admin-main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(3, 7, 18, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 32px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 8px 16px;
+      width: min(380px, 100%);
+    }
+
+    .search-input {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(121, 82, 255, 0.14);
+      border: 1px solid rgba(121, 82, 255, 0.35);
+      font-size: 12px;
+      font-weight: 750;
+      color: #cdbaff;
+    }
+
+    .admin-avatar-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 12px 4px 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+    }
+
+    .admin-avatar-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #030d1a;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    /* Dashboard Body */
+    .dashboard-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* Verification Alert Hero */
+    .alert-hero-card {
+      background: linear-gradient(135deg, rgba(38, 8, 16, 0.94), rgba(20, 4, 9, 0.96));
+      border: 1.5px solid rgba(239, 68, 68, 0.4);
+      border-radius: var(--radius);
+      padding: 24px 30px;
+      display: grid;
+      grid-template-columns: 1fr 240px auto;
+      align-items: center;
+      gap: 24px;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(239, 68, 68, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 1000px) {
+      .alert-hero-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-art-thumb {
+      width: 100%;
+      height: 110px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(239, 68, 68, 0.45);
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .admin-art-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .alert-hero-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .alert-hero-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(255, 71, 87, 0.2);
+      border: 1px solid var(--red);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 750;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--red), #e84118);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 71, 87, 0.4);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Metric Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(121, 82, 255, 0.35);
+    }
+
+    .metric-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 750;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-val {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    /* Split Activity & Queue */
+    .dashboard-split {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .dashboard-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 850;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-link {
+      font-size: 12.5px;
+      font-weight: 750;
+      color: var(--cyan);
+    }
+
+    .view-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Feed Items */
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .activity-row {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .activity-row:hover {
+      background: rgba(121, 82, 255, 0.08);
+      border-color: rgba(121, 82, 255, 0.3);
+    }
+
+    .activity-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .activity-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .icon-user { background: rgba(0, 136, 255, 0.15); color: var(--cyan); }
+    .icon-expert { background: rgba(121, 82, 255, 0.15); color: var(--purple); }
+    .icon-pay { background: rgba(32, 216, 137, 0.15); color: var(--green); }
+    .icon-report { background: rgba(255, 71, 87, 0.15); color: var(--red); }
+
+    /* Quick Action Nav Grid */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action-btn-card {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .action-btn-card:hover {
+      background: rgba(0, 217, 255, 0.08);
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .action-btn-card strong {
+      font-size: 13px;
+      color: var(--white);
+    }
+
+    .action-btn-card span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      background: #0f1c30;
+      border: 1px solid var(--cyan);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      display: none;
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast-pill.show {
+      display: block;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .alert-hero-card { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 10px 14px;
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .search-box {
+        width: 100%;
+      }
+      .dashboard-body {
+        padding: 16px 12px;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .alert-hero-card {
+        padding: 18px 14px;
+      }
+      .alert-hero-card .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================
+       ADMIN SIDEBAR
+       ======================================================== -->
+  <aside class="admin-sidebar">
+    <div>
+      <div class="brand-wrap">
+        <div class="brand-mark">AE</div>
+        <div class="brand-title">Ask<span>Expert</span></div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="admin-dashboard.html" class="nav-item active">
+          <div class="nav-item-left">
+            <span>📊</span>
+            <span>Command Center</span>
+          </div>
+        </a>
+
+        <a href="admin-health.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>⚡</span>
+            <span>System Health</span>
+          </div>
+          <span class="badge-count" style="background: rgba(32, 216, 137, 0.2); border: 1px solid #20d889; color: #20d889;">LIVE</span>
+        </a>
+
+        <a href="admin-ai-fix-center.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🤖</span>
+            <span>AI Fix Center</span>
+          </div>
+          <span class="badge-count" style="background: rgba(121, 82, 255, 0.2); border: 1px solid #7952ff; color: #7952ff;">AI</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>👥</span>
+            <span>User Accounts</span>
+          </div>
+        </a>
+
+        <a href="admin-professionals.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🎓</span>
+            <span>Professionals & KYC</span>
+          </div>
+          <span class="badge-count" id="badgePendingVerif" style="display: none;">0</span>
+        </a>
+
+        <a href="admin-questions.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>❓</span>
+            <span>Questions Stream</span>
+          </div>
+        </a>
+
+        <a href="admin-payments.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>💳</span>
+            <span>Payments & GMV</span>
+          </div>
+        </a>
+
+        <a href="admin-reports.html" class="nav-item">
+          <div class="nav-item-left">
+            <span>🚨</span>
+            <span>Disputes & Safety</span>
+          </div>
+          <span class="badge-count badge-gold" id="badgeOpenDisputes">0</span>
+        </a>
+
+        <a href="#errorPortalSection" id="navErrorPortal" class="nav-item">
+          <div class="nav-item-left">
+            <span>🤖</span>
+            <span>AI Error & Auto-Fix</span>
+          </div>
+          <span class="badge-count" id="badgeOpenErrors" style="background: var(--red);">0</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button type="button" id="adminLogoutBtn" class="btn-logout">
+        <span>🔒</span>
+        <span>Secure Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================================
+       MAIN DASHBOARD
+       ======================================================== -->
+  <div class="admin-main-wrap">
+    
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" class="search-input" placeholder="Search users, experts, transaction IDs, or reports..." />
+      </div>
+
+      <div class="topbar-right">
+        <div class="admin-status-pill">
+          <span>●</span>
+          <span>Compliance Engine: Active</span>
+        </div>
+
+        <div class="admin-avatar-pill">
+          <div class="admin-avatar-dot">OP</div>
+          <div style="line-height: 1.2;">
+            <strong style="font-size: 12px; color: var(--white); display: block;">Platform Operator</strong>
+            <span style="font-size: 10px; color: var(--cyan);">Super Admin</span>
+          </div>
+        </div>
+
+        <button type="button" id="adminTopbarLogoutBtn" style="padding: 6px 12px; font-size: 12px; border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.1); border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 700;">
+          <span>🔒</span> Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-body">
+
+      <!-- Prominent Pending Verification Hero Banner with 3D Cyber Command Art -->
+      <section class="alert-hero-card">
+        <div class="alert-hero-left">
+          <div class="alert-hero-icon">🛡️</div>
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.18); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 2px 8px; border-radius: 12px; font-size: 10.5px; font-weight: 800; margin-bottom: 6px;">
+              <span>🚨</span> Priority Executive Governance
+            </div>
+            <h2 style="font-size: 18px; font-weight: 850; color: var(--white); margin: 0;">
+              Professional Verification Queue Action
+            </h2>
+            <p style="font-size: 13px; color: #ffb8c4; margin-top: 4px;">
+              <strong id="heroPendingText"><span id="heroPendingCount">0</span> professional applications</strong> with degree certificates & council registrations are waiting for compliance review.
+            </p>
+          </div>
+        </div>
+
+        <div class="admin-art-thumb" aria-hidden="true">
+          <img src="./assets/images/admin_hero_art.jpg" alt="Command Operations Deck" loading="eager">
+          <div style="position: absolute; bottom: 4px; left: 6px; right: 6px; background: rgba(18, 3, 7, 0.88); backdrop-filter: blur(6px); padding: 2px 6px; border-radius: 4px; font-size: 9.5px; color: #fecdd3; display: flex; justify-content: space-between;">
+            <span style="color: #ef4444; font-weight: 700;">● Cyber HQ Live</span>
+            <span id="liveSpikesIndicator">0 Alert Spikes</span>
+          </div>
+        </div>
+
+        <a href="admin-professionals.html" class="btn btn-danger" style="white-space: nowrap;">
+          <span>⚡</span> Review Applications Queue →
+        </a>
+      </section>
+
+      <!-- Metrics Grid (Dynamic from Supabase) -->
+      <section class="metrics-grid">
+        <!-- Users -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Total Users</span>
+            <span>👥</span>
+          </div>
+          <div class="metric-val" id="valTotalUsers">0</div>
+        </div>
+
+        <!-- Experts -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Verified Experts</span>
+            <span>🎓</span>
+          </div>
+          <div class="metric-val" id="valVerifiedExperts">0</div>
+        </div>
+
+        <!-- Pending KYC -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Pending KYC</span>
+            <span>⏳</span>
+          </div>
+          <div class="metric-val" style="color: var(--gold);" id="valPendingKYC">0</div>
+        </div>
+
+        <!-- Questions -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Questions Asked</span>
+            <span>❓</span>
+          </div>
+          <div class="metric-val" id="valTotalQuestions">0</div>
+        </div>
+
+        <!-- Active Chats -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Active Consultations</span>
+            <span>💬</span>
+          </div>
+          <div class="metric-val" id="valActiveChats">0</div>
+        </div>
+
+        <!-- Payouts Pending -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Pending Payouts</span>
+            <span>💰</span>
+          </div>
+          <div class="metric-val" style="color: var(--green);" id="valPendingPayouts">₹0.00</div>
+        </div>
+      </section>
+
+      <!-- Split: Activity Stream + Quick Admin Portals -->
+      <div class="dashboard-split">
+        
+        <!-- Left: Live Activity Feed -->
+        <section class="glass-card">
+          <div class="card-header-row">
+            <h2 class="card-title">
+              <span>⚡</span> Real-Time Audit & Activity Stream
+            </h2>
+            <span style="font-size: 12px; color: var(--green);">● Live Supabase Feed</span>
+          </div>
+
+          <div class="activity-feed" id="activityFeed">
+            <div style="text-align: center; padding: 36px 20px; color: var(--muted); font-size: 13px;">
+              <span>⚡ Loading live activity stream from Supabase...</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Governance Quick Controls -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <section class="glass-card">
+            <h3 class="card-title" style="margin-bottom: 16px;">
+              <span>🗂️</span> Governance Portals
+            </h3>
+
+            <div class="actions-grid">
+              <a href="admin-users.html" class="action-btn-card">
+                <span>👥 Users</span>
+                <strong>Manage Accounts</strong>
+                <span>Inspect profiles & roles</span>
+              </a>
+
+              <a href="admin-professionals.html" class="action-btn-card">
+                <span>🎓 Experts</span>
+                <strong>KYC Review</strong>
+                <span>Approve / Reject degrees</span>
+              </a>
+
+              <a href="admin-questions.html" class="action-btn-card">
+                <span>❓ Questions</span>
+                <strong>Content Stream</strong>
+                <span>Moderate inquiries</span>
+              </a>
+
+              <a href="admin-payments.html" class="action-btn-card">
+                <span>💳 Financials</span>
+                <strong>Settlements</strong>
+                <span>GMV & Payout ledger</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- Security System Card -->
+          <section class="glass-card" style="border-color: rgba(121, 82, 255, 0.3);">
+            <h3 style="font-size: 14px; font-weight: 850; color: var(--white); margin-bottom: 8px;">
+              <span>🔒</span> Security & Cryptographic Audit
+            </h3>
+            <p style="font-size: 12px; color: var(--muted); line-height: 1.5;">
+              All admin actions are recorded in immutable logs. Storage policies strictly isolate private applicant KYC records.
+            </p>
+          </section>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================
+           ADMIN-CONTROLLED AI ERROR DETECTION & AUTO-FIX PORTAL
+           ======================================================== -->
+      <section id="errorPortalSection" class="glass-card" style="margin-top: 30px; border: 1px solid rgba(121, 82, 255, 0.4);">
+        <div class="card-header-row" style="flex-wrap: wrap; gap: 15px;">
+          <div>
+            <h2 class="card-title" style="font-size: 18px; color: var(--white);">
+              <span>🤖</span> Admin-Approved AI Error Detection & Auto-Fix Portal
+            </h2>
+            <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">
+              Continuous application monitoring. <strong style="color: var(--cyan);">AI proposes fixes — Admin explicitly approves before execution.</strong>
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" id="btnTriggerDevTestErr" class="btn btn-secondary" style="font-size: 12px; padding: 8px 14px; background: rgba(121, 82, 255, 0.2); border: 1px solid var(--purple); color: #ffffff; cursor: pointer;">
+              ⚡ Trigger Dev Test Error
+            </button>
+            <button type="button" id="btnRefreshErrors" class="btn btn-secondary" style="font-size: 12px; padding: 8px 14px; cursor: pointer;">
+              🔄 Refresh Log
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Counters -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px;">
+            <span style="font-size: 11px; color: var(--muted); text-transform: uppercase;">Open Errors</span>
+            <div id="statOpenErrCount" style="font-size: 22px; font-weight: 900; color: var(--red); margin-top: 4px;">0</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px;">
+            <span style="font-size: 11px; color: var(--muted); text-transform: uppercase;">Critical / Security</span>
+            <div id="statCriticalErrCount" style="font-size: 22px; font-weight: 900; color: var(--gold); margin-top: 4px;">0</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px;">
+            <span style="font-size: 11px; color: var(--muted); text-transform: uppercase;">Pending AI Proposals</span>
+            <div id="statPendingPropCount" style="font-size: 22px; font-weight: 900; color: var(--purple); margin-top: 4px;">0</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px;">
+            <span style="font-size: 11px; color: var(--muted); text-transform: uppercase;">Fixed & Verified</span>
+            <div id="statFixedErrCount" style="font-size: 22px; font-weight: 900; color: var(--green); margin-top: 4px;">0</div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; align-items: center; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px;">
+          <select id="filterErrStatus" style="background: #091224; color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <option value="ALL">All Statuses</option>
+            <option value="OPEN" selected>OPEN</option>
+            <option value="FIX PROPOSED">FIX PROPOSED</option>
+            <option value="WAITING FOR APPROVAL">WAITING FOR APPROVAL</option>
+            <option value="FIXED">FIXED</option>
+            <option value="REJECTED">REJECTED</option>
+          </select>
+
+          <select id="filterErrCategory" style="background: #091224; color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <option value="ALL">All Categories</option>
+            <option value="USER">USER</option>
+            <option value="EXPERT">EXPERT</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="APPLICATION">APPLICATION</option>
+            <option value="DATABASE">DATABASE</option>
+            <option value="AUTHENTICATION">AUTHENTICATION</option>
+            <option value="PAYMENT">PAYMENT</option>
+            <option value="SECURITY">SECURITY</option>
+            <option value="INFRASTRUCTURE">INFRASTRUCTURE</option>
+          </select>
+
+          <select id="filterErrSeverity" style="background: #091224; color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; font-size: 12px;">
+            <option value="ALL">All Severities</option>
+            <option value="CRITICAL">CRITICAL</option>
+            <option value="HIGH">HIGH</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="LOW">LOW</option>
+          </select>
+        </div>
+
+        <!-- Table -->
+        <div style="overflow-x: auto; margin-top: 15px;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--card-border); color: var(--muted);">
+                <th style="padding: 10px;">ID / Time</th>
+                <th style="padding: 10px;">Category</th>
+                <th style="padding: 10px;">Severity</th>
+                <th style="padding: 10px;">Error Message</th>
+                <th style="padding: 10px;">Affected Page</th>
+                <th style="padding: 10px;">Count</th>
+                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="errorLogTbody">
+              <tr>
+                <td colspan="8" style="padding: 20px; text-align: center; color: var(--muted);">
+                  Loading captured system errors...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- AI PROPOSAL & ADMIN APPROVAL GATE MODAL -->
+  <div id="aiProposalModal" style="position: fixed; inset: 0; background: rgba(2, 5, 14, 0.85); backdrop-filter: blur(16px); z-index: 999; display: none; place-items: center; padding: 20px; overflow-y: auto;">
+    <div style="background: #071126; border: 1px solid var(--purple); border-radius: 20px; max-width: 800px; width: 100%; padding: 24px; box-shadow: 0 0 50px rgba(121, 82, 255, 0.3);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 16px;">
+        <div>
+          <h3 style="font-size: 18px; color: var(--white); display: flex; align-items: center; gap: 8px;">
+            <span>🤖</span> AI Root-Cause Analysis & Fix Proposal
+          </h3>
+          <span style="font-size: 11px; color: var(--cyan);" id="modalErrorIdTag">ERROR ID: ERR_12345</span>
+        </div>
+        <button type="button" id="btnCloseModal" style="background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer;">✕</button>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px; max-height: 65vh; overflow-y: auto; padding-right: 8px;">
+        <!-- Error Details Box -->
+        <div style="background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.3); border-radius: 12px; padding: 14px;">
+          <strong style="color: var(--red); font-size: 12px; display: block; text-transform: uppercase;">Captured Error Payload</strong>
+          <div id="modalErrMessage" style="font-size: 13px; color: var(--white); font-weight: 700; margin-top: 4px;">-</div>
+          <pre id="modalStackTrace" style="background: #020612; color: #a5b4fc; padding: 10px; border-radius: 8px; font-size: 11px; margin-top: 8px; overflow-x: auto; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;">-</pre>
+        </div>
+
+        <!-- Root Cause Analysis -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+          <strong style="color: var(--cyan); font-size: 12px; display: block; text-transform: uppercase;">1. AI Root-Cause Diagnosis</strong>
+          <p id="modalRootCause" style="font-size: 13px; color: var(--text); margin-top: 4px;">-</p>
+        </div>
+
+        <!-- Risk & Affected Files -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+            <strong style="color: var(--muted); font-size: 11px; display: block;">Risk Rating</strong>
+            <span id="modalRiskBadge" style="display: inline-block; margin-top: 4px; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 12px; background: var(--gold); color: #000;">MEDIUM</span>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+            <strong style="color: var(--muted); font-size: 11px; display: block;">Affected Files / DB Objects</strong>
+            <span id="modalAffectedFiles" style="font-size: 12px; color: var(--white); margin-top: 4px; display: block;">-</span>
+          </div>
+        </div>
+
+        <!-- Proposed Code Changes -->
+        <div style="background: rgba(0, 217, 255, 0.05); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 12px; padding: 14px;">
+          <strong style="color: var(--cyan); font-size: 12px; display: block; text-transform: uppercase;">2. Proposed Code / Fix Diff</strong>
+          <pre id="modalCodeChanges" style="background: #020612; color: #38bdf8; padding: 10px; border-radius: 8px; font-size: 11.5px; margin-top: 8px; overflow-x: auto; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;">-</pre>
+        </div>
+
+        <!-- Proposed SQL Changes -->
+        <div id="modalSqlBox" style="background: rgba(121, 82, 255, 0.05); border: 1px solid rgba(121, 82, 255, 0.2); border-radius: 12px; padding: 14px; display: none;">
+          <strong style="color: var(--purple); font-size: 12px; display: block; text-transform: uppercase;">3. Safe Database Migration (SQL)</strong>
+          <pre id="modalSqlChanges" style="background: #020612; color: #c084fc; padding: 10px; border-radius: 8px; font-size: 11.5px; margin-top: 8px; overflow-x: auto; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;">-</pre>
+        </div>
+
+        <!-- Impact & Rollback -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+          <strong style="color: var(--green); font-size: 12px; display: block; text-transform: uppercase;">4. Rollback Strategy & Required Tests</strong>
+          <p id="modalRollback" style="font-size: 12px; color: var(--muted); margin-top: 4px;">-</p>
+        </div>
+      </div>
+
+      <!-- ADMIN APPROVAL GATE BANNER & BUTTONS -->
+      <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+        <div style="background: rgba(255, 183, 3, 0.1); border: 1px solid var(--gold); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px;">
+          <span style="font-size: 11.5px; color: var(--gold); font-weight: 700; display: block;">
+            🛡️ MANDATORY ADMIN APPROVAL GATE: AI MUST NEVER AUTOMATICALLY APPLY FIXES. EXECUTION REQUIRES YOUR EXPLICIT APPROVAL.
+          </span>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" id="btnRejectProposal" class="btn btn-secondary" style="background: rgba(255,71,87,0.15); border: 1px solid var(--red); color: var(--red); padding: 10px 20px; font-weight: 700; cursor: pointer;">
+            ❌ Reject Proposal
+          </button>
+          <button type="button" id="btnApproveExecute" class="btn btn-primary" style="background: linear-gradient(135deg, var(--green), #059669); border: none; color: #ffffff; padding: 10px 24px; font-weight: 800; box-shadow: 0 0 20px rgba(32, 216, 137, 0.4); cursor: pointer;">
+            ✅ Approve & Execute Fix
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastPill" class="toast-pill"></div>
+
+  <!-- =======================================================
+       SUPABASE ADMIN DASHBOARD INTEGRATION SCRIPT
+       ======================================================= -->
+  <script type="module">
+    "use strict";
+    import { supabase } from "./assets/js/common/supabaseClient.js";
+    import { generateAIProposal, executeApprovedFix, rejectFixProposal, triggerControlledTestError } from "./assets/js/admin/adminErrorAgent.js";
+    import { initGlobalErrorTracker } from "./assets/js/common/errorTracker.js";
+
+    let activeProposal = null;
+
+    async function initAdminDashboard() {
+      setupLogout();
+      await verifyAdminAccess();
+      fetchLivePlatformStats();
+      initErrorPortal();
+    }
+
+    /* ========================================================
+       AI ERROR DETECTION & AUTO-FIX PORTAL HANDLERS
+       ======================================================== */
+    async function initErrorPortal() {
+      loadErrorLogs();
+
+      document.getElementById("btnRefreshErrors")?.addEventListener("click", () => {
+        showToast("Refreshing error log...");
+        loadErrorLogs();
+      });
+
+      document.getElementById("btnTriggerDevTestErr")?.addEventListener("click", async () => {
+        try {
+          showToast("⚡ Triggering Dev Test Error...");
+          await triggerControlledTestError();
+          loadErrorLogs();
+        } catch (e) {
+          showToast("Failed to trigger test error: " + e.message);
+        }
+      });
+
+      document.getElementById("filterErrStatus")?.addEventListener("change", loadErrorLogs);
+      document.getElementById("filterErrCategory")?.addEventListener("change", loadErrorLogs);
+      document.getElementById("filterErrSeverity")?.addEventListener("change", loadErrorLogs);
+
+      document.getElementById("btnCloseModal")?.addEventListener("click", closeModal);
+      document.getElementById("btnRejectProposal")?.addEventListener("click", handleRejectProposal);
+      document.getElementById("btnApproveExecute")?.addEventListener("click", handleApproveExecute);
+    }
+
+    async function loadErrorLogs() {
+      if (!supabase) return;
+      const tbody = document.getElementById("errorLogTbody");
+      if (!tbody) return;
+
+      try {
+        const { data: errors, error } = await supabase
+          .from("system_errors")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          // If table doesn't exist yet (404 / PGRST116), show empty state silently
+          const isTableMissing = error.code === 'PGRST116' || error.code === '42P01'
+            || (error.message && (error.message.includes('does not exist') || error.message.includes('404')))
+            || error.status === 404;
+          if (isTableMissing) {
+            tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; color:var(--muted); opacity:0.6;">No system error logs yet.</td></tr>`;
+            ['statOpenErrCount','statCriticalErrCount','statPendingPropCount','statFixedErrCount'].forEach(id => {
+              const el = document.getElementById(id); if (el) el.textContent = '0';
+            });
+            return;
+          }
+          tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; color:var(--red);">Error loading log: ${escapeHTML(error.message)}</td></tr>`;
+          return;
+        }
+
+        const openCount = errors?.filter(e => e.status === "OPEN" || e.status === "INVESTIGATING").length || 0;
+        const criticalCount = errors?.filter(e => e.severity === "CRITICAL" || e.severity === "HIGH").length || 0;
+        const pendingPropCount = errors?.filter(e => e.status === "FIX PROPOSED" || e.status === "WAITING FOR APPROVAL").length || 0;
+        const fixedCount = errors?.filter(e => e.status === "FIXED").length || 0;
+
+        document.getElementById("statOpenErrCount").textContent = openCount;
+        document.getElementById("statCriticalErrCount").textContent = criticalCount;
+        document.getElementById("statPendingPropCount").textContent = pendingPropCount;
+        document.getElementById("statFixedErrCount").textContent = fixedCount;
+
+        // Apply UI Filters
+        const filterStatus = document.getElementById("filterErrStatus")?.value || "ALL";
+        const filterCategory = document.getElementById("filterErrCategory")?.value || "ALL";
+        const filterSeverity = document.getElementById("filterErrSeverity")?.value || "ALL";
+
+        let filtered = errors || [];
+        if (filterStatus !== "ALL") filtered = filtered.filter(e => e.status === filterStatus);
+        if (filterCategory !== "ALL") filtered = filtered.filter(e => e.category === filterCategory);
+        if (filterSeverity !== "ALL") filtered = filtered.filter(e => e.severity === filterSeverity);
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; color:var(--muted);">No matching errors found. System operating normally.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(err => {
+          const timeAgo = new Date(err.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const catBadgeColor = err.category === 'SECURITY' || err.category === 'PAYMENT' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(0, 217, 255, 0.15)';
+          const sevBadgeColor = err.severity === 'CRITICAL' ? 'var(--red)' : (err.severity === 'HIGH' ? 'var(--gold)' : 'var(--muted)');
+          
+          return `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 10px;">
+                <strong style="color: var(--white); display: block;">${err.fingerprint}</strong>
+                <span style="font-size: 10.5px; color: var(--muted);">${timeAgo}</span>
+              </td>
+              <td style="padding: 10px;">
+                <span style="padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 11px; background: ${catBadgeColor}; color: var(--cyan);">${err.category}</span>
+              </td>
+              <td style="padding: 10px;">
+                <span style="font-weight: 800; color: ${sevBadgeColor}; font-size: 11px;">● ${err.severity}</span>
+              </td>
+              <td style="padding: 10px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${err.error_message}">
+                <strong style="color: var(--text);">${err.error_message}</strong>
+              </td>
+              <td style="padding: 10px; font-family: monospace; font-size: 11px; color: #a5b4fc;">${err.affected_page || '/'}</td>
+              <td style="padding: 10px; font-weight: 800; color: var(--white);">${err.occurrence_count}</td>
+              <td style="padding: 10px;">
+                <span style="padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; background: rgba(255,255,255,0.05); color: ${err.status === 'FIXED' ? 'var(--green)' : (err.status === 'REJECTED' ? 'var(--red)' : 'var(--gold)')};">
+                  ${err.status}
+                </span>
+              </td>
+              <td style="padding: 10px; text-align: right;">
+                <button type="button" class="btn-inspect-err btn btn-secondary" data-id="${err.id}" style="font-size: 11px; padding: 6px 12px; cursor: pointer; background: rgba(121, 82, 255, 0.2); border: 1px solid var(--purple); color: #fff;">
+                  🤖 Inspect & Fix
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        // Attach Inspect click listeners
+        document.querySelectorAll(".btn-inspect-err").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const errId = btn.getAttribute("data-id");
+            const targetErr = errors.find(e => e.id === errId);
+            if (targetErr) openProposalModal(targetErr);
+          });
+        });
+
+      } catch (err) {
+        console.error("Error loading error log:", err);
+      }
+    }
+
+    async function openProposalModal(errorItem) {
+      document.getElementById("modalErrorIdTag").textContent = `ERROR ID: ${errorItem.fingerprint}`;
+      document.getElementById("modalErrMessage").textContent = errorItem.error_message;
+      document.getElementById("modalStackTrace").textContent = errorItem.stack_trace || 'No stack trace provided.';
+      
+      const modal = document.getElementById("aiProposalModal");
+      modal.style.display = "grid";
+
+      try {
+        // Fetch or Generate AI Proposal
+        const { data: existingProp } = await supabase
+          .from("error_fix_proposals")
+          .select("*")
+          .eq("error_id", errorItem.id)
+          .maybeSingle();
+
+        activeProposal = existingProp || await generateAIProposal(errorItem);
+
+        document.getElementById("modalRootCause").textContent = activeProposal.root_cause;
+        document.getElementById("modalRiskBadge").textContent = activeProposal.risk_level;
+        document.getElementById("modalAffectedFiles").textContent = (activeProposal.affected_files || []).join(", ") || 'N/A';
+        document.getElementById("modalCodeChanges").textContent = activeProposal.proposed_code_changes || '// No frontend code changes required';
+        
+        const sqlBox = document.getElementById("modalSqlBox");
+        if (activeProposal.proposed_sql_changes) {
+          sqlBox.style.display = "block";
+          document.getElementById("modalSqlChanges").textContent = activeProposal.proposed_sql_changes;
+        } else {
+          sqlBox.style.display = "none";
+        }
+
+        document.getElementById("modalRollback").textContent = activeProposal.rollback_plan + " | Tests: " + (activeProposal.tests_to_run || []).join(", ");
+
+      } catch (e) {
+        showToast("Error preparing AI proposal: " + e.message);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("aiProposalModal").style.display = "none";
+      activeProposal = null;
+    }
+
+    async function handleApproveExecute() {
+      if (!activeProposal) return;
+      try {
+        showToast("⏳ Authenticating Admin & Executing Approved Fix...");
+        const result = await executeApprovedFix(activeProposal.id);
+        showToast("✅ Fix Approved & Executed Successfully! Automated Tests Passed.");
+        closeModal();
+        loadErrorLogs();
+      } catch (e) {
+        showToast("❌ Execution Failed: " + e.message);
+      }
+    }
+
+    async function handleRejectProposal() {
+      if (!activeProposal) return;
+      try {
+        showToast("❌ Proposal Rejected by Admin. 0 changes executed.");
+        await rejectFixProposal(activeProposal.id, "Rejected by Admin Operator");
+        closeModal();
+        loadErrorLogs();
+      } catch (e) {
+        showToast("Error rejecting proposal: " + e.message);
+      }
+    }
+
+    /* ========================================================
+       VERIFY ADMIN ACCESS
+       ======================================================== */
+    async function verifyAdminAccess() {
+      if (new URLSearchParams(window.location.search).get("preview") === "true") {
+        return true;
+      }
+      try {
+        const storedRole = sessionStorage.getItem("askexpert_user_role") || localStorage.getItem("askexpert_user_role");
+        if (storedRole === "admin") {
+          return true;
+        }
+
+        if (!supabase) {
+          window.location.replace("login.html");
+          return false;
+        }
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !session || !session.user) {
+          window.location.replace("login.html");
+          return false;
+        }
+
+        const { data: prof, error: profError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profError || !prof || prof.role !== "admin") {
+          await supabase.auth.signOut();
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          window.location.replace("login.html");
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+        window.location.replace("login.html");
+        return false;
+      }
+    }
+
+    /* ========================================================
+       LOAD LIVE METRICS & SUPABASE AUDIT STREAM
+       ======================================================== */
+    async function fetchLivePlatformStats() {
+      if (!supabase) return;
+      try {
+        // 1. Pending Professional KYC
+        const { count: pendingCount } = await supabase
+          .from("professional_verifications")
+          .select("*", { count: "exact", head: true })
+          .eq("verification_status", "pending");
+
+        const actualPending = typeof pendingCount === "number" ? pendingCount : 0;
+        document.getElementById("valPendingKYC").textContent = actualPending;
+        const badgeEl = document.getElementById("badgePendingVerif");
+        if (badgeEl) {
+          badgeEl.textContent = actualPending;
+          badgeEl.style.display = actualPending > 0 ? "inline-block" : "none";
+        }
+        const heroPendingCountEl = document.getElementById("heroPendingCount");
+        if (heroPendingCountEl) heroPendingCountEl.textContent = actualPending;
+
+        // 2. Total Registered Users
+        const { count: usersCount } = await supabase
+          .from("profiles")
+          .select("*", { count: "exact", head: true });
+        if (typeof usersCount === "number") {
+          document.getElementById("valTotalUsers").textContent = usersCount.toLocaleString();
+        }
+
+        // 3. Verified Experts
+        const { count: expertsCount } = await supabase
+          .from("profiles")
+          .select("*", { count: "exact", head: true })
+          .eq("role", "expert")
+          .eq("is_verified", true);
+        if (typeof expertsCount === "number") {
+          document.getElementById("valVerifiedExperts").textContent = expertsCount.toLocaleString();
+        }
+
+        // 4. Questions Asked
+        const { count: questionsCount } = await supabase
+          .from("questions")
+          .select("*", { count: "exact", head: true });
+        if (typeof questionsCount === "number") {
+          document.getElementById("valTotalQuestions").textContent = questionsCount.toLocaleString();
+        }
+
+        // 5. Active Consultations
+        const { count: activeConsultations } = await supabase
+          .from("consultation_requests")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "accepted");
+        if (typeof activeConsultations === "number") {
+          document.getElementById("valActiveChats").textContent = activeConsultations.toLocaleString();
+        }
+
+        // 6. Pending Payouts (sum of pending amounts)
+        const { data: pendingPayouts } = await supabase
+          .from("payout_requests")
+          .select("amount")
+          .eq("status", "pending");
+        if (pendingPayouts && pendingPayouts.length > 0) {
+          const totalPending = pendingPayouts.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0);
+          document.getElementById("valPendingPayouts").textContent = `₹${totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        } else {
+          document.getElementById("valPendingPayouts").textContent = "₹0.00";
+        }
+
+        // 7. Render Real Activity Feed from Questions, Profiles, & Verifications
+        await renderLiveActivityStream();
+
+        // 8. Open Disputes / Reports badge (real count)
+        try {
+          const { count: openReportsCount } = await supabase
+            .from("reports")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "open");
+          const disputesBadge = document.getElementById("badgeOpenDisputes");
+          if (disputesBadge && typeof openReportsCount === "number") {
+            disputesBadge.textContent = openReportsCount;
+          }
+        } catch (_) { /* silent — badge stays 0 */ }
+
+      } catch (err) {
+        console.warn("Metrics fetch error:", err);
+      }
+    }
+
+
+    async function renderLiveActivityStream() {
+      const feedEl = document.getElementById("activityFeed");
+      if (!feedEl) return;
+
+      try {
+        const [{ data: recentQuestions }, { data: recentVerifs }, { data: recentUsers }] = await Promise.all([
+          supabase.from("questions").select("id, title, category, created_at").order("created_at", { ascending: false }).limit(3),
+          supabase.from("professional_verifications").select("id, council_registration_no, verification_status, created_at").order("created_at", { ascending: false }).limit(3),
+          supabase.from("profiles").select("id, full_name, email, role, created_at").order("created_at", { ascending: false }).limit(3)
+        ]);
+
+        const activities = [];
+
+        (recentQuestions || []).forEach(q => {
+          activities.push({
+            type: "question",
+            icon: "❓",
+            title: `New Inquiry: ${escapeHTML(q.title || "Inquiry")}`,
+            subtitle: `Category: ${escapeHTML(q.category || "General")} • ID: ${q.id.substring(0, 8)}`,
+            link: "admin-questions.html",
+            linkText: "View →",
+            date: new Date(q.created_at || Date.now())
+          });
+        });
+
+        (recentVerifs || []).forEach(v => {
+          activities.push({
+            type: "verification",
+            icon: "🎓",
+            title: `Professional KYC: ${escapeHTML(v.council_registration_no || "Application")}`,
+
+            subtitle: `Status: ${escapeHTML(v.verification_status || "pending")}`,
+            link: "admin-professionals.html",
+            linkText: "Review →",
+            date: new Date(v.created_at || Date.now())
+          });
+        });
+
+        (recentUsers || []).forEach(u => {
+          activities.push({
+            type: "user",
+            icon: "👤",
+            title: `User Registered: ${escapeHTML(u.full_name || u.email || "New Member")}`,
+            subtitle: `Role: ${escapeHTML(u.role || "user")} • Verified`,
+            link: "admin-users.html",
+            linkText: "Inspect →",
+            date: new Date(u.created_at || Date.now())
+          });
+        });
+
+        activities.sort((a, b) => b.date - a.date);
+
+        if (activities.length === 0) {
+          feedEl.innerHTML = `
+            <div style="text-align: center; padding: 36px 20px; color: var(--muted); font-size: 13px;">
+              <span style="font-size: 20px; display: block; margin-bottom: 6px;">📋</span>
+              No platform activity records found yet. Live Supabase streaming active.
+            </div>`;
+          return;
+        }
+
+        feedEl.innerHTML = activities.slice(0, 5).map(act => `
+          <div class="activity-row">
+            <div class="activity-left">
+              <div class="activity-icon ${act.type === 'question' ? 'icon-report' : act.type === 'verification' ? 'icon-expert' : 'icon-user'}">${act.icon}</div>
+              <div>
+                <strong style="font-size: 13px; color: var(--white);">${act.title}</strong>
+                <span style="display: block; font-size: 11px; color: var(--muted);">${act.subtitle}</span>
+              </div>
+            </div>
+            <a href="${act.link}" class="view-link">${act.linkText}</a>
+          </div>
+        `).join("");
+      } catch (err) {
+        console.warn("Live activity feed error:", err);
+      }
+    }
+
+    /* ========================================================
+       LOGOUT
+       ======================================================== */
+    function setupLogout() {
+      const doLogout = async () => {
+        showToast("Ending secure administrative session...");
+        try {
+          sessionStorage.clear();
+          localStorage.removeItem("askexpert_user_id");
+          localStorage.removeItem("askexpert_user_role");
+          if (supabase) await supabase.auth.signOut();
+        } catch (e) {}
+        setTimeout(() => window.location.href = "login.html", 400);
+      };
+
+      document.getElementById("adminLogoutBtn")?.addEventListener("click", doLogout);
+      document.getElementById("adminTopbarLogoutBtn")?.addEventListener("click", doLogout);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastPill");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    initAdminDashboard();
+  </script>
+</body>
+</html>

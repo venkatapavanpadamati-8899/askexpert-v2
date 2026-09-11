@@ -1166,6 +1166,28 @@
 
       const degreeFile = document.getElementById("vDegreeFile").files[0];
       const licenseFile = document.getElementById("vLicenseFile").files[0];
+      const identityFile = document.getElementById("vIdFile").files[0];
+      const permittedTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
+      const requiredFiles = [
+        [identityFile, "identity document"],
+        [degreeFile, "degree document"],
+        [licenseFile, "license or registration document"]
+      ];
+
+      for (const [file, label] of requiredFiles) {
+        if (!file) {
+          showToast(`Please upload your ${label} before submitting.`);
+          nextBtn.disabled = false;
+          nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
+          return;
+        }
+        if (!permittedTypes.has(file.type) || file.size <= 0 || file.size > 20 * 1024 * 1024) {
+          showToast(`${label} must be a non-empty PDF, JPG, PNG, or WEBP file smaller than 20 MB.`);
+          nextBtn.disabled = false;
+          nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
+          return;
+        }
+      }
 
       // Run Statutory Format & Integrity Pre-Check
       const aiCheck = analyzeCertificateAuthenticity({
@@ -1254,9 +1276,6 @@
           console.warn("DB submission warning:", dbErr);
         }
       }
-
-      // Local storage backup
-      localStorage.setItem("askexpert_verification_record", JSON.stringify(verifRecord));
 
       showToast("✓ Application submitted successfully for admin review!");
       setTimeout(() => {

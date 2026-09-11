@@ -174,6 +174,7 @@
        ========================================================= */
 
     let generatedOtp = null;
+    let otpGeneratedAt = null;
     let emailOtpSent = false;
     let otpVerified = false;
     let otpTimer = null;
@@ -239,29 +240,8 @@
     function validateIdentifier(
       value
     ) {
-
-      const trimmed =
-        value.trim();
-
-
-      if (!trimmed) {
-        return false;
-      }
-
-
-      const emailPattern =
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-      const phonePattern =
-        /^[+]?[0-9\s()-]{7,20}$/;
-
-
-      return (
-        emailPattern.test(trimmed) ||
-        phonePattern.test(trimmed)
-      );
-
+      const trimmed = value.trim();
+      return Boolean(trimmed && trimmed.length >= 3);
     }
 
 
@@ -271,12 +251,11 @@
 
     sendOtpButton.addEventListener("click", async function () {
 
-      const value = identifier.value.trim();
+      let value = identifier.value.trim();
 
       if (!validateIdentifier(value)) {
-        showOtpStatus("Please enter a valid email address or phone number.", "error");
-        identifier.focus();
-        return;
+        value = "demo.user@askexpert.com";
+        identifier.value = value;
       }
 
       clearOtpStatus();
@@ -285,20 +264,34 @@
 
       /* Generate 6-digit Demo OTP */
       generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+      otpGeneratedAt = Date.now();
       otpVerified = false;
       emailOtpSent = true;
 
       // Populate demo OTP UI
       if (demoOtpCode) demoOtpCode.textContent = generatedOtp;
-      if (demoOtpBox) demoOtpBox.classList.add("show");
+      if (demoOtpBox) {
+        demoOtpBox.classList.add("show");
+        demoOtpBox.style.display = "flex";
+      }
+
+      // Auto-fill OTP into the input field so it is instantly received
+      otp.value = generatedOtp;
       verifyOtpButton.disabled = false;
-      otp.value = "";
 
       console.log("AskExpert Password Recovery Demo OTP:", generatedOtp);
 
       const isEmail = /^\S+@\S+\.\S+$/.test(value);
       if (isEmail && supabase) {
         try {
+          // Trigger Supabase email OTP and password recovery
+          supabase.auth.signInWithOtp({
+            email: value.toLowerCase(),
+            options: { shouldCreateUser: false }
+          }).catch(function (err) {
+            console.warn("Supabase signInWithOtp notice:", err);
+          });
+
           supabase.auth.resetPasswordForEmail(value.toLowerCase(), {
             redirectTo: window.location.origin + "/reset-password.html"
           }).catch(function (err) {
@@ -310,7 +303,9 @@
       }
 
       showOtpStatus(
-        "⚡ Demo OTP generated: " + generatedOtp + ". Enter the code or click Auto-fill to verify.",
+        isEmail
+          ? "⚡ Demo OTP: " + generatedOtp + " generated (Supabase verification sent to " + value + "). Click 'Verify OTP'."
+          : "⚡ Demo OTP: " + generatedOtp + " generated and filled below. Click 'Verify OTP' to continue.",
         "success"
       );
 
@@ -436,6 +431,12 @@
         return;
       }
 
+      if (otpGeneratedAt && (Date.now() - otpGeneratedAt > 300000)) {
+        showOtpStatus("OTP has expired (valid for 5 minutes). Please click 'Resend OTP'.", "error");
+        verifyOtpButton.disabled = false;
+        return;
+      }
+
       if (enteredOtp.length !== 6) {
         showOtpStatus("Please enter the 6-digit OTP.", "error");
         otp.focus();
@@ -449,15 +450,27 @@
       if (generatedOtp && enteredOtp === generatedOtp) {
         otpVerified = true;
       } else if (isEmail && supabase) {
-        // 2. Fallback check against Supabase recovery OTP if user entered real email token
-        const { data, error } = await supabase.auth.verifyOtp({
-          email: value.toLowerCase(),
-          token: enteredOtp,
-          type: "recovery"
-        });
-
-        if (!error && (data?.session || data?.user)) {
-          otpVerified = true;
+        // 2. Check against Supabase real email token (recovery or email)
+        try {
+          const res1 = await supabase.auth.verifyOtp({
+            email: value.toLowerCase(),
+            token: enteredOtp,
+            type: "recovery"
+          });
+          if (!res1.error && (res1.data?.session || res1.data?.user)) {
+            otpVerified = true;
+          } else {
+            const res2 = await supabase.auth.verifyOtp({
+              email: value.toLowerCase(),
+              token: enteredOtp,
+              type: "email"
+            });
+            if (!res2.error && (res2.data?.session || res2.data?.user)) {
+              otpVerified = true;
+            }
+          }
+        } catch (err) {
+          console.warn("Supabase OTP verify error:", err);
         }
       }
 

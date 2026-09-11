@@ -345,3 +345,5 @@ export function analyzeCertificateAuthenticity(documentData = {}) {
     verifiedAt: new Date().toISOString()
   };
 }
+
+export { runExpertVerificationAgent } from './expertVerificationAgent.js';

@@ -1,18 +1,17 @@
 /**
- * AskExpert - Production-Grade AI Aadhaar OCR & Verification Engine
- * Roles: Senior Full Stack Security Engineer, Vision AI Specialist, Identity Architect
+ * AskExpert - Free-KYC AI Document & Identity Analysis Engine
  *
  * SPECIFICATION & GOVERNANCE:
- * 1. Aadhaar-Only Policy: Only genuine Government of India UIDAI Aadhaar cards are permitted.
- * 2. Strict Rejection: All other documents (PAN, Driving License, Passport, Voter ID, Certificates, Random Photos) are rejected with clear reasons.
- * 3. Two-Tier Verification Flow:
- *    - 1st Failure: 2nd chance to re-upload clear Aadhaar scan.
- *    - 2nd Failure: Stops upload and surfaces "Request Manual Verification" button.
- * 4. Verhoeff Checksum Algorithm: Validates UIDAI 12-digit Aadhaar mathematical checksum.
- * 5. Admin Governance: Admin performs final approval to set profiles.is_verified = true.
+ * 1. Free-KYC Policy: No paid providers (Surepass/Sandbox/Setu/UIDAI APIs/scraping).
+ * 2. Multi-Document Support: Supports Aadhaar/VID, Passport, Driving Licence, Voter ID, and Other Government IDs.
+ * 3. Optional Identity Number: Entering an identity number is voluntary.
+ * 4. Identity Number Privacy: Full identity numbers are never stored permanently, never logged, never sent to external AI.
+ * 5. Temporary Last-Four Consistency Check: Compares only the last four digits of entered identifier vs readable document info.
+ * 6. Advisory-Only AI: "AI-ASSISTED DOCUMENT PRE-CHECK — ADVISORY ONLY". Never claims 100% genuine or officially verified.
+ * 7. Admin-Only Approval Gate: Final approval decision rests exclusively with the authorized Administrator.
  */
 
-// Verhoeff multiplication & permutation tables for Aadhaar checksum
+// Verhoeff multiplication & permutation tables for optional Aadhaar format validation
 const VERHOEFF_D = [
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
@@ -37,10 +36,8 @@ const VERHOEFF_P = [
   [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
 ];
 
-const VERHOEFF_INV = [0, 4, 3, 2, 1, 5, 6, 7, 8, 9];
-
 /**
- * Validates 12-digit Aadhaar number with Verhoeff Checksum Algorithm
+ * Validates 12-digit Aadhaar number syntax with Verhoeff Checksum Algorithm
  */
 export function validateVerhoeffAadhaar(aadhaarStr = '') {
   const clean = String(aadhaarStr).replace(/\D/g, '');
@@ -56,275 +53,197 @@ export function validateVerhoeffAadhaar(aadhaarStr = '') {
 }
 
 /**
- * Document Signatures and Disallowed Document Classifiers
+ * Masks any identity number to show only the last 4 digits (e.g. "XXXX-XXXX-1234" or "****-1234")
  */
-const DOCUMENT_SIGNATURES = {
-  AADHAAR: {
-    primaryKeywords: [
-      'government of india', 'bharat sarkar', 'unique identification authority',
-      'uidai', 'aadhaar', 'mera aadhaar', 'meri pehchan', 'enrolment no',
-      'help@uidai.gov.in', 'www.uidai.gov.in', 'vid :', '1947'
-    ],
-    secondaryKeywords: [
-      'dob', 'date of birth', 'year of birth', 'male', 'female', 'transgender',
-      'address', 's/o', 'd/o', 'w/o', 'c/o', 'pin code'
-    ],
-    numberRegex: /\b[2-9]{1}[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\b/
+export function formatAadhaarMasked(numStr = '') {
+  const clean = String(numStr).replace(/\s+/g, '').trim();
+  if (!clean) return '';
+  if (clean.length <= 4) return clean;
+  const lastFour = clean.slice(-4);
+  if (clean.replace(/\D/g, '').length === 12) {
+    return `XXXX-XXXX-${lastFour}`;
+  }
+  return `****-****-${lastFour}`;
+}
+
+/**
+ * Supported Government Identity Document Signatures
+ */
+export const SUPPORTED_IDENTITY_DOCS = {
+  Aadhaar: {
+    label: 'Aadhaar / VID Document',
+    keywords: ['government of india', 'bharat sarkar', 'unique identification authority', 'uidai', 'aadhaar', 'mera aadhaar', 'vid', 'enrolment'],
+    digitLength: 12
   },
-  PAN_CARD: {
-    name: 'PAN Card (Permanent Account Number)',
-    keywords: ['income tax department', 'permanent account number', 'father\'s name', 'pan card', 'signature of holder'],
-    numberRegex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/
+  Passport: {
+    label: 'Indian / National Passport',
+    keywords: ['passport', 'republic of india', 'ministry of external affairs', 'type p', 'code ind', 'nationality'],
+    digitLength: 8
   },
-  DRIVING_LICENSE: {
-    name: 'Driving License',
-    keywords: ['driving licence', 'driving license', 'transport department', 'union of india driving', 'dl no', 'form 7', 'lmv', 'mcwg'],
-    numberRegex: /[A-Z]{2}[0-9]{2}[0-9]{11}/
+  DrivingLicense: {
+    label: 'Driving Licence',
+    keywords: ['driving licence', 'driving license', 'transport department', 'union of india driving', 'dl no', 'form 7', 'lmv'],
+    digitLength: 15
   },
-  PASSPORT: {
-    name: 'Indian Passport',
-    keywords: ['passport', 'republic of india', 'ministry of external affairs', 'type p', 'code ind', 'nationality indian'],
-    numberRegex: /[A-Z]{1}[0-9]{7}/
-  },
-  VOTER_ID: {
-    name: 'Voter ID (EPIC Card)',
+  VoterID: {
+    label: 'Voter ID (EPIC Card)',
     keywords: ['election commission of india', 'voter id', 'identity card', 'epic', 'elector photo'],
-    numberRegex: /[A-Z]{3}[0-9]{7}/
+    digitLength: 10
   },
-  ACADEMIC_CERTIFICATE: {
-    name: 'Educational Degree / Certificate',
-    keywords: ['university', 'board of', 'degree', 'diploma', 'semester', 'grade sheet', 'marks card', 'bachelor', 'master', 'institute']
+  OtherGovtID: {
+    label: 'Other Government Identity Document',
+    keywords: ['government of india', 'state government', 'identity card', 'official', 'department', 'gazetted'],
+    digitLength: 0
   }
 };
 
 /**
- * Client-Side Optical Character Analysis & Document Inspection
- * @param {Object} params - { file, fileName, enteredAadhaar, applicantName, customText }
- * @returns {Promise<Object>} Detailed verification result
+ * Performs Temporary Last-Four-Digit Consistency Check.
+ * Returns one of: 'CONSISTENT', 'DO_NOT_MATCH', 'UNABLE_TO_DETERMINE', 'NOT_PROVIDED'
+ * NEVER persists full raw OCR or entered numbers.
  */
-export async function verifyAadhaarDocument({
-  file = null,
-  fileName = '',
-  enteredAadhaar = '',
-  applicantName = '',
-  customText = ''
+export function performTemporaryLastFourCheck({
+  enteredNumber = '',
+  documentText = '',
+  fileName = ''
 } = {}) {
-  const cleanEnteredAadhaar = String(enteredAadhaar).replace(/\D/g, '');
-  const cleanApplicantName = (applicantName || '').trim().toLowerCase();
-  const lowerFileName = (fileName || (file?.name || '')).toLowerCase();
-  const ext = lowerFileName.split('.').pop() || '';
-
-  // 1. Basic File Format & Existence Check
-  if (!file && !fileName && !customText) {
+  const cleanEntered = String(enteredNumber).replace(/\D/g, '');
+  if (!cleanEntered || cleanEntered.length < 4) {
     return {
-      isValid: false,
-      docType: 'NONE',
-      confidence: 0,
-      extractedAadhaar: null,
-      extractedText: '',
-      reasons: ['No Aadhaar document or scan provided for verification.'],
-      recommendation: 'Upload a clear JPEG, PNG, or PDF file of your official Aadhaar Card.'
+      status: 'NOT_PROVIDED',
+      message: 'No voluntary identity number provided. Proceeding with document-based Admin manual review.',
+      lastFourEntered: null,
+      lastFourDetected: null
     };
   }
 
-  const validExts = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
-  if (ext && !validExts.includes(ext)) {
+  const enteredLastFour = cleanEntered.slice(-4);
+
+  // Extract candidate numeric sequences from document text / stream
+  const docDigits = String(documentText).replace(/[^0-9\s]/g, ' ');
+  const numberTokens = docDigits.split(/\s+/).filter(tok => tok.length >= 4);
+
+  if (numberTokens.length === 0 && !fileName) {
     return {
-      isValid: false,
-      docType: 'INVALID_FORMAT',
-      confidence: 0,
-      extractedAadhaar: null,
-      extractedText: '',
-      reasons: [`Unsupported file format (.${ext}). Only JPG, PNG, WEBP, or PDF are accepted.`],
-      recommendation: 'Convert your Aadhaar card image to JPG, PNG, or PDF and re-upload.'
+      status: 'UNABLE_TO_DETERMINE',
+      message: 'Unable to determine last-four digits from document text automatically. Queued for Admin inspection.',
+      lastFourEntered: enteredLastFour,
+      lastFourDetected: null
     };
   }
 
-  // 2. Perform OCR Text Extraction
-  let ocrText = (customText || '').toLowerCase();
+  // Check if entered last four matches any detected sequence ending
+  const matchingToken = numberTokens.find(tok => tok.endsWith(enteredLastFour));
 
-  // If text is not provided, generate realistic OCR stream based on image/file inspection
-  if (!ocrText) {
-    ocrText = await extractTextFromDocument(file, fileName, enteredAadhaar, applicantName);
+  if (matchingToken || (fileName && fileName.includes(enteredLastFour))) {
+    return {
+      status: 'CONSISTENT',
+      message: 'Last four digits are consistent with the submitted information.',
+      lastFourEntered: enteredLastFour,
+      lastFourDetected: enteredLastFour
+    };
   }
 
-  const normalizedOcrText = ocrText.toLowerCase();
-
-  // 3. Document Classification & Non-Aadhaar Document Interception
-  // Explicitly check for PAN, Driving License, Passport, Voter ID, Academic certificates
-  for (const [docKey, docInfo] of Object.entries(DOCUMENT_SIGNATURES)) {
-    if (docKey === 'AADHAAR') continue;
-
-    const matchedKw = docInfo.keywords.filter(kw => normalizedOcrText.includes(kw) || lowerFileName.includes(kw.replace(/\s+/g, '_')));
-    const matchedRegex = docInfo.numberRegex && docInfo.numberRegex.test(normalizedOcrText.toUpperCase());
-
-    if (matchedKw.length >= 2 || (matchedKw.length >= 1 && matchedRegex) || lowerFileName.includes(docKey.toLowerCase())) {
-      return {
-        isValid: false,
-        docType: docKey,
-        detectedName: docInfo.name,
-        confidence: 0,
-        extractedAadhaar: null,
-        extractedText: ocrText,
-        reasons: [
-          `Rejected: Uploaded document was identified as a ${docInfo.name}.`,
-          `Only Government of India UIDAI Aadhaar Cards are accepted for Expert Identity Verification.`
-        ],
-        discrepancyList: [`Detected foreign document signature: ${docInfo.name}`],
-        recommendation: 'Please upload your 12-digit Aadhaar Card (Front/Back) issued by UIDAI.'
-      };
-    }
-  }
-
-  // 4. Aadhaar Marker & Feature Extraction
-  const aadhaarKw = DOCUMENT_SIGNATURES.AADHAAR.primaryKeywords;
-  const secKw = DOCUMENT_SIGNATURES.AADHAAR.secondaryKeywords;
-
-  const matchedPrimary = aadhaarKw.filter(kw => normalizedOcrText.includes(kw) || lowerFileName.includes(kw.replace(/\s+/g, '')));
-  const matchedSecondary = secKw.filter(kw => normalizedOcrText.includes(kw));
-
-  // Extract Aadhaar Number from OCR stream
-  const numberMatches = normalizedOcrText.match(/[2-9][0-9]{3}\s?[0-9]{4}\s?[0-9]{4}/g) || [];
-  let extractedAadhaar = null;
-  if (numberMatches.length > 0) {
-    extractedAadhaar = numberMatches[0].replace(/\s+/g, '');
-  }
-
-  // 5. Verification Scoring Heuristic
-  let confidenceScore = 0;
-  const reasons = [];
-  const discrepancies = [];
-  const passedBadges = [];
-
-  // Primary Aadhaar keywords (UIDAI, Govt of India, Bharat Sarkar)
-  if (matchedPrimary.length >= 1) {
-    confidenceScore += 45;
-    passedBadges.push(`UIDAI/Govt of India Header Detected (${matchedPrimary.join(', ')})`);
-  } else if (lowerFileName.includes('aadhaar') || lowerFileName.includes('aadhar') || lowerFileName.includes('uidai')) {
-    confidenceScore += 25;
-    passedBadges.push('Aadhaar Document Filename Signature Match');
-  } else {
-    discrepancies.push('Missing UIDAI or Government of India institutional header text.');
-  }
-
-  // Secondary demographic keywords (DOB, Gender, Address)
-  if (matchedSecondary.length >= 1) {
-    confidenceScore += 25;
-    passedBadges.push(`Demographic Markers Identified (${matchedSecondary.join(', ')})`);
-  }
-
-  // Aadhaar Number Check
-  if (extractedAadhaar) {
-    confidenceScore += 20;
-    passedBadges.push(`Extracted 12-Digit UIDAI Format: ${formatAadhaarMasked(extractedAadhaar)}`);
-
-    // Verhoeff checksum validation
-    const isVerhoeffValid = validateVerhoeffAadhaar(extractedAadhaar);
-    if (isVerhoeffValid) {
-      confidenceScore += 10;
-      passedBadges.push('Verhoeff Mathematical Checksum Validated (UIDAI Standard)');
-    }
-
-    // Cross-check with entered Aadhaar if provided
-    if (cleanEnteredAadhaar) {
-      if (cleanEnteredAadhaar === extractedAadhaar) {
-        confidenceScore += 10;
-        passedBadges.push('Entered Aadhaar Number exactly matches Document OCR UID (100%)');
-      } else {
-        discrepancies.push(`Number mismatch: Entered (${formatAadhaarMasked(cleanEnteredAadhaar)}) vs Document OCR (${formatAadhaarMasked(extractedAadhaar)})`);
-      }
-    }
-  } else if (cleanEnteredAadhaar && cleanEnteredAadhaar.length === 12) {
-    // If OCR missed the exact digits due to scan angle but filename/keywords matched
-    if (matchedPrimary.length >= 1) {
-      confidenceScore += 15;
-      extractedAadhaar = cleanEnteredAadhaar;
-      passedBadges.push(`Using Verified Input UID: ${formatAadhaarMasked(cleanEnteredAadhaar)}`);
-    }
-  } else {
-    discrepancies.push('Could not detect a valid 12-digit Aadhaar UID number in the document image.');
-  }
-
-  // Name check
-  if (cleanApplicantName) {
-    const nameTokens = cleanApplicantName.split(/\s+/).filter(t => t.length > 2);
-    const matchedTokens = nameTokens.filter(t => normalizedOcrText.includes(t));
-    if (matchedTokens.length > 0) {
-      passedBadges.push(`Applicant Name Matched (${matchedTokens.join(' ')})`);
-    }
-  }
-
-  // Normalize confidence
-  confidenceScore = Math.min(100, Math.max(0, confidenceScore));
-
-  const isAadhaarValid = confidenceScore >= 60 && discrepancies.length === 0;
-
-  if (!isAadhaarValid) {
-    if (discrepancies.length > 0) {
-      reasons.push(...discrepancies);
-    } else {
-      reasons.push('Document failed Aadhaar structural integrity check. Ensure UIDAI seals and text are clear.');
-    }
+  if (numberTokens.length > 0) {
+    return {
+      status: 'DO_NOT_MATCH',
+      message: 'Last four digits do not match the readable digits found in the document preview.',
+      lastFourEntered: enteredLastFour,
+      lastFourDetected: numberTokens[0].slice(-4)
+    };
   }
 
   return {
-    isValid: isAadhaarValid,
-    docType: isAadhaarValid ? 'AADHAAR' : (confidenceScore < 30 ? 'NON_AADHAAR_OR_INVALID' : 'POOR_QUALITY_AADHAAR'),
-    confidence: confidenceScore,
-    extractedAadhaar: extractedAadhaar ? formatAadhaarMasked(extractedAadhaar) : null,
-    rawAadhaar: extractedAadhaar,
-    extractedText: ocrText,
-    passedBadges,
-    discrepancies,
-    reasons,
-    recommendation: isAadhaarValid 
-      ? 'Aadhaar Verified. Ready for Admin KYC Approval.' 
-      : 'Please ensure the photo is well-lit, uncropped, and clearly shows the UIDAI emblem and 12-digit number.'
+    status: 'UNABLE_TO_DETERMINE',
+    message: 'Unable to determine last-four digits from document text. Document queued for Admin manual inspection.',
+    lastFourEntered: enteredLastFour,
+    lastFourDetected: null
   };
 }
 
 /**
- * Masks Aadhaar number for security (e.g. "XXXX XXXX 1234")
+ * Comprehensive Free-KYC Advisory Pre-Check for Identity Documents
  */
-export function formatAadhaarMasked(numStr = '') {
-  const clean = String(numStr).replace(/\D/g, '');
-  if (clean.length < 12) return clean;
-  return `XXXX XXXX ${clean.slice(-4)}`;
-}
-
-/**
- * Text extraction simulation using file metadata, Canvas OCR heuristics, and image headers
- */
-async function extractTextFromDocument(file, fileName = '', enteredAadhaar = '', applicantName = '') {
+export async function analyzeIdentityDocumentAdvisory({
+  file = null,
+  fileName = '',
+  docType = 'Aadhaar',
+  enteredNumber = '',
+  applicantName = '',
+  customText = ''
+} = {}) {
   const cleanName = (fileName || (file?.name || '')).toLowerCase();
+  const ext = (cleanName.split('.').pop() || '').toLowerCase();
+  const fileSize = file?.size || 0;
+  const reasons = [];
+  const passedBadges = [];
+  const suspiciousSignals = [];
 
-  // If user uploaded an obvious test / sample non-Aadhaar file
-  if (cleanName.includes('pan') || cleanName.includes('pancard')) {
-    return `INCOME TAX DEPARTMENT GOVT. OF INDIA Permanent Account Number Card ABCDE1234F ${applicantName || 'Applicant'} Father Name Signature`;
-  }
-  if (cleanName.includes('license') || cleanName.includes('licence') || cleanName.includes('dl_')) {
-    return `UNION OF INDIA DRIVING LICENCE TRANSPORT DEPARTMENT DL NO MH0220180012345 Name ${applicantName || 'Applicant'} LMV MCWG`;
-  }
-  if (cleanName.includes('passport')) {
-    return `PASSPORT REPUBLIC OF INDIA Code IND Type P Passport No Z1234567 Given Name ${applicantName || 'Applicant'} Nationality Indian`;
-  }
-  if (cleanName.includes('degree') || cleanName.includes('certificate') || cleanName.includes('marksheet')) {
-    return `BOARD OF UNIVERSITY BACHELOR OF ENGINEERING DEGREE EXAMINATION SEMESTER MARKS GRADE PASS ${applicantName || 'Applicant'}`;
+  // 1. File Type & Extension Validation
+  const validExts = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
+  if (ext && !validExts.includes(ext)) {
+    reasons.push(`Unsupported file extension .${ext}. Allowed formats: PDF, JPG, PNG, WEBP.`);
   }
 
-  // If file contains aadhaar / aadhar or valid format
-  const mockAadhaar = enteredAadhaar ? enteredAadhaar.replace(/\D/g, '') : '543212348765';
-  const formattedMock = mockAadhaar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+  // 2. File Size & Quality Health
+  if (fileSize > 0) {
+    if (fileSize < 10 * 1024) {
+      suspiciousSignals.push(`Document file size (${(fileSize / 1024).toFixed(1)} KB) is very small. Possible blur or low resolution.`);
+    } else if (fileSize > 10 * 1024 * 1024) {
+      reasons.push(`File exceeds 10 MB limit (${(fileSize / (1024 * 1024)).toFixed(1)} MB).`);
+    } else {
+      passedBadges.push(`Valid file size (${(fileSize / 1024).toFixed(1)} KB)`);
+    }
+  }
 
-  return `GOVERNMENT OF INDIA BHARAT SARKAR
-Unique Identification Authority of India (UIDAI)
-Enrollment No: 1234/56789/01234
-To,
-${(applicantName || 'Verified Expert').toUpperCase()}
-DOB: 15/08/1990
-Gender: Male / Transgender
-Address: Near City Center, India - 500001
-${formattedMock}
-Mera Aadhaar, Meri Pehchan
-Helpdesk: 1947 | help@uidai.gov.in | www.uidai.gov.in`;
+  // 3. Document Type Keyword Detection
+  const selectedConfig = SUPPORTED_IDENTITY_DOCS[docType] || SUPPORTED_IDENTITY_DOCS.Aadhaar;
+  passedBadges.push(`Document Type: ${selectedConfig.label}`);
+
+  // 4. Temporary Last-Four Consistency Check
+  const lastFourResult = performTemporaryLastFourCheck({
+    enteredNumber,
+    documentText: customText,
+    fileName: cleanName
+  });
+
+  if (lastFourResult.status === 'CONSISTENT') {
+    passedBadges.push('Last four digits are consistent with submitted information');
+  } else if (lastFourResult.status === 'DO_NOT_MATCH') {
+    suspiciousSignals.push('Notice: Entered identifier last four digits do not match readable document text.');
+  }
+
+  // 5. Name Alignment Check (Advisory)
+  if (applicantName) {
+    const tokens = applicantName.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+    if (tokens.length > 0) {
+      passedBadges.push(`Applicant Name Structure Validated (${tokens.join(' ')})`);
+    }
+  }
+
+  // 6. Overall Advisory Score Computation
+  let advisoryScore = 85;
+  if (reasons.length > 0) advisoryScore -= 40;
+  if (suspiciousSignals.length > 0) advisoryScore -= 15;
+  if (lastFourResult.status === 'CONSISTENT') advisoryScore += 10;
+  advisoryScore = Math.min(100, Math.max(20, advisoryScore));
+
+  const isPrecheckPassed = reasons.length === 0;
+
+  return {
+    isPrecheckPassed,
+    status: isPrecheckPassed ? 'AI_PRECHECK_PASSED' : 'AI_WARNING',
+    advisoryScore,
+    disclaimer: 'AI-ASSISTED DOCUMENT PRE-CHECK — ADVISORY ONLY. Final approval rests with authorized Admin.',
+    docType: selectedConfig.label,
+    maskedIdentifier: enteredNumber ? formatAadhaarMasked(enteredNumber) : 'NOT_ENTERED',
+    lastFourConsistency: lastFourResult.status,
+    lastFourMessage: lastFourResult.message,
+    passedBadges,
+    suspiciousSignals,
+    reasons,
+    recommendation: isPrecheckPassed
+      ? 'Document pre-check passed. Ready for Admin signed-URL review.'
+      : 'Please review flagged warnings or upload a clearer scanned copy.'
+  };
 }

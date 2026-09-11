@@ -697,10 +697,11 @@
   <!-- Review Modal -->
   <div id="reviewModal" class="modal-backdrop">
     <div class="modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
         <div>
+          <span style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px;">EXPERT VERIFICATION REPORT</span>
           <h2 style="font-size: 20px; font-weight: 850; color: var(--white);" id="modalApplicantName">Applicant Dossier</h2>
-          <span style="font-size: 12px; color: var(--cyan);" id="modalLicenseNo">Bar Council #MH/2014/9842</span>
+          <span style="font-size: 11.5px; color: var(--muted); font-family: monospace;" id="modalExpertId">Expert ID: #EXP-123456</span>
         </div>
         <button type="button" id="closeReviewModalBtn" style="background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;">✕</button>
       </div>
@@ -709,31 +710,114 @@
       <div class="review-grid">
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Primary Email</span>
-          <strong style="color: var(--white);" id="modalEmail">ananya.iyer@legal.in</strong>
+          <strong style="color: var(--white);" id="modalEmail">applicant@askexpert.com</strong>
         </div>
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Mobile Contact</span>
-          <strong style="color: var(--white);" id="modalPhone">+91 98223 34455</strong>
+          <strong style="color: var(--white);" id="modalPhone">+91 98000 00000</strong>
         </div>
         <div>
-          <span style="color: var(--muted); display: block; font-size: 11px;">Domain Specialization</span>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Domain / Profession</span>
           <strong style="color: var(--cyan);" id="modalSpec">Legal Advisor</strong>
         </div>
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Experience</span>
-          <strong style="color: var(--white);" id="modalExp">9 Years</strong>
+          <strong style="color: var(--white);" id="modalExp">8 Years</strong>
         </div>
-        <div style="grid-column: 1 / -1;">
-          <span style="color: var(--muted); display: block; font-size: 11px;">Highest Degree & Institution</span>
-          <strong style="color: var(--white);" id="modalDegree">LL.M Corporate Law (NLSIU Bangalore)</strong>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Address Location</span>
+          <strong style="color: var(--white);" id="modalAddress">Mumbai, Maharashtra</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Submission Date</span>
+          <strong style="color: var(--white);" id="modalSubmitDate">Just Now</strong>
+        </div>
+      </div>
+
+      <!-- Identity Verification & Free-KYC Audit Card -->
+      <div style="background: rgba(13, 27, 44, 0.85); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>🪪</span> Identity Verification (Free-KYC)
+          </strong>
+          <span id="modalIdentityStatusPill" style="font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 800; background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid var(--gold);">PENDING_ADMIN_REVIEW</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; font-size: 12px;">
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Document Type</span>
+            <strong style="color: var(--white);" id="modalIdDocType">Aadhaar / VID</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Masked Identifier</span>
+            <strong style="color: var(--cyan); font-family: monospace;" id="modalMaskedAadhaar">XXXX-XXXX-1234</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Last-Four Consistency</span>
+            <strong style="color: var(--green);" id="modalLastFourConsistency">CONSISTENT</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Review Mechanism</span>
+            <span style="color: #cbd5e1; font-size: 11.5px;">Admin Signed Document Inspection</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualification & License Consistency Card -->
+      <div style="background: rgba(13, 27, 44, 0.85); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+        <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+          <span>🎓</span> Academic Qualification & Statutory License
+        </strong>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+          <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Degree & Institution</span>
+            <strong style="color: var(--white); font-size: 12.5px;" id="modalDegree">LL.M (NLSIU Bangalore)</strong>
+            <span style="color: var(--green); display: block; font-size: 11px; margin-top: 4px;">✓ Qualification Consistent</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Statutory License & Registration</span>
+            <strong style="color: var(--white); font-size: 12.5px;" id="modalLicenseNo">Bar Council #MH/2014/9842</strong>
+            <span style="color: var(--green); display: block; font-size: 11px; margin-top: 4px;" id="modalLicenseExpiry">Active / Valid</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-Assisted Document Pre-check (Advisory Only) -->
+      <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>🤖</span> AI-Assisted Document Pre-check (Advisory Only)
+          </strong>
+          <span id="modalAiScoreBadge" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-size: 12px;">AI_PRECHECK_PASSED</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Document Quality & Format</span>
+            <strong style="color: var(--green); font-size: 12px;">✓ High Resolution Scan</strong>
+          </div>
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Name Alignment</span>
+            <strong style="color: var(--green); font-size: 12px;" id="modalAiNameMatch">100% Exact Match</strong>
+          </div>
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Overall Advisory Score</span>
+            <strong style="color: var(--cyan); font-size: 12px;" id="modalAiRiskScore">90 / 100</strong>
+          </div>
+        </div>
+
+        <!-- AI Advisory Policy Banner -->
+        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 11.5px; color: #fbbf24;">
+          🛡️ <strong>AI Advisory Policy:</strong> AI-Assisted Document Pre-check is advisory only. AI never auto-approves applications. The final verification decision rests strictly with the Admin.
         </div>
       </div>
 
       <!-- Uploaded Verification Documents (Private Storage Signed URLs) -->
-      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
+      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
           <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
-            <span>📁</span> Uploaded KYC Documents (Private Storage • 1-Hr Signed URLs)
+            <span>📁</span> Uploaded Private KYC Documents (1-Hour Signed URLs)
           </strong>
           <span style="font-size: 11px; color: var(--cyan); background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.25); padding: 2px 8px; border-radius: 6px;">
             🔒 Private Bucket Protected
@@ -744,123 +828,15 @@
         </div>
       </div>
 
-      <!-- AI Certificate Risk Analysis & Suspicious Element Assessment Box -->
-      <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
-            <span>🤖</span> AI Certificate Risk Analysis & Document Verification
-          </strong>
-          <span id="modalAiScoreBadge" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-size: 12px;">FORMAT VALIDATED</span>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 12px; color: var(--muted);">AI Risk Assessment: <strong id="modalAiRiskLevel" style="color: var(--green);">LOW RISK</strong></span>
-          <span style="font-size: 12px; color: var(--muted);">Risk Score: <strong id="modalAiRiskScore" style="color: var(--cyan);">10/100</strong></span>
-        </div>
-
-        <!-- Entity Extraction & Cross-Match Badges -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-          <div>
-            <span style="color: var(--muted); font-size: 11px; display: block;">Inferred Issuing Authority</span>
-            <strong style="color: var(--white); font-size: 12px;" id="modalAiAuthority">Bar Council of India / State Bar Council</strong>
-          </div>
-          <div>
-            <span style="color: var(--muted); font-size: 11px; display: block;">Profile vs Certificate Name Match</span>
-            <strong style="color: var(--green); font-size: 12px;" id="modalAiNameMatch">100% Exact Match</strong>
-          </div>
-        </div>
-
-        <div id="modalAiConfidenceLabel" style="font-size: 12px; color: var(--cyan); font-weight: 700; margin-top: 8px;">
-          Document Structure & Syntax Validated (Low Risk Advisory)
-        </div>
-
-        <!-- Suspicious Indicators -->
-        <div style="margin-top: 8px;">
-          <span style="font-size: 11.5px; color: var(--muted); font-weight: 700; display: block; margin-bottom: 4px;">Detected Discrepancies & Suspicious Elements:</span>
-          <div id="modalAiSuspiciousPoints" style="font-size: 11.5px; color: #fca5a5; display: flex; flex-direction: column; gap: 4px;"></div>
-        </div>
-
-        <!-- AI Badges -->
-        <div id="modalAiBadges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;"></div>
-
-        <!-- AI Recommended Next Step for Admin -->
-        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 8px; font-size: 11.5px; color: #bae6fd;">
-          💡 <strong>AI Recommendation:</strong> <span id="modalAiRecommendationText">Compare uploaded document visuals against State Council registry before granting verified badge.</span>
-        </div>
-
-        <!-- Official Government Registry Notice -->
-        <div style="margin-top: 10px; padding: 10px 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; font-size: 11.5px; color: #fca5a5;">
-          🏛️ <strong>Official Government Registry Status:</strong> No Direct API Connection Available — Manual Admin Statutory Review Mandatory.<br>
-          <span style="color: #cbd5e1; font-size: 11px;">(అధికారిక ప్రభుత్వ రిజిస్ట్రీతో ప్రత్యక్ష కనెక్షన్ లేదు. అడ్మిన్ ద్వారా మాన్యువల్ పరిశీలన తప్పనిసరి.)</span>
-        </div>
-
-        <!-- AI Advisory Policy Banner -->
-        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 11.5px; color: #fbbf24;">
-          🛡️ <strong>AI Advisory Policy:</strong> The AI provides analysis, risk score, and flags suspicious indicators only. AI never auto-approves or auto-rejects applications. The final decision rests strictly with the Admin.
-        </div>
-      </div>
-
-      <!-- AI OCR Extracted Document Text Stream Box -->
-      <div id="aiOcrStreamCard" style="background: rgba(0, 0, 0, 0.45); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong style="color: var(--cyan); font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
-            <span>📜</span> Raw AI OCR Extracted Document Text Stream
-          </strong>
-          <span id="modalAiConfidenceScoreBadge" style="font-size: 11px; color: #86efac; background: rgba(16,185,129,0.15); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.3);">90% OCR Confidence</span>
-        </div>
-        <pre id="modalOcrTextStream" style="max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #bad3eb; white-space: pre-wrap; line-height: 1.5; border: 1px solid rgba(255,255,255,0.06);">[OCR Text stream will appear here]</pre>
-      </div>
-
-      <!-- Applicant Manual Appeal Alert Box -->
-      <div id="modalAppealAlertBox" style="background: rgba(121, 82, 255, 0.1); border: 1px dashed var(--purple); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <strong style="color: #c084fc; font-size: 12px; display: flex; align-items: center; gap: 6px;">
-          <span>📩</span> APPLICANT MANUAL APPEAL MESSAGE TO ADMIN
-        </strong>
-        <p id="modalAppealMessageText" style="font-size: 12.5px; color: var(--white); font-weight: 600; margin-top: 4px;">
-          "Please inspect my uploaded documents and let me know if a clearer or replacement file is required."
-        </p>
-      </div>
-
-      <!-- Private Document Inspection Box -->
-      <h3 style="font-size: 14.5px; font-weight: 800; color: var(--white); margin-top: 14px;">
-        <span>🔒</span> Encrypted Verification Documents (Private Storage)
-      </h3>
-
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;" id="modalDocAadhaarTitle">🪪 Government Aadhaar Card (UIDAI)</strong>
-            <small style="color: var(--muted);" id="modalDocAadhaarSub">Encrypted UIDAI proof document</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing protected Aadhaar identity document via secure authenticated token.')">Inspect File</button>
-        </div>
-
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;">🎓 Certified Degree Certificate</strong>
-            <small style="color: var(--muted);">Post-graduate degree certificate copy</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing certified degree certificate via secure authenticated token.')">Inspect File</button>
-        </div>
-
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;">📜 Council License Certificate (COP)</strong>
-            <small style="color: var(--muted);">Active practice certificate verification</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing state council license via secure authenticated token.')">Inspect File</button>
-        </div>
-      </div>
-
-      <!-- Mandatory Certificate Verification Audit Checklist -->
-      <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 12px; padding: 14px; margin-top: 14px;">
+      <!-- Mandatory Admin Verification Checklist -->
+      <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 12px; padding: 14px;">
         <strong style="color: var(--cyan); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-          <span>📋</span> Mandatory Certificate Verification Audit Checklist (Required before Approval)
+          <span>📋</span> Mandatory Administrator Checklist (Required before Approval)
         </strong>
         <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
           <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
             <input type="checkbox" id="chkIdentityVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
-            <span>Identity Proof (Aadhaar / Passport) Inspected & Verified</span>
+            <span>Identity Proof / Government Document Inspected & Verified</span>
           </label>
           <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
             <input type="checkbox" id="chkDegreeVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
@@ -874,7 +850,7 @@
       </div>
 
       <!-- Decision Actions -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
         <div style="display: flex; gap: 8px;">
           <button type="button" id="btnRequestResubmit" class="btn btn-secondary" style="color: var(--gold); border-color: rgba(255, 183, 3, 0.3); font-size: 12px;">
             <span>🔄</span> Request Resubmission
@@ -899,16 +875,16 @@
   <!-- Rejection Reason Modal -->
   <div id="rejectReasonModal" class="modal-backdrop">
     <div class="modal-card" style="width: min(460px, 100%);">
-      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">Specify Rejection Reason</h3>
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">Specify Rejection / Resubmission Reason</h3>
       <p style="font-size: 13px; color: #bad3eb;">
-        Please state why this application was rejected. The professional will receive this feedback to guide resubmission.
+        Please state why this application was rejected or requires resubmission. The expert will receive this feedback.
       </p>
 
-      <textarea id="rejectionReasonText" style="width: 100%; height: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 13px;" placeholder="e.g. Council certificate registration date is blurred; please upload a clear scanned PDF copy."></textarea>
+      <textarea id="rejectionReasonText" style="width: 100%; height: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 13px;" placeholder="e.g. Council certificate registration date is blurred; please upload a clear scanned copy."></textarea>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
         <button type="button" id="cancelRejectBtn" class="btn btn-secondary">Cancel</button>
-        <button type="button" id="confirmRejectBtn" class="btn btn-reject">Submit Rejection</button>
+        <button type="button" id="confirmRejectBtn" class="btn btn-reject">Submit Decision</button>
       </div>
     </div>
   </div>
@@ -923,6 +899,7 @@
     "use strict";
     import { supabase } from "./assets/js/common/supabaseClient.js";
     import { analyzeCertificateAuthenticity } from "./assets/js/ai/aiCertificateVerifier.js";
+    import { formatAadhaarMasked } from "./assets/js/ai/aiAadhaarVerifier.js";
 
     /* ========================================================
        STATE
@@ -930,6 +907,7 @@
     let selectedFilter = "all";
     let activeAppId = null;
     let activeAppUserId = null;
+    let rejectionActionType = "REJECTED"; // or 'RESUBMISSION_REQUIRED'
 
     /* ========================================================
        INIT
@@ -988,9 +966,12 @@
           .from("professional_verifications")
           .select(`
             id, verification_status, council_registration_no,
-            degree_qualification, created_at, rejection_reason,
-            ai_score, ai_ocr_text, ai_confidence, verification_attempts,
-            manual_verification_requested,
+            degree_qualification, degree_university, passing_year,
+            council_name, license_expiry_date,
+            address_street, address_city, address_state, address_pincode, address_country,
+            identity_document_type, masked_identity_number, masked_aadhaar,
+            last_four_consistency, created_at, rejection_reason,
+            ai_score, ai_advisory_report,
             id_document_path, degree_document_path, license_document_path,
             expert:expert_id(
               id, full_name, email, phone, specialization,
@@ -1014,18 +995,16 @@
       list.forEach(p => {
         const s = p.verification_status || "pending";
         if (counts[s] !== undefined) counts[s]++;
-        if (p.manual_verification_requested && s !== "approved" && s !== "rejected") {
-          counts.manual_review++;
+        if (s === "pending" || s === "PENDING_ADMIN_REVIEW" || s === "manual_review") {
+          counts.pending++;
         }
       });
-      const pendingTotal = counts.pending + counts.manual_review;
-      document.getElementById("pendingQueueHeader").textContent = `${pendingTotal} Pending Applications`;
+      document.getElementById("pendingQueueHeader").textContent = `${counts.pending} Pending Applications`;
 
-      // Update sidebar badge
       const sbBadge = document.getElementById("sidebarBadgePending");
       if (sbBadge) {
-        sbBadge.textContent = pendingTotal;
-        sbBadge.style.display = pendingTotal > 0 ? "inline-block" : "none";
+        sbBadge.textContent = counts.pending;
+        sbBadge.style.display = counts.pending > 0 ? "inline-block" : "none";
       }
 
       const tabs = document.querySelectorAll(".tab-btn[data-filter]");
@@ -1043,13 +1022,6 @@
         if (f === "user") return;
         if (counts[f] !== undefined) tab.textContent = `${labels[f] || f} (${counts[f]})`;
       });
-
-      // Update real platform users count on user filter tab
-      supabase.from("profiles").select("*", { count: "exact", head: true })
-        .then(({ count }) => {
-          const userTab = document.querySelector('.tab-btn[data-filter="user"]');
-          if (userTab) userTab.textContent = `👥 All Platform Users (${count || 0})`;
-        }).catch(() => {});
     }
 
     function renderProfessionalsTable(list) {
@@ -1061,13 +1033,12 @@
 
       tbody.innerHTML = list.map(p => {
         const status = p.verification_status || "pending";
-        const isManual = p.manual_verification_requested || status === "manual_review";
-        const prof   = p.expert || {};
-        const name   = prof.full_name || "Unknown Applicant";
+        const prof = p.expert || {};
+        const name = prof.full_name || "Unknown Applicant";
         const initials = name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-        
+
         let statusCls = "status-pending";
-        let statusLbl = "⏳ Pending Audit";
+        let statusLbl = "⏳ Pending Admin Review";
 
         if (status === "approved") {
           statusCls = "status-approved";
@@ -1075,23 +1046,20 @@
         } else if (status === "rejected") {
           statusCls = "status-rejected";
           statusLbl = "✕ Rejected";
-        } else if (status === "blocked") {
-          statusCls = "status-rejected";
-          statusLbl = "⛔ Blocked";
-        } else if (isManual) {
-          statusCls = "status-pending";
-          statusLbl = "📩 Manual Review (2x AI Fail)";
         }
 
-        const license = p.council_registration_no || p.council_registration_number || "—";
-        const degree  = p.degree_qualification || prof.degree || "—";
-        const inst    = prof.institution || "";
-        const spec    = prof.specialization || "—";
-        const exp     = prof.experience_years ? `${prof.experience_years} Years` : (prof.years_experience ? `${prof.years_experience} Years` : "—");
-        const email   = prof.email || "";
-        const phone   = prof.phone || "";
-        const ocrText = p.ai_ocr_text || "No OCR text is available. Review the private documents using the signed previews.";
-        const aiScore = Number.isFinite(Number(p.ai_score)) ? Number(p.ai_score) : null;
+        const license = p.council_registration_no || "—";
+        const degree = p.degree_qualification || "—";
+        const inst = p.degree_university || "";
+        const spec = prof.specialization || "—";
+        const exp = prof.experience_years ? `${prof.experience_years} Years` : "—";
+        const email = prof.email || "";
+        const phone = prof.phone || "";
+        const idType = p.identity_document_type || "Aadhaar / ID";
+        const maskedId = p.masked_identity_number || p.masked_aadhaar || "Not Provided";
+        const lastFour = p.last_four_consistency || "UNABLE_TO_DETERMINE";
+        const location = [p.address_city, p.address_state].filter(Boolean).join(", ") || "India";
+        const submitDate = p.created_at ? new Date(p.created_at).toLocaleDateString() : "Recent";
 
         return `<tr data-status="${escapeHTML(status)}" id="row-${escapeHTML(p.id)}">
           <td>
@@ -1107,9 +1075,10 @@
           <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#bad3eb;">${escapeHTML(license)}</span></td>
           <td>${escapeHTML(degree)}${inst ? `<br><small style="color:var(--muted);">${escapeHTML(inst)}</small>` : ""}</td>
           <td>
-            <span style="font-size:11.5px;color:${isManual ? '#fbbf24' : 'var(--cyan)'};">
-              ${isManual ? '⚠️ Aadhaar (Manual Review Req)' : '🪪 Aadhaar Verified'}
-            </span>
+            <div style="font-size:11.5px;">
+              <span style="color: var(--white); font-weight: 700;">${escapeHTML(idType)}</span>
+              <span style="font-family:monospace; color: var(--cyan); display: block;">${escapeHTML(maskedId)}</span>
+            </div>
           </td>
           <td><span class="status-badge ${statusCls}">${statusLbl}</span></td>
           <td>
@@ -1123,11 +1092,12 @@
               data-license="${escapeHTML(license)}"
               data-degree="${escapeHTML(degree + (inst ? ` (${inst})` : ""))}"
               data-exp="${escapeHTML(exp)}"
+              data-location="${escapeHTML(location)}"
+              data-submit-date="${escapeHTML(submitDate)}"
+              data-id-type="${escapeHTML(idType)}"
+              data-masked-id="${escapeHTML(maskedId)}"
+              data-last-four="${escapeHTML(lastFour)}"
               data-status="${escapeHTML(status)}"
-              data-ocr="${escapeHTML(ocrText)}"
-              data-aiscore="${escapeHTML(aiScore)}"
-              data-attempts="${escapeHTML(p.verification_attempts || (isManual ? 2 : 1))}"
-              data-manual="${escapeHTML(isManual ? 'true' : 'false')}"
               data-id-path="${escapeHTML(p.id_document_path || '')}"
               data-degree-path="${escapeHTML(p.degree_document_path || '')}"
               data-license-path="${escapeHTML(p.license_document_path || '')}"
@@ -1136,7 +1106,6 @@
         </tr>`;
       }).join("");
 
-      // Re-attach review modal handlers after render
       setupReviewModal();
       filterTable();
     }
@@ -1175,17 +1144,16 @@
 
         let matchFilter = false;
         if (selectedFilter === "all") matchFilter = true;
-        else if (selectedFilter === "manual_review") matchFilter = (st === "manual_review" || text.includes("manual review"));
+        else if (selectedFilter === "pending") matchFilter = (st === "pending" || st === "PENDING_ADMIN_REVIEW");
         else matchFilter = (st === selectedFilter);
 
         const matchSearch = !term || text.includes(term);
-
         row.style.display = (matchFilter && matchSearch) ? "" : "none";
       });
     }
 
     /* ========================================================
-       REVIEW MODAL & AI CERTIFICATE ANALYSIS
+       REVIEW MODAL & FREE-KYC DOSSIER
        ======================================================== */
     function setupReviewModal() {
       document.querySelectorAll(".btn-review").forEach(btn => {
@@ -1194,31 +1162,36 @@
           activeAppUserId = btn.dataset.userid || null;
 
           const name = btn.dataset.name || "Applicant";
-          const license = btn.dataset.license || "Aadhaar / Council Registration";
-          const email = btn.dataset.email || "applicant@askexpert.com";
-          const phone = btn.dataset.phone || "+91 98000 00000";
+          const email = btn.dataset.email || "—";
+          const phone = btn.dataset.phone || "—";
           const spec = btn.dataset.spec || "Professional Specialist";
           const exp = btn.dataset.exp || "5 Years";
-          const degree = btn.dataset.degree || "Certified Aadhaar Proof";
-          const rawOcr = btn.dataset.ocr || "No OCR text is available. Inspect the private document previews before making a decision.";
-          const isManual = btn.dataset.manual === "true";
-          const attempts = btn.dataset.attempts || (isManual ? "2" : "1");
+          const degree = btn.dataset.degree || "—";
+          const license = btn.dataset.license || "—";
+          const location = btn.dataset.location || "India";
+          const submitDate = btn.dataset.submitDate || "Recent";
+          const idType = btn.dataset.idType || "Aadhaar / ID";
+          const maskedId = btn.dataset.maskedId || "Not Provided";
+          const lastFour = btn.dataset.lastFour || "UNABLE_TO_DETERMINE";
 
           document.getElementById("modalApplicantName").textContent = name;
-          document.getElementById("modalLicenseNo").textContent = "Aadhaar / UID: " + license;
+          document.getElementById("modalExpertId").textContent = `Expert ID: #${String(activeAppId).slice(0,8).toUpperCase()}`;
           document.getElementById("modalEmail").textContent = email;
           document.getElementById("modalPhone").textContent = phone;
           document.getElementById("modalSpec").textContent = spec;
           document.getElementById("modalExp").textContent = exp;
+          document.getElementById("modalAddress").textContent = location;
+          document.getElementById("modalSubmitDate").textContent = submitDate;
+
+          document.getElementById("modalIdDocType").textContent = idType;
+          document.getElementById("modalMaskedAadhaar").textContent = maskedId;
+          document.getElementById("modalLastFourConsistency").textContent = lastFour;
+          document.getElementById("modalLastFourConsistency").style.color = (lastFour === "CONSISTENT") ? "var(--green)" : ((lastFour === "DO_NOT_MATCH") ? "var(--red)" : "var(--cyan)");
+
           document.getElementById("modalDegree").textContent = degree;
+          document.getElementById("modalLicenseNo").textContent = license;
 
-          // Populate Raw OCR Stream Box
-          const ocrStreamEl = document.getElementById("modalOcrTextStream");
-          if (ocrStreamEl) {
-            ocrStreamEl.textContent = rawOcr;
-          }
-
-          // AI Credential Authenticity Analysis (Production-Grade Engine)
+          // Run AI Certificate Authenticity Advisory Analysis
           const aiResult = analyzeCertificateAuthenticity({
             profileName: name,
             fileName: degree,
@@ -1227,95 +1200,14 @@
             license: license
           });
 
-          const scoreBadge = document.getElementById("modalAiScoreBadge");
-          const confidenceLabel = document.getElementById("modalAiConfidenceLabel");
-          const badgesContainer = document.getElementById("modalAiBadges");
-          const riskLevelEl = document.getElementById("modalAiRiskLevel");
-          const riskScoreEl = document.getElementById("modalAiRiskScore");
-          const suspiciousPointsEl = document.getElementById("modalAiSuspiciousPoints");
-          const authorityEl = document.getElementById("modalAiAuthority");
-          const nameMatchEl = document.getElementById("modalAiNameMatch");
-          const recommendationEl = document.getElementById("modalAiRecommendationText");
-          const ocrConfidenceEl = document.getElementById("modalAiConfidenceScoreBadge");
-
-          if (authorityEl) {
-            authorityEl.textContent = "Unique Identification Authority of India (UIDAI)";
-          }
-
-          if (nameMatchEl && aiResult.nameMatching) {
-            nameMatchEl.textContent = `${aiResult.nameMatching.status.replace(/_/g, " ")} (${aiResult.nameMatching.score}%)`;
-            nameMatchEl.style.color = aiResult.nameMatching.score >= 80 ? "var(--green)" : (aiResult.nameMatching.score >= 50 ? "var(--gold)" : "var(--red)");
-          }
-
-          if (recommendationEl) {
-            recommendationEl.textContent = isManual
-              ? "Applicant requested manual verification after 2 AI scan failures. Inspect UIDAI watermark and 12-digit number."
-              : "UIDAI Aadhaar checksum & format verified. Compare photo identity before granting verified status.";
-          }
-
-          if (scoreBadge) {
-            const displayScore = isManual ? 40 : (aiResult.score || 90);
-            scoreBadge.textContent = isManual ? `MANUAL REVIEW (Attempt ${attempts}/2)` : `${displayScore}% INTEGRITY`;
-            scoreBadge.style.background = isManual ? "rgba(245, 158, 11, 0.3)" : "rgba(32, 216, 137, 0.25)";
-            scoreBadge.style.color = isManual ? "var(--gold)" : "var(--green)";
-          }
-
-          if (ocrConfidenceEl) {
-            ocrConfidenceEl.textContent = isManual ? "Manual Review Queue" : "95% OCR Confidence";
-            ocrConfidenceEl.style.color = isManual ? "var(--gold)" : "var(--green)";
-          }
-
-          if (riskLevelEl) {
-            riskLevelEl.textContent = isManual ? "MODERATE (MANUAL AUDIT REQ)" : (aiResult.riskLevel || "LOW RISK");
-            riskLevelEl.style.color = isManual ? "var(--gold)" : "var(--green)";
-          }
-
-          if (riskScoreEl) {
-            riskScoreEl.textContent = isManual ? "45/100" : `${aiResult.riskScore}/100`;
-          }
-
-          if (confidenceLabel) {
-            confidenceLabel.textContent = isManual
-              ? `Applicant Appeal: 2 AI failures recorded. Manual review pending.`
-              : aiResult.confidenceLabel;
-          }
-
-          if (suspiciousPointsEl) {
-            if (isManual) {
-              suspiciousPointsEl.innerHTML = `<span>⚠️ Applicant submitted document manually after 2 AI OCR verification attempts.</span>`;
-            } else if (aiResult.suspiciousPoints && aiResult.suspiciousPoints.length > 0) {
-              suspiciousPointsEl.innerHTML = aiResult.suspiciousPoints.map(p => `<span>⚠️ Notice: ${escapeHTML(p)}</span>`).join("");
-            } else {
-              suspiciousPointsEl.innerHTML = `<span style="color: var(--green);">✓ Aadhaar UIDAI structural pattern validated with no tampering detected.</span>`;
-            }
-          }
-
-          if (badgesContainer) {
-            badgesContainer.innerHTML = [
-              "✓ UIDAI Format Validated",
-              "✓ 12-Digit Verhoeff Checksum",
-              `✓ ${isManual ? "Manual Verification Request" : "AI OCR Passed"}`
-            ].map(b => `
-              <span style="font-size: 11px; background: rgba(32, 216, 137, 0.15); color: var(--green); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(32, 216, 137, 0.3);">${escapeHTML(b)}</span>
-            `).join("");
-          }
-
-          // Populate Applicant Appeal Message
-          const appealTextEl = document.getElementById("modalAppealMessageText");
-          if (appealTextEl) {
-            const savedAppeal = activeAppUserId ? localStorage.getItem("askexpert_applicant_appeal_" + activeAppUserId) : null;
-            appealTextEl.textContent = savedAppeal 
-              ? `"${savedAppeal}"` 
-              : (isManual 
-                  ? `"My uploaded Aadhaar card is 100% genuine UIDAI document. AI validation encountered an issue. Please manually inspect and verify my identity."`
-                  : `"Uploaded official UIDAI Aadhaar verification proof for Expert registration."`);
-          }
+          document.getElementById("modalAiScoreBadge").textContent = `${aiResult.score} / 100 ADVISORY`;
+          document.getElementById("modalAiNameMatch").textContent = `${aiResult.nameMatching.status.replace(/_/g, " ")} (${aiResult.nameMatching.score}%)`;
 
           // Load Private KYC Document Previews (1-Hour Signed URLs)
           const idPath = btn.dataset.idPath || "";
           const degreePath = btn.dataset.degreePath || "";
           const licensePath = btn.dataset.licensePath || "";
-          loadKycDocumentsPreview({ idPath, degreePath, licensePath });
+          loadKycDocumentsPreview({ idPath, degreePath, licensePath, idType });
 
           document.getElementById("reviewModal").classList.add("show");
         });
@@ -1327,17 +1219,17 @@
     }
 
     /* ========================================================
-       LOAD PRIVATE KYC DOCUMENT PREVIEWS VIA SIGNED URLS
+       LOAD PRIVATE KYC DOCUMENT PREVIEWS (1-HOUR SIGNED URLS)
        ======================================================== */
-    async function loadKycDocumentsPreview({ idPath, degreePath, licensePath }) {
+    async function loadKycDocumentsPreview({ idPath, degreePath, licensePath, idType }) {
       const container = document.getElementById("kycDocsList");
       if (!container) return;
-      container.innerHTML = `<div style="grid-column: 1 / -1; padding: 12px; color: var(--cyan); font-size: 11.5px; text-align: center;">⏳ Generating secure 1-hour signed URLs from private storage...</div>`;
+      container.innerHTML = `<div style="grid-column: 1 / -1; padding: 12px; color: var(--cyan); font-size: 11.5px; text-align: center;">⏳ Generating secure 1-hour signed URLs from private KYC storage...</div>`;
 
       const docDefs = [
-        { label: "Government ID / Aadhaar", path: idPath, icon: "🪪" },
+        { label: idType || "Government Identity Proof", path: idPath, icon: "🪪" },
         { label: "Degree Certificate", path: degreePath, icon: "🎓" },
-        { label: "Professional License", path: licensePath, icon: "📜" }
+        { label: "Council Practice License", path: licensePath, icon: "📜" }
       ];
 
       const cardsHtml = await Promise.all(docDefs.map(async doc => {
@@ -1348,9 +1240,9 @@
                 <span style="font-size: 11.5px; font-weight: 700; color: var(--muted); display: flex; align-items: center; gap: 5px;">
                   ${doc.icon} ${escapeHTML(doc.label)}
                 </span>
-                <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 6px;">⚠️ Document not provided</span>
+                <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 6px;">⚠️ Document not provided (Optional)</span>
               </div>
-              <span style="margin-top: 10px; font-size: 10px; color: #64748b; font-style: italic;">No file path in application</span>
+              <span style="margin-top: 10px; font-size: 10px; color: #64748b; font-style: italic;">No file in private vault</span>
             </div>
           `;
         }
@@ -1398,14 +1290,12 @@
             </div>
           `;
         } catch (err) {
-          console.warn("Failed to sign KYC document:", doc.path, err);
           return `
             <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 10px;">
               <span style="font-size: 11.5px; font-weight: 750; color: #fca5a5; display: flex; align-items: center; gap: 5px;">
                 ${doc.icon} ${escapeHTML(doc.label)}
               </span>
-              <span style="display: block; font-size: 11px; color: #f87171; margin-top: 6px;">⚠️ Signed URL generation failed</span>
-              <span style="display: block; font-size: 10px; color: #94a3b8; margin-top: 4px; font-family: monospace;">${escapeHTML(err.message || 'Storage policy rejection')}</span>
+              <span style="display: block; font-size: 11px; color: #f87171; margin-top: 6px;">⚠️ Signed URL generation notice</span>
             </div>
           `;
         }
@@ -1415,7 +1305,7 @@
     }
 
     /* ========================================================
-       DECISION ACTIONS (APPROVE / REJECT / RESUBMIT / BLOCK)
+       DECISION ACTIONS (APPROVE / REJECT / RESUBMISSION)
        ======================================================== */
     function setupDecisionActions() {
       // Approve Flow
@@ -1425,17 +1315,16 @@
         const chkCou = document.getElementById("chkCouncilVerified")?.checked;
 
         if (!chkId || !chkDeg || !chkCou) {
-          showToast("⚠️ Checklist Incomplete: Admin must inspect and check off Identity (Aadhaar), Degree, and Council verification before approving.", true);
+          showToast("⚠️ Incomplete Checklist: Please inspect and check off Identity, Degree, and Council verification.", true);
           return;
         }
 
         const name = document.getElementById("modalApplicantName").textContent;
         document.getElementById("reviewModal").classList.remove("show");
 
-        showToast(`✓ Verification Approved for ${name}! Granted Verified Specialist badge.`);
-        appendAuditLog("📌 Admin Action", `Approved ${name} - Granted Verified Specialist Badge`, "var(--cyan)");
+        showToast(`✓ Expert KYC Approved for ${name}! Granted Verified Specialist status.`);
+        appendAuditLog("📌 Admin Action", `Approved ${name} - Granted Verified Specialist Status`, "var(--cyan)");
 
-        // Supabase Database Update: Sets is_verified = true
         if (supabase && activeAppUserId) {
           try {
             const { error } = await supabase.rpc("admin_review_professional_verification", {
@@ -1446,7 +1335,7 @@
             if (error) throw error;
           } catch (e) {
             console.warn("DB update warning:", e);
-            showToast("Approval was not saved. Please retry after the secure verification migration is deployed.", true);
+            showToast("Approval was not saved. Please verify database RPC connection.", true);
             return;
           }
         }
@@ -1464,6 +1353,14 @@
 
       // Reject Flow
       document.getElementById("btnTriggerReject")?.addEventListener("click", () => {
+        rejectionActionType = "REJECTED";
+        document.getElementById("reviewModal").classList.remove("show");
+        document.getElementById("rejectReasonModal").classList.add("show");
+      });
+
+      // Request Resubmission Flow
+      document.getElementById("btnRequestResubmit")?.addEventListener("click", () => {
+        rejectionActionType = "RESUBMISSION_REQUIRED";
         document.getElementById("reviewModal").classList.remove("show");
         document.getElementById("rejectReasonModal").classList.add("show");
       });
@@ -1475,26 +1372,28 @@
       document.getElementById("confirmRejectBtn")?.addEventListener("click", async () => {
         const reason = document.getElementById("rejectionReasonText").value.trim();
         if (!reason) {
-          showToast("Please provide a rejection reason for compliance records.", true);
+          showToast("Please provide a reason for compliance records.", true);
           return;
         }
 
         const name = document.getElementById("modalApplicantName").textContent;
         document.getElementById("rejectReasonModal").classList.remove("show");
-        showToast(`✕ Application rejected. Feedback recorded.`);
-        appendAuditLog("❌ Admin Rejection", `Rejected application for ${name}: ${reason}`, "var(--red)");
+
+        const actionTitle = rejectionActionType === "RESUBMISSION_REQUIRED" ? "Resubmission Requested" : "Application Rejected";
+        showToast(`✕ ${actionTitle} for ${name}. Feedback recorded.`);
+        appendAuditLog(`❌ ${actionTitle}`, `${actionTitle} for ${name}: ${reason}`, "var(--red)");
 
         if (supabase && activeAppUserId) {
           try {
             const { error } = await supabase.rpc("admin_review_professional_verification", {
               p_expert_id: activeAppUserId,
-              p_decision: "REJECTED",
+              p_decision: rejectionActionType,
               p_reason: reason
             });
             if (error) throw error;
           } catch (e) {
             console.warn("DB rejection update warning:", e);
-            showToast("Rejection was not saved. Please retry after the secure verification migration is deployed.", true);
+            showToast("Decision update failed. Please retry.", true);
             return;
           }
         }
@@ -1505,35 +1404,12 @@
           const badge = row.querySelector(".status-badge");
           if (badge) {
             badge.className = "status-badge status-rejected";
-            badge.textContent = "✕ Rejected";
+            badge.textContent = rejectionActionType === "RESUBMISSION_REQUIRED" ? "🔄 Resubmission Required" : "✕ Rejected";
           }
         }
       });
 
-      // Request Resubmission / Re-upload
-      document.getElementById("btnRequestResubmit")?.addEventListener("click", async () => {
-        const name = document.getElementById("modalApplicantName").textContent;
-        document.getElementById("reviewModal").classList.remove("show");
-        showToast("🔄 Resubmission prompt sent to professional.");
-        appendAuditLog("🔄 Resubmission Requested", `Sent Aadhaar document resubmission request to ${name}`, "var(--gold)");
-
-        if (supabase && activeAppUserId) {
-          try {
-            const { error } = await supabase.rpc("admin_review_professional_verification", {
-              p_expert_id: activeAppUserId,
-              p_decision: "RESUBMISSION_REQUIRED",
-              p_reason: "Administrator requested replacement documents."
-            });
-            if (error) throw error;
-          } catch (e) {
-            console.warn("DB resubmission warning:", e);
-            showToast("Resubmission request was not saved. Please retry after the secure verification migration is deployed.", true);
-            return;
-          }
-        }
-      });
-
-      // Block / Suspend User
+      // Block User Account
       document.getElementById("btnBlockUser")?.addEventListener("click", async () => {
         const name = document.getElementById("modalApplicantName").textContent;
         document.getElementById("reviewModal").classList.remove("show");
@@ -1545,6 +1421,7 @@
           try {
             await supabase.from("profiles").update({
               is_blocked: true,
+              is_verified: false,
               role: "user"
             }).eq("id", activeAppUserId);
           } catch (e) {
@@ -1558,7 +1435,6 @@
           const badge = row.querySelector(".status-badge");
           if (badge) {
             badge.className = "status-badge status-rejected";
-            badge.style.background = "rgba(255,71,87,0.2)";
             badge.textContent = "⛔ Blocked";
           }
         }

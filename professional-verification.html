@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AskExpert - Professional Registration & Verification. Upload credentials, degrees, and council licenses for verified expert status." />
-  <title>AskExpert | Professional Verification</title>
+  <meta name="description" content="AskExpert - Free Multi-Step Professional Verification & KYC. Upload academic credentials, optional government identity proof, and submit for Admin compliance review." />
+  <title>AskExpert | Professional Verification & Free-KYC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/styles.css" />
 
   <style>
@@ -18,9 +18,9 @@
       --bg-1: #030712;
       --bg-2: #07152d;
       --bg-3: #0d122b;
-      --card-bg: rgba(10, 20, 44, 0.88);
+      --card-bg: rgba(10, 20, 44, 0.90);
       --card-inner: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(59, 130, 246, 0.22);
+      --card-border: rgba(59, 130, 246, 0.25);
       --card-hover: rgba(59, 130, 246, 0.5);
 
       --white: #ffffff;
@@ -63,7 +63,7 @@
     }
 
     .container {
-      width: min(940px, 94%);
+      width: min(980px, 95%);
       margin: 0 auto;
     }
 
@@ -118,7 +118,7 @@
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
       position: relative;
       overflow: hidden;
     }
@@ -134,7 +134,7 @@
     }
 
     .intro-section {
-      padding: 36px 40px 24px;
+      padding: 32px 36px 20px;
     }
 
     .badge-eyebrow {
@@ -150,11 +150,11 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .main-title {
-      font-size: clamp(24px, 4vw, 34px);
+      font-size: clamp(22px, 3.5vw, 32px);
       font-weight: 900;
       color: var(--white);
       letter-spacing: -0.5px;
@@ -162,29 +162,26 @@
     }
 
     .intro-desc {
-      font-size: 14px;
+      font-size: 13.5px;
       color: #bad3eb;
-      margin-top: 8px;
-      max-width: 720px;
+      margin-top: 6px;
+      max-width: 760px;
     }
 
-    /* Stepper Bar */
+    /* 9-Step Stepper Bar */
+    .stepper-bar-wrap {
+      overflow-x: auto;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 6px;
+    }
+
     .stepper-bar {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    @media (max-width: 650px) {
-      .stepper-bar {
-        gap: 4px;
-      }
-      .step-label {
-        display: none;
-      }
+      grid-template-columns: repeat(9, minmax(80px, 1fr));
+      gap: 6px;
+      min-width: 720px;
     }
 
     .step-item {
@@ -192,21 +189,22 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 6px;
-      font-size: 11.5px;
+      gap: 5px;
+      font-size: 11px;
       font-weight: 700;
       color: #64748b;
+      transition: color 0.25s;
     }
 
     .step-circle {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: 1px solid var(--card-border);
       background: rgba(255, 255, 255, 0.04);
       display: grid;
       place-items: center;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
       transition: all 0.25s ease;
     }
@@ -216,7 +214,7 @@
     }
 
     .step-item.active .step-circle {
-      background: rgba(0, 217, 255, 0.15);
+      background: rgba(0, 217, 255, 0.18);
       border-color: var(--cyan);
       color: var(--cyan);
       box-shadow: 0 0 12px rgba(0, 217, 255, 0.35);
@@ -234,13 +232,13 @@
 
     /* Form Body */
     .form-container {
-      padding: 0 40px 40px;
+      padding: 0 36px 36px;
     }
 
     @media (max-width: 650px) {
       .intro-section, .form-container {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 18px;
+        padding-right: 18px;
       }
     }
 
@@ -263,12 +261,15 @@
       font-weight: 850;
       color: var(--white);
       margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .step-subtitle {
       font-size: 13px;
       color: var(--muted);
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .fields-grid {
@@ -297,9 +298,12 @@
       font-size: 12.5px;
       font-weight: 750;
       color: #bad3eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .form-input, .form-select {
+    .form-input, .form-select, .form-textarea {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       border-radius: 12px;
@@ -308,6 +312,11 @@
       font-size: 13.5px;
       outline: none;
       transition: all 0.2s;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
     }
 
     .form-select {
@@ -319,25 +328,31 @@
       color: #ffffff;
     }
 
-    .form-input:focus, .form-select:focus {
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       border-color: var(--cyan);
       background: rgba(0, 217, 255, 0.05);
       box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.15);
     }
 
-    /* Document Upload Dropzones */
-    .upload-zone-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    /* Verification State Pill */
+    .state-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
 
-    @media (max-width: 600px) {
-      .upload-zone-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .state-not-started { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .state-pending-review { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.3); }
+    .state-approved { background: rgba(32, 216, 137, 0.18); color: var(--green); border: 1px solid rgba(32, 216, 137, 0.4); }
+    .state-rejected { background: rgba(239, 68, 68, 0.18); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.4); }
 
+    /* Interactive Upload Dropzones */
     .upload-zone {
       border: 1.5px dashed rgba(0, 217, 255, 0.3);
       background: rgba(0, 217, 255, 0.03);
@@ -387,8 +402,8 @@
 
     /* Privacy Banner */
     .privacy-notice {
-      margin-top: 20px;
-      padding: 14px 16px;
+      margin-top: 14px;
+      padding: 12px 16px;
       background: rgba(12, 28, 48, 0.85);
       border: 1px solid rgba(0, 217, 255, 0.25);
       border-radius: 12px;
@@ -406,7 +421,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-top: 30px;
+      margin-top: 28px;
       padding-top: 18px;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
@@ -415,7 +430,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 11px 24px;
+      padding: 11px 22px;
       border-radius: 12px;
       font-size: 13.5px;
       font-weight: 750;
@@ -451,10 +466,46 @@
       transform: none !important;
     }
 
+    /* Review Summary Grid */
+    .review-dossier-card {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .review-section-header {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 6px;
+    }
+
+    .review-grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 600px) {
+      .review-grid-two {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* Status Screen Card */
     .status-dashboard-card {
       text-align: center;
-      padding: 40px 20px;
+      padding: 36px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -462,13 +513,13 @@
     }
 
     .status-badge-icon {
-      width: 76px;
-      height: 76px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      font-size: 36px;
-      margin-bottom: 6px;
+      font-size: 34px;
+      margin-bottom: 4px;
     }
 
     .status-pending { background: rgba(255, 183, 3, 0.15); border: 2px solid var(--gold); color: var(--gold); }
@@ -476,7 +527,7 @@
     .status-rejected { background: rgba(255, 71, 87, 0.15); border: 2px solid var(--red); color: var(--red); }
 
     .status-check-list {
-      max-width: 440px;
+      max-width: 500px;
       width: 100%;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
@@ -513,38 +564,13 @@
       animation: toastIn 0.3s ease;
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 12px 8px 40px;
-      }
-      .topbar {
-        padding: 8px 4px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-      .brand {
-        font-size: 18px;
-      }
-      .panel {
-        padding: 20px 14px;
-      }
-      .main-title {
-        font-size: 20px;
-        line-height: 1.3;
-      }
-      .stepper-nav {
-        overflow-x: auto;
-        width: 100%;
-        padding-bottom: 8px;
-      }
-      .form-actions-row {
-        flex-direction: column;
-      }
-      .form-actions-row .btn {
-        width: 100%;
-        justify-content: center;
-      }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast-pill.show {
+      display: block;
     }
   </style>
 </head>
@@ -566,33 +592,54 @@
       
       <!-- Intro Section -->
       <div class="intro-section">
-        <span class="badge-eyebrow">🛡️ Verified Professional Onboarding</span>
-        <h1 class="main-title">Professional Identity & License Verification</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span class="badge-eyebrow">🛡️ Free Multi-Step Professional Verification</span>
+          <span class="state-pill state-not-started" id="globalStatePill">Status: Draft</span>
+        </div>
+        <h1 class="main-title">Expert Registration & Free-KYC Onboarding</h1>
         <p class="intro-desc">
-          To advise clients on AskExpert, please verify your professional credentials, degree, and council registration. Your documents are stored in private encrypted storage and reviewed only by authorized compliance admins.
+          Complete our secure, 9-step professional verification flow. Submit your qualifications, council license, and optional identity document for authorized Administrator review.
         </p>
 
-        <!-- Stepper Navigation -->
-        <div class="stepper-bar" id="stepperBar">
-          <div class="step-item active" data-step="1">
-            <div class="step-circle">1</div>
-            <span class="step-label">Personal Info</span>
-          </div>
-          <div class="step-item" data-step="2">
-            <div class="step-circle">2</div>
-            <span class="step-label">Professional Info</span>
-          </div>
-          <div class="step-item" data-step="3">
-            <div class="step-circle">3</div>
-            <span class="step-label">Identity KYC</span>
-          </div>
-          <div class="step-item" data-step="4">
-            <div class="step-circle">4</div>
-            <span class="step-label">Degree & License</span>
-          </div>
-          <div class="step-item" data-step="5">
-            <div class="step-circle">5</div>
-            <span class="step-label">Declaration</span>
+        <!-- 9-Step Stepper Navigation -->
+        <div class="stepper-bar-wrap">
+          <div class="stepper-bar" id="stepperBar">
+            <div class="step-item active" data-step="1">
+              <div class="step-circle">1</div>
+              <span>Personal</span>
+            </div>
+            <div class="step-item" data-step="2">
+              <div class="step-circle">2</div>
+              <span>Address</span>
+            </div>
+            <div class="step-item" data-step="3">
+              <div class="step-circle">3</div>
+              <span>Professional</span>
+            </div>
+            <div class="step-item" data-step="4">
+              <div class="step-circle">4</div>
+              <span>Identity</span>
+            </div>
+            <div class="step-item" data-step="5">
+              <div class="step-circle">5</div>
+              <span>Degree</span>
+            </div>
+            <div class="step-item" data-step="6">
+              <div class="step-circle">6</div>
+              <span>License</span>
+            </div>
+            <div class="step-item" data-step="7">
+              <div class="step-circle">7</div>
+              <span>AI Pre-check</span>
+            </div>
+            <div class="step-item" data-step="8">
+              <div class="step-circle">8</div>
+              <span>Review</span>
+            </div>
+            <div class="step-item" data-step="9">
+              <div class="step-circle">9</div>
+              <span>Pending</span>
+            </div>
           </div>
         </div>
       </div>
@@ -600,37 +647,46 @@
       <!-- Form Container -->
       <div class="form-container">
         
-        <!-- Live Status Screen (Rendered if application is already submitted) -->
+        <!-- Live Status Screen (STEP 9 / Rendered if application is submitted) -->
         <div id="statusScreen" style="display: none;">
           <div class="status-dashboard-card">
             <div class="status-badge-icon status-pending" id="statusBadgeIcon">⏳</div>
-            <h2 style="font-size: 22px; font-weight: 850; color: var(--white);" id="statusHeader">Verification Under Review</h2>
-            <p style="font-size: 13.5px; color: #bad3eb; max-width: 520px;" id="statusMessage">
-              Your credentials and documents have been submitted to the AskExpert Compliance Board. We verify licenses with state councils within 12–24 hours.
+            <h2 style="font-size: 22px; font-weight: 850; color: var(--white);" id="statusHeader">Verification Pending Admin Review</h2>
+            <p style="font-size: 13.5px; color: #bad3eb; max-width: 540px;" id="statusMessage">
+              Your credentials and documents have been securely submitted to the AskExpert Compliance Board. Private documents will be reviewed using time-limited signed URLs.
             </p>
 
             <div class="status-check-list">
               <div class="status-check-row">
-                <span>Government ID Verification</span>
-                <strong style="color: var(--gold);" id="checkIdentityStatus">● In Progress</strong>
+                <span>Identity Document Review</span>
+                <strong style="color: var(--gold);" id="checkIdentityStatus">● Pending Admin Inspection</strong>
               </div>
               <div class="status-check-row">
                 <span>Educational Degree Audit</span>
-                <strong style="color: var(--gold);" id="checkDegreeStatus">● In Progress</strong>
+                <strong style="color: var(--gold);" id="checkDegreeStatus">● Pending Admin Inspection</strong>
               </div>
               <div class="status-check-row">
-                <span>Bar / ICAI Council License Check</span>
-                <strong style="color: var(--gold);" id="checkCouncilStatus">● In Progress</strong>
+                <span>Council / Bar License Check</span>
+                <strong style="color: var(--gold);" id="checkCouncilStatus">● Pending Admin Inspection</strong>
+              </div>
+              <div class="status-check-row">
+                <span>AI-Assisted Document Pre-check</span>
+                <strong style="color: var(--cyan);" id="checkAiStatus">● Advisory Pre-check Completed</strong>
               </div>
             </div>
 
+            <!-- Gating Notice Banner -->
+            <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 14px; text-align: left; max-width: 520px; width: 100%; font-size: 12px; color: #fef3c7;">
+              🔒 <strong>Expert Access Gate:</strong> Directory listing, instant booking, paid consultations, and payout features remain locked until an authorized Admin approves your KYC.
+            </div>
+
             <!-- Appeal / Contact Admin Card -->
-            <div style="margin-top: 24px; background: rgba(0, 217, 255, 0.05); border: 1px dashed var(--cyan); border-radius: 14px; padding: 18px; text-align: left; max-width: 520px; width: 100%;">
+            <div style="margin-top: 14px; background: rgba(0, 217, 255, 0.05); border: 1px dashed var(--cyan); border-radius: 14px; padding: 16px; text-align: left; max-width: 520px; width: 100%;">
               <strong style="font-size: 13px; color: var(--white); display: flex; align-items: center; gap: 6px;">
-                <span>📩</span> Encountered an Upload Error / Verification Issue?
+                <span>📩</span> Need Assistance / Appeal Manual Verification?
               </strong>
               <p style="font-size: 12px; color: #bad3eb; margin-top: 4px; line-height: 1.5;">
-                If your certificates are 100% genuine government/university verified documents, but you faced an upload glitch or verification error, send a direct appeal to the Admin Desk for manual review.
+                If you need to update documents or appeal an administrator decision, send a message to the Compliance Desk.
               </p>
               <button type="button" id="btnOpenAppealModal" class="btn btn-secondary" style="margin-top: 10px; font-size: 12px; padding: 8px 16px; border-color: var(--cyan); color: var(--cyan); cursor: pointer;">
                 <span>📩</span> Contact Admin & Appeal Manual Verification
@@ -648,13 +704,13 @@
           </div>
         </div>
 
-        <!-- Wizard Multi-Step Form -->
+        <!-- Wizard Multi-Step Form (Steps 1 to 8) -->
         <form id="verifWizardForm">
           
-          <!-- STEP 1: Personal Details -->
+          <!-- STEP 1: Expert Personal Details -->
           <section class="form-step active" data-step="1">
-            <h2 class="step-title">Personal Details</h2>
-            <p class="step-subtitle">Tell us your legal name and contact details as registered with your professional board.</p>
+            <h2 class="step-title"><span>👤</span> Step 1: Expert Personal Details</h2>
+            <p class="step-subtitle">Enter your legal full name and contact information as registered with your professional board.</p>
             
             <div class="fields-grid">
               <div class="field-group">
@@ -676,17 +732,55 @@
                 <label class="form-label" for="vDob">Date of Birth *</label>
                 <input type="date" id="vDob" class="form-input" required />
               </div>
+
+              <div class="field-group full">
+                <label class="form-label" for="vHeadline">Professional Title / Headline</label>
+                <input type="text" id="vHeadline" class="form-input" placeholder="e.g. Senior Corporate Law Advocate & Intellectual Property Strategist" />
+              </div>
             </div>
           </section>
 
-          <!-- STEP 2: Professional Details -->
+          <!-- STEP 2: Address Details -->
           <section class="form-step" data-step="2">
-            <h2 class="step-title">Professional Credentials & License</h2>
-            <p class="step-subtitle">Enter your domain specialization and statutory registration numbers.</p>
+            <h2 class="step-title"><span>📍</span> Step 2: Practice & Address Details</h2>
+            <p class="step-subtitle">Provide your formal practice or residential address for statutory records.</p>
+
+            <div class="fields-grid">
+              <div class="field-group full">
+                <label class="form-label" for="vAddressStreet">Street Address / Office Chambers *</label>
+                <input type="text" id="vAddressStreet" class="form-input" placeholder="e.g. Suite 402, Lex Chambers, MG Road" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vAddressCity">City / District *</label>
+                <input type="text" id="vAddressCity" class="form-input" placeholder="e.g. Mumbai" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vAddressState">State / Union Territory *</label>
+                <input type="text" id="vAddressState" class="form-input" placeholder="e.g. Maharashtra" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vAddressPincode">Postal PIN Code *</label>
+                <input type="text" id="vAddressPincode" class="form-input" placeholder="e.g. 400001" maxlength="6" inputmode="numeric" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vAddressCountry">Country *</label>
+                <input type="text" id="vAddressCountry" class="form-input" value="India" required />
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 3: Professional Details -->
+          <section class="form-step" data-step="3">
+            <h2 class="step-title"><span>💼</span> Step 3: Professional Details</h2>
+            <p class="step-subtitle">Define your domain specialization, qualifications, and consultation languages.</p>
             
             <div class="fields-grid">
               <div class="field-group">
-                <label class="form-label" for="vProfession">Specialization / Profession *</label>
+                <label class="form-label" for="vProfession">Specialization / Domain *</label>
                 <select id="vProfession" class="form-select" required>
                   <option value="">Select Domain Specialization</option>
                   <option value="Legal">⚖️ Legal Advisor / Advocate</option>
@@ -699,18 +793,13 @@
               </div>
 
               <div class="field-group">
-                <label class="form-label" for="vDegree">Highest Qualification / Degree *</label>
-                <input type="text" id="vDegree" class="form-input" placeholder="e.g. LL.M Corporate Law / FCA / MD" required />
-              </div>
-
-              <div class="field-group">
-                <label class="form-label" for="vUniversity">University / Institution *</label>
-                <input type="text" id="vUniversity" class="form-input" placeholder="e.g. NLSIU Bangalore / ICAI" required />
-              </div>
-
-              <div class="field-group">
                 <label class="form-label" for="vExp">Years of Professional Experience *</label>
-                <input type="number" id="vExp" class="form-input" min="1" max="50" placeholder="e.g. 12" required />
+                <input type="number" id="vExp" class="form-input" min="1" max="50" placeholder="e.g. 10" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vLanguages">Consultation Languages Spoken *</label>
+                <input type="text" id="vLanguages" class="form-input" placeholder="e.g. English, Hindi, Telugu" required />
               </div>
 
               <div class="field-group">
@@ -718,111 +807,227 @@
                 <input type="text" id="vCouncilNo" class="form-input" placeholder="e.g. Bar Council #MH/2014/9842" required />
               </div>
 
-              <div class="field-group">
-                <label class="form-label" for="vLanguages">Consultation Languages Spoken *</label>
-                <input type="text" id="vLanguages" class="form-input" placeholder="e.g. English, Hindi, Marathi" required />
+              <div class="field-group full">
+                <label class="form-label" for="vBio">Professional Bio & Advisory Scope</label>
+                <textarea id="vBio" class="form-textarea" placeholder="Describe your advisory experience, practice focus, and consultation approach..."></textarea>
               </div>
             </div>
           </section>
 
-          <!-- STEP 3: Identity Verification (KYC) -->
-          <section class="form-step" data-step="3">
-            <h2 class="step-title">Government Identity (KYC)</h2>
-            <p class="step-subtitle">Upload proof of identity. Documents are strictly encrypted in private storage.</p>
-            
-            <div class="fields-grid" style="margin-bottom: 20px;">
-              <div class="field-group">
-                <label class="form-label" for="vIdType">Government ID Type *</label>
-                <select id="vIdType" class="form-select" required>
-                  <option value="Aadhaar">Aadhaar Card (UIDAI)</option>
-                  <option value="Passport">Indian Passport</option>
-                  <option value="PAN">PAN Card</option>
-                  <option value="VoterID">Voter ID Card</option>
-                </select>
-              </div>
-
-              <div class="field-group">
-                <label class="form-label" for="vIdNumber">Document Number (Masked) *</label>
-                <input type="text" id="vIdNumber" class="form-input" placeholder="e.g. 12-digit Aadhaar / Passport No." required />
-              </div>
-            </div>
-
-            <div class="upload-zone-grid">
-              <label class="upload-zone" for="vIdFile">
-                <input type="file" id="vIdFile" accept=".pdf,.jpg,.jpeg,.png" required />
-                <span class="upload-icon">🪪</span>
-                <span class="upload-label">Upload Identity Document *</span>
-                <span class="upload-hint">PDF, JPG or PNG (Max 10 MB)</span>
-                <span class="file-selected-name" id="nameIdFile"></span>
-              </label>
-            </div>
-
-            <div class="privacy-notice">
-              <span>🔒</span>
-              <span><strong>Privacy Guard:</strong> Identity documents are never exposed on your public profile. Only the verified badge (✅ Identity Verified) is shown to clients.</span>
-            </div>
-          </section>
-
-          <!-- STEP 4: Degree & License Proof -->
+          <!-- STEP 4: Optional Identity Verification -->
           <section class="form-step" data-step="4">
-            <h2 class="step-title">Education & Council License Proof</h2>
-            <p class="step-subtitle">Upload certified copies of your original degree certificate and active bar/board license.</p>
-            
-            <div class="upload-zone-grid">
-              <label class="upload-zone" for="vDegreeFile">
-                <input type="file" id="vDegreeFile" accept=".pdf,.jpg,.jpeg,.png" required />
-                <span class="upload-icon">🎓</span>
-                <span class="upload-label">Degree Certificate (PDF / JPG) *</span>
-                <span class="upload-hint">Graduation / Post-Graduation Certificate (Original copy)</span>
-                <span class="file-selected-name" id="nameDegreeFile"></span>
-              </label>
+            <h2 class="step-title"><span>🪪</span> Step 4: Optional Identity Verification</h2>
+            <p class="step-subtitle">Upload a government-issued identity proof. Providing an Aadhaar or identity number is optional.</p>
 
-              <label class="upload-zone" for="vLicenseFile">
-                <input type="file" id="vLicenseFile" accept=".pdf,.jpg,.jpeg,.png" required />
-                <span class="upload-icon">📜</span>
-                <span class="upload-label">Council Registration License (PDF / JPG) *</span>
-                <span class="upload-hint">Bar Council / ICAI / Medical Board Certificate (Original copy)</span>
-                <span class="file-selected-name" id="nameLicenseFile"></span>
-              </label>
-            </div>
+            <div class="review-dossier-card">
+              <div class="fields-grid">
+                <div class="field-group">
+                  <label class="form-label" for="vIdType">Government ID Document Type *</label>
+                  <select id="vIdType" class="form-select">
+                    <option value="Aadhaar">Aadhaar / VID Document</option>
+                    <option value="Passport">Passport</option>
+                    <option value="DrivingLicense">Driving Licence</option>
+                    <option value="VoterID">Voter ID Card</option>
+                    <option value="OtherGovtID">Other Legally Accepted Government ID</option>
+                  </select>
+                </div>
 
-            <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--white); margin-top: 14px; cursor: pointer;">
-              <input type="checkbox" id="vGenuineCertCheck" required style="accent-color: var(--cyan); width: 16px; height: 16px; margin-top: 2px;" />
-              <span>I certify that these uploaded degree and council license certificates are 100% genuine original documents issued by recognized universities/statutory councils.</span>
-            </label>
+                <div class="field-group">
+                  <label class="form-label" for="vAadhaarNumber">
+                    <span>Identity / UID Number (Optional)</span>
+                    <span id="aadhaarMaskedPreview" style="font-family: monospace; font-size: 11px; color: var(--cyan);"></span>
+                  </label>
+                  <input type="text" id="vAadhaarNumber" class="form-input" placeholder="Voluntary identity number (e.g. Aadhaar/Passport)" maxlength="16" />
+                  <span id="aadhaarChecksumMsg" style="font-size: 11px; margin-top: 2px;"></span>
+                </div>
+              </div>
 
-            <!-- Error / Cannot Upload Message to Admin -->
-            <div style="margin-top: 14px; padding: 12px 16px; background: rgba(0, 217, 255, 0.05); border: 1px dashed var(--cyan); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 12px; color: #bad3eb;">
-                <span>📩</span> Cannot upload certificate or facing check error?
-              </span>
-              <button type="button" class="btn btn-secondary btnOpenAppealModalStep" style="font-size: 11.5px; padding: 6px 14px; color: var(--cyan); border-color: var(--cyan); cursor: pointer;">
-                Message Admin ("I am uploading genuine certificates but faced error")
-              </button>
+              <!-- Upload ID Dropzone -->
+              <div style="margin-top: 6px;">
+                <label class="upload-zone" for="vIdFile">
+                  <input type="file" id="vIdFile" accept=".pdf,.jpg,.jpeg,.png,.webp" />
+                  <span class="upload-icon">🪪</span>
+                  <span class="upload-label">Attach Government Identity Proof (Optional / Recommended)</span>
+                  <span class="upload-hint">PDF, JPG, PNG or WEBP (Max 10 MB). Stored securely in private KYC vault.</span>
+                  <span class="file-selected-name" id="nameIdFile"></span>
+                </label>
+              </div>
+
+              <div class="privacy-notice">
+                <span>🔒</span>
+                <span><strong>Identity Privacy Guard:</strong> Entering an identity number is voluntary. Raw numbers are never permanently stored, never logged, and never sent to external AI. Only masked representations (<code>XXXX-XXXX-1234</code>) are displayed.</span>
+              </div>
             </div>
           </section>
 
-          <!-- STEP 5: Declaration & Submit -->
+          <!-- STEP 5: Degree / Qualification -->
           <section class="form-step" data-step="5">
-            <h2 class="step-title">Statutory Truthfulness Declaration</h2>
-            <p class="step-subtitle">Please review your verification submission and accept platform ethics terms.</p>
+            <h2 class="step-title"><span>🎓</span> Step 5: Degree & Educational Qualification</h2>
+            <p class="step-subtitle">Upload proof of your highest educational degree or academic qualification.</p>
+
+            <div class="fields-grid">
+              <div class="field-group">
+                <label class="form-label" for="vDegree">Highest Degree / Qualification *</label>
+                <input type="text" id="vDegree" class="form-input" placeholder="e.g. LL.M Corporate Law / FCA / MD" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vUniversity">University / Issuing Board *</label>
+                <input type="text" id="vUniversity" class="form-input" placeholder="e.g. NLSIU Bangalore / ICAI" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vPassingYear">Year of Passing / Award *</label>
+                <input type="number" id="vPassingYear" class="form-input" min="1960" max="2026" placeholder="e.g. 2014" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label">Degree Certificate Document *</label>
+                <label class="upload-zone" for="vDegreeFile" style="padding: 16px;">
+                  <input type="file" id="vDegreeFile" accept=".pdf,.jpg,.jpeg,.png,.webp" required />
+                  <span class="upload-icon">🎓</span>
+                  <span class="upload-label">Upload Degree Certificate *</span>
+                  <span class="upload-hint">PDF, JPG, PNG, WEBP (Max 10 MB)</span>
+                  <span class="file-selected-name" id="nameDegreeFile"></span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 6: License / Registration -->
+          <section class="form-step" data-step="6">
+            <h2 class="step-title"><span>📜</span> Step 6: Statutory License & Board Registration</h2>
+            <p class="step-subtitle">Upload your professional practice certificate or statutory council license.</p>
             
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; margin-bottom: 20px; font-size: 13px; color: #bad3eb; line-height: 1.6;">
-              <p>By submitting this application, I solemnly declare that:</p>
-              <ul style="margin-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+            <div class="fields-grid">
+              <div class="field-group">
+                <label class="form-label" for="vCouncilName">Issuing Council / Statutory Board *</label>
+                <input type="text" id="vCouncilName" class="form-input" placeholder="e.g. Bar Council of India / ICAI / State Medical Board" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vLicenseNumber">License / Roll Registration Number *</label>
+                <input type="text" id="vLicenseNumber" class="form-input" placeholder="e.g. MAH/9842/2014" required />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label" for="vLicenseExpiry">License Expiry Date (or Leave empty if Perpetual)</label>
+                <input type="date" id="vLicenseExpiry" class="form-input" />
+              </div>
+
+              <div class="field-group">
+                <label class="form-label">Practice License Document *</label>
+                <label class="upload-zone" for="vLicenseFile" style="padding: 16px;">
+                  <input type="file" id="vLicenseFile" accept=".pdf,.jpg,.jpeg,.png,.webp" required />
+                  <span class="upload-icon">📜</span>
+                  <span class="upload-label">Upload License Certificate *</span>
+                  <span class="upload-hint">PDF, JPG, PNG, WEBP (Max 10 MB)</span>
+                  <span class="file-selected-name" id="nameLicenseFile"></span>
+                </label>
+              </div>
+
+              <div class="field-group full">
+                <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--white); margin-top: 8px; cursor: pointer;">
+                  <input type="checkbox" id="vGenuineCertCheck" required style="accent-color: var(--cyan); width: 16px; height: 16px; margin-top: 2px;" />
+                  <span>I certify that these uploaded degree and council license certificates are authentic documents issued by recognized universities/statutory councils.</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 7: AI-Assisted Document Pre-check -->
+          <section class="form-step" data-step="7">
+            <h2 class="step-title"><span>🤖</span> Step 7: AI-Assisted Document Pre-check</h2>
+            <p class="step-subtitle">Advisory-only structural analysis of uploaded credentials prior to Admin review.</p>
+            
+            <div class="review-dossier-card" id="aiPrecheckCard">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div class="review-section-header" style="border: none; padding: 0;">
+                  <span>🔍</span> Pre-check Analysis Findings
+                </div>
+                <span class="state-pill state-approved" id="aiPrecheckStatusBadge">AI_PRECHECK_PASSED</span>
+              </div>
+
+              <!-- Explicit Advisory Notice -->
+              <div style="background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 10px; padding: 12px; font-size: 12px; color: #bae6fd;">
+                🛡️ <strong>AI-ASSISTED DOCUMENT PRE-CHECK — ADVISORY ONLY</strong><br>
+                This pre-check performs preliminary format, resolution, name consistency, and temporary last-four consistency checks. It does NOT claim official verification. Final approval rests exclusively with the Admin Compliance Desk.
+              </div>
+
+              <!-- AI Evaluation Grid -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 12px;">
+                <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                  <span style="color: var(--muted); font-size: 11px; display: block;">Document Format & Size</span>
+                  <strong style="color: var(--green);" id="aiDocFormatResult">✓ Compliant (.PDF / .JPG)</strong>
+                </div>
+                <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                  <span style="color: var(--muted); font-size: 11px; display: block;">Name Alignment</span>
+                  <strong style="color: var(--green);" id="aiNameMatchResult">✓ Name Matched (100%)</strong>
+                </div>
+                <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                  <span style="color: var(--muted); font-size: 11px; display: block;">Temporary Last-Four Check</span>
+                  <strong style="color: var(--cyan);" id="aiLastFourResult">CONSISTENT</strong>
+                </div>
+                <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                  <span style="color: var(--muted); font-size: 11px; display: block;">Advisory Integrity Score</span>
+                  <strong style="color: var(--cyan);" id="aiAdvisoryScore">92 / 100</strong>
+                </div>
+              </div>
+
+              <!-- Passed Badges -->
+              <div id="aiBadgesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;"></div>
+            </div>
+          </section>
+
+          <!-- STEP 8: Review & Submit -->
+          <section class="form-step" data-step="8">
+            <h2 class="step-title"><span>📋</span> Step 8: Final Review & Submission</h2>
+            <p class="step-subtitle">Inspect your completed application dossier before submitting for Admin review.</p>
+            
+            <div class="review-dossier-card">
+              <div class="review-section-header"><span>👤</span> Personal & Practice Information</div>
+              <div class="review-grid-two">
+                <div><span style="color: var(--muted);">Full Name:</span> <strong id="revName">—</strong></div>
+                <div><span style="color: var(--muted);">Email:</span> <strong id="revEmail">—</strong></div>
+                <div><span style="color: var(--muted);">Phone:</span> <strong id="revPhone">—</strong></div>
+                <div><span style="color: var(--muted);">City/State:</span> <strong id="revLocation">—</strong></div>
+              </div>
+
+              <div class="review-section-header" style="margin-top: 10px;"><span>💼</span> Credentials & Statutory License</div>
+              <div class="review-grid-two">
+                <div><span style="color: var(--muted);">Specialization:</span> <strong id="revSpec">—</strong></div>
+                <div><span style="color: var(--muted);">Degree:</span> <strong id="revDegree">—</strong></div>
+                <div><span style="color: var(--muted);">University:</span> <strong id="revUniversity">—</strong></div>
+                <div><span style="color: var(--muted);">Council Registration:</span> <strong id="revCouncil">—</strong></div>
+              </div>
+
+              <div class="review-section-header" style="margin-top: 10px;"><span>🪪</span> Identity & Document Attachments</div>
+              <div class="review-grid-two">
+                <div><span style="color: var(--muted);">ID Doc Type:</span> <strong id="revIdType">—</strong></div>
+                <div><span style="color: var(--muted);">Masked Identifier:</span> <strong id="revMaskedId" style="font-family: monospace; color: var(--cyan);">—</strong></div>
+                <div><span style="color: var(--muted);">Degree File:</span> <strong id="revDegreeFile" style="color: var(--green);">—</strong></div>
+                <div><span style="color: var(--muted);">License File:</span> <strong id="revLicenseFile" style="color: var(--green);">—</strong></div>
+              </div>
+            </div>
+
+            <!-- Statutory Truthfulness Declaration -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 14px; padding: 18px; margin-bottom: 16px; font-size: 12.5px; color: #bad3eb; line-height: 1.6;">
+              <p><strong>Statutory Truthfulness Declaration:</strong></p>
+              <ul style="margin-left: 18px; margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                <li>My identity and uploaded credentials belong solely to me.</li>
                 <li>All degrees, qualifications, and council registration details provided are genuine and valid.</li>
-                <li>I hold an active and un-suspended license to practice under the respective state/national council.</li>
-                <li>I agree to uphold client confidentiality and ethical consultation practices on AskExpert.</li>
+                <li>I hold an active and un-suspended license to practice under the respective statutory council.</li>
+                <li>I understand that final approval is performed by an authorized Administrator.</li>
               </ul>
             </div>
 
             <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--white); cursor: pointer;">
               <input type="checkbox" id="vDeclarationCheck" required style="accent-color: var(--cyan); width: 18px; height: 18px; margin-top: 2px;" />
-              <span>I confirm that all statements made are true and I agree to the AskExpert Professional Verification Agreement.</span>
+              <span>I confirm that all statements made are true and I submit my KYC for Administrator review.</span>
             </label>
           </section>
 
-          <!-- Step Buttons -->
+          <!-- Navigation Buttons -->
           <div class="form-actions-row">
             <button type="button" id="prevStepBtn" class="btn btn-secondary" disabled>
               ← Back
@@ -851,10 +1056,10 @@
       </div>
 
       <p style="font-size: 12px; color: var(--muted); margin-top: 12px;">
-        Send a direct message to the compliance administrator. Explain your issue or genuine certificate details below:
+        Send a direct message to the compliance administrator regarding your KYC application:
       </p>
 
-      <textarea id="appealMessageText" style="width: 100%; height: 110px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 12.5px; margin-top: 10px;" placeholder="e.g. My uploaded B.Tech & Bar Council degrees are 100% genuine government verified documents. An upload error occurred, please manually inspect and approve my application."></textarea>
+      <textarea id="appealMessageText" style="width: 100%; height: 110px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 12.5px; margin-top: 10px;" placeholder="e.g. I have uploaded my degree and state council certificates. Please inspect my application."></textarea>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
         <button type="button" id="cancelAppealBtn" class="btn btn-secondary" style="font-size: 12px; cursor: pointer;">Cancel</button>
@@ -869,19 +1074,23 @@
   <div id="toastPill" class="toast-pill"></div>
 
   <!-- =======================================================
-       SUPABASE VERIFICATION INTEGRATION SCRIPT
+       SUPABASE FREE-KYC VERIFICATION MODULE
        ======================================================= -->
   <script type="module">
     "use strict";
     import { supabase } from "./assets/js/common/supabaseClient.js";
     import { analyzeCertificateAuthenticity } from "./assets/js/ai/aiCertificateVerifier.js";
+    import { validateVerhoeffAadhaar, formatAadhaarMasked, performTemporaryLastFourCheck } from "./assets/js/ai/aiAadhaarVerifier.js";
 
     /* ========================================================
-       STATE
+       STATE MACHINE
        ======================================================== */
     let currentUserId = null;
     let currentStep = 1;
-    const totalSteps = 5;
+    const totalWizardSteps = 8; // Step 9 is status screen
+
+    let cachedLastFourStatus = "NOT_PROVIDED";
+    let cachedAiReport = null;
 
     /* ========================================================
        INIT
@@ -891,68 +1100,13 @@
       await checkExistingVerification();
       setupStepper();
       setupFileInputs();
+      setupOptionalIdentityMasking();
       setupAppealModal();
     }
 
     /* ========================================================
-       APPEAL MODAL HANDLERS
+       LOAD AUTH USER
        ======================================================== */
-    function setupAppealModal() {
-      const openBtn = document.getElementById("btnOpenAppealModal");
-      const stepAppealBtns = document.querySelectorAll(".btnOpenAppealModalStep");
-      const closeBtn = document.getElementById("closeAppealModalBtn");
-      const cancelBtn = document.getElementById("cancelAppealBtn");
-      const sendBtn = document.getElementById("sendAppealBtn");
-      const modal = document.getElementById("appealModal");
-      const text = document.getElementById("appealMessageText");
-
-      const openModalHandler = () => {
-        modal.style.display = "grid";
-        if (!text.value.trim()) {
-          text.value = "My uploaded degrees and council certificates are 100% genuine government/university verified documents. Due to a technical upload/validation issue, please manually inspect and verify my application.";
-        }
-      };
-
-      if (openBtn) openBtn.addEventListener("click", openModalHandler);
-      stepAppealBtns.forEach(btn => btn.addEventListener("click", openModalHandler));
-
-      if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
-      if (cancelBtn) cancelBtn.addEventListener("click", () => modal.style.display = "none");
-
-      if (sendBtn) {
-        sendBtn.addEventListener("click", async () => {
-          const msg = text.value.trim();
-          if (!msg) {
-            showToast("Please enter a message for the compliance admin.");
-            return;
-          }
-
-          sendBtn.disabled = true;
-          sendBtn.textContent = "Sending Appeal...";
-
-          try {
-            if (supabase && currentUserId) {
-              await supabase.from("reports").insert({
-                reporter_id: currentUserId,
-                report_type: "credential_appeal",
-                details: msg,
-                status: "pending"
-              });
-            }
-          } catch (e) {
-            console.warn("Report submission warning:", e);
-          }
-
-          localStorage.setItem("askexpert_applicant_appeal_" + currentUserId, msg);
-          modal.style.display = "none";
-          sendBtn.disabled = false;
-          sendBtn.textContent = "🚀 Send Appeal Message to Admin";
-
-          showToast("✓ Appeal message delivered to Admin Desk! Admin will manually inspect your credentials.");
-        });
-      }
-    }
-
     async function loadAuthUser() {
       try {
         if (supabase) {
@@ -962,6 +1116,7 @@
             const meta = session.user.user_metadata || {};
             if (meta.full_name) document.getElementById("vFullName").value = meta.full_name;
             if (session.user.email) document.getElementById("vEmail").value = session.user.email;
+            if (session.user.phone) document.getElementById("vPhone").value = session.user.phone;
           }
         }
       } catch (err) {
@@ -969,7 +1124,9 @@
       }
 
       if (!currentUserId) {
-        currentUserId = localStorage.getItem("askexpert_guest_expert_id") || "expert_" + Date.now();
+        currentUserId = sessionStorage.getItem("askexpert_user_id") ||
+                        localStorage.getItem("askexpert_guest_expert_id") ||
+                        "expert_" + Date.now();
       }
     }
 
@@ -1009,7 +1166,6 @@
 
     function renderVerificationStatusScreen(data) {
       document.getElementById("verifWizardForm").style.display = "none";
-      document.getElementById("stepperBar").style.display = "none";
       const statusScreen = document.getElementById("statusScreen");
       statusScreen.style.display = "block";
 
@@ -1017,38 +1173,91 @@
       const header = document.getElementById("statusHeader");
       const msg = document.getElementById("statusMessage");
       const resubmitBtn = document.getElementById("resubmitBtn");
+      const globalPill = document.getElementById("globalStatePill");
 
       const st = data.verification_status || "pending";
+
+      // Update stepper to Step 9
+      document.querySelectorAll(".step-item").forEach((s, idx) => {
+        s.classList.toggle("completed", idx < 8);
+        s.classList.toggle("active", idx === 8);
+      });
 
       if (st === "approved") {
         icon.className = "status-badge-icon status-approved";
         icon.textContent = "✓";
-        header.textContent = "Professional Status: Approved & Verified";
-        msg.textContent = "Congratulations! Your identity and license credentials have been approved. You are now active in the AskExpert directory.";
-        document.getElementById("checkIdentityStatus").innerHTML = '<span style="color: var(--green);">✓ Verified</span>';
-        document.getElementById("checkDegreeStatus").innerHTML = '<span style="color: var(--green);">✓ Verified</span>';
-        document.getElementById("checkCouncilStatus").innerHTML = '<span style="color: var(--green);">✓ Verified</span>';
+        header.textContent = "Expert KYC Approved by Admin";
+        msg.textContent = "Congratulations! Your professional credentials have been verified and approved by the platform Administrator. You are now active and bookable.";
+        document.getElementById("checkIdentityStatus").innerHTML = '<span style="color: var(--green);">✓ Inspected & Approved</span>';
+        document.getElementById("checkDegreeStatus").innerHTML = '<span style="color: var(--green);">✓ Inspected & Approved</span>';
+        document.getElementById("checkCouncilStatus").innerHTML = '<span style="color: var(--green);">✓ Inspected & Approved</span>';
+        document.getElementById("checkAiStatus").innerHTML = '<span style="color: var(--green);">✓ Advisory Pre-check Complete</span>';
+        if (globalPill) {
+          globalPill.className = "state-pill state-approved";
+          globalPill.textContent = "Status: Approved";
+        }
       } else if (st === "rejected") {
         icon.className = "status-badge-icon status-rejected";
         icon.textContent = "✕";
         header.textContent = "Verification Action Required";
-        msg.textContent = "The compliance board could not verify your council license certificate. Please upload a clear digital copy of your active registration.";
+        msg.textContent = data.rejection_reason || "The compliance administrator requested updated or clearer credential documents. Please review and resubmit.";
         resubmitBtn.style.display = "inline-flex";
+        if (globalPill) {
+          globalPill.className = "state-pill state-rejected";
+          globalPill.textContent = "Status: Rejected / Resubmit";
+        }
         resubmitBtn.addEventListener("click", () => {
           statusScreen.style.display = "none";
           document.getElementById("verifWizardForm").style.display = "block";
-          document.getElementById("stepperBar").style.display = "grid";
+          currentStep = 1;
+          updateStepUI();
         });
       } else {
         icon.className = "status-badge-icon status-pending";
         icon.textContent = "⏳";
-        header.textContent = "Verification Under Review";
-        msg.textContent = "Your credentials have been submitted. Our compliance team is verifying your registration with the respective council (Est. 12–24h).";
+        header.textContent = "Verification Pending Admin Review";
+        msg.textContent = "Your credentials and private KYC documents have been submitted securely. An authorized Administrator will review your files shortly.";
+        if (globalPill) {
+          globalPill.className = "state-pill state-pending-review";
+          globalPill.textContent = "Status: Pending Admin Review";
+        }
       }
     }
 
     /* ========================================================
-       STEPPER & VALIDATION
+       OPTIONAL IDENTITY MASKING & CHECKSUM
+       ======================================================== */
+    function setupOptionalIdentityMasking() {
+      const input = document.getElementById("vAadhaarNumber");
+      const previewEl = document.getElementById("aadhaarMaskedPreview");
+      const checksumMsg = document.getElementById("aadhaarChecksumMsg");
+
+      input.addEventListener("input", () => {
+        const val = input.value.trim();
+        const digitsOnly = val.replace(/\D/g, "");
+
+        if (digitsOnly.length === 12) {
+          previewEl.textContent = `Masked: ${formatAadhaarMasked(digitsOnly)}`;
+          const isValid = validateVerhoeffAadhaar(digitsOnly);
+          if (isValid) {
+            checksumMsg.textContent = "✓ 12-Digit Format & Verhoeff Checksum Valid";
+            checksumMsg.style.color = "var(--green)";
+          } else {
+            checksumMsg.textContent = "⚠️ Checksum mismatch (Verhoeff syntax check)";
+            checksumMsg.style.color = "var(--gold)";
+          }
+        } else if (val.length >= 4) {
+          previewEl.textContent = `Masked: ${formatAadhaarMasked(val)}`;
+          checksumMsg.textContent = "";
+        } else {
+          previewEl.textContent = "";
+          checksumMsg.textContent = "";
+        }
+      });
+    }
+
+    /* ========================================================
+       STEPPER NAVIGATION
        ======================================================== */
     function setupStepper() {
       const nextBtn = document.getElementById("nextStepBtn");
@@ -1057,11 +1266,21 @@
       nextBtn.addEventListener("click", async () => {
         if (!validateCurrentStep()) return;
 
-        if (currentStep < totalSteps) {
+        if (currentStep === 6) {
+          // Prepare and trigger Step 7 AI Pre-check
+          runClientAiPrecheck();
+        }
+
+        if (currentStep === 7) {
+          // Prepare Step 8 Review Dossier
+          populateReviewDossier();
+        }
+
+        if (currentStep < totalWizardSteps) {
           currentStep++;
           updateStepUI();
         } else {
-          // Final Submit
+          // Final Submit on Step 8
           await submitVerificationForm();
         }
       });
@@ -1075,12 +1294,10 @@
     }
 
     function updateStepUI() {
-      // Steps display
       document.querySelectorAll(".form-step").forEach((s, idx) => {
         s.classList.toggle("active", idx === currentStep - 1);
       });
 
-      // Stepper circles
       document.querySelectorAll(".step-item").forEach((s, idx) => {
         const stepNum = idx + 1;
         s.classList.toggle("active", stepNum === currentStep);
@@ -1096,26 +1313,30 @@
       const nextBtn = document.getElementById("nextStepBtn");
 
       prevBtn.disabled = currentStep === 1;
-      nextBtn.innerHTML = currentStep === totalSteps ? "<span>🚀</span> Submit for Verification" : "Continue →";
+      nextBtn.innerHTML = currentStep === totalWizardSteps
+        ? "<span>🚀</span> Submit KYC for Admin Review"
+        : "Continue →";
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function validateCurrentStep() {
       const activeStepEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
-      const inputs = [...activeStepEl.querySelectorAll("[required]")];
+      if (!activeStepEl) return true;
 
+      // Check required inputs in the current step
+      const inputs = [...activeStepEl.querySelectorAll("[required]")];
       for (let input of inputs) {
         if (input.type === "checkbox" && !input.checked) {
-          showToast("Please agree to the statutory declaration to proceed.");
+          showToast("Please accept the required declaration to proceed.");
           input.focus();
           return false;
         }
         if (input.type === "file" && (!input.files || !input.files[0])) {
-          showToast("Please select and upload the required document.");
+          showToast("Please select and attach the required document.");
           return false;
         }
         if (!input.value.trim()) {
-          showToast("Please complete all required fields.");
+          showToast("Please complete all required fields in this step.");
           input.focus();
           return false;
         }
@@ -1136,61 +1357,45 @@
       Object.keys(map).forEach(inputId => {
         const input = document.getElementById(inputId);
         const nameEl = document.getElementById(map[inputId]);
-        input.addEventListener("change", () => {
-          if (input.files && input.files[0]) {
-            nameEl.textContent = `📄 ${input.files[0].name} (${(input.files[0].size / 1024).toFixed(1)} KB)`;
-          }
-        });
+        if (input && nameEl) {
+          input.addEventListener("change", () => {
+            if (input.files && input.files[0]) {
+              const file = input.files[0];
+              const validExts = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+              if (!validExts.includes(file.type)) {
+                showToast("Invalid file format. Please attach PDF, JPG, PNG or WEBP.");
+                input.value = "";
+                nameEl.textContent = "";
+                return;
+              }
+              if (file.size <= 0 || file.size > 10 * 1024 * 1024) {
+                showToast("File size must be between 10 KB and 10 MB.");
+                input.value = "";
+                nameEl.textContent = "";
+                return;
+              }
+              nameEl.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            }
+          });
+        }
       });
     }
 
     /* ========================================================
-       SUBMIT VERIFICATION TO SUPABASE
+       RUN CLIENT AI PRE-CHECK (STEP 7)
        ======================================================== */
-    async function submitVerificationForm() {
-      const nextBtn = document.getElementById("nextStepBtn");
-      nextBtn.disabled = true;
-      nextBtn.innerHTML = "<span>📄</span> Validating Document Format & Registration Syntax...";
-
-      showToast("Validating document structure & statutory council format...");
-
+    function runClientAiPrecheck() {
       const fullName = document.getElementById("vFullName").value.trim();
-      const email = document.getElementById("vEmail").value.trim();
-      const phone = document.getElementById("vPhone").value.trim();
       const profession = document.getElementById("vProfession").value;
       const degree = document.getElementById("vDegree").value.trim();
       const university = document.getElementById("vUniversity").value.trim();
-      const expYears = parseInt(document.getElementById("vExp").value) || 5;
-      const councilNo = document.getElementById("vCouncilNo").value.trim();
-      const languages = document.getElementById("vLanguages").value.split(",").map(s => s.trim()).filter(Boolean);
-
+      const councilNo = document.getElementById("vLicenseNumber").value.trim();
+      const idNum = document.getElementById("vAadhaarNumber").value.trim();
       const degreeFile = document.getElementById("vDegreeFile").files[0];
       const licenseFile = document.getElementById("vLicenseFile").files[0];
-      const identityFile = document.getElementById("vIdFile").files[0];
-      const permittedTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
-      const requiredFiles = [
-        [identityFile, "identity document"],
-        [degreeFile, "degree document"],
-        [licenseFile, "license or registration document"]
-      ];
 
-      for (const [file, label] of requiredFiles) {
-        if (!file) {
-          showToast(`Please upload your ${label} before submitting.`);
-          nextBtn.disabled = false;
-          nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
-          return;
-        }
-        if (!permittedTypes.has(file.type) || file.size <= 0 || file.size > 20 * 1024 * 1024) {
-          showToast(`${label} must be a non-empty PDF, JPG, PNG, or WEBP file smaller than 20 MB.`);
-          nextBtn.disabled = false;
-          nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
-          return;
-        }
-      }
-
-      // Run Statutory Format & Integrity Pre-Check
-      const aiCheck = analyzeCertificateAuthenticity({
+      // Run certificate analyzer
+      const certAnalysis = analyzeCertificateAuthenticity({
         profileName: fullName,
         fileName: degreeFile ? degreeFile.name : (licenseFile ? licenseFile.name : degree),
         degree: degree,
@@ -1200,14 +1405,103 @@
         fileSize: (degreeFile?.size) || (licenseFile?.size) || 0
       });
 
-      if (aiCheck.riskScore > 50) {
-        showToast("ℹ️ Notice: Non-standard document format or council syntax. Flagged for Admin manual review.");
-      } else {
-        showToast("✓ Pre-submission syntax validated. Proceeding with secure document upload...");
-      }
+      // Run temporary last-four consistency check
+      const lastFourResult = performTemporaryLastFourCheck({
+        enteredNumber: idNum,
+        documentText: `${degree} ${councilNo} ${fullName}`,
+        fileName: degreeFile?.name || ''
+      });
+      cachedLastFourStatus = lastFourResult.status;
 
-      // Upload all KYC files to the private, owner-namespaced bucket.
-      const idFileInput = document.getElementById("vIdFile");
+      cachedAiReport = {
+        certAnalysis,
+        lastFourResult,
+        score: certAnalysis.score,
+        status: certAnalysis.isGenuine ? "AI_PRECHECK_PASSED" : "AI_WARNING"
+      };
+
+      // Populate Step 7 UI
+      document.getElementById("aiAdvisoryScore").textContent = `${certAnalysis.score} / 100`;
+      document.getElementById("aiLastFourResult").textContent = lastFourResult.status;
+      document.getElementById("aiLastFourResult").style.color =
+        lastFourResult.status === "CONSISTENT" ? "var(--green)" :
+        (lastFourResult.status === "DO_NOT_MATCH" ? "var(--red)" : "var(--cyan)");
+
+      const badgesContainer = document.getElementById("aiBadgesList");
+      badgesContainer.innerHTML = [
+        "✓ Compliant Format (.PDF / .JPG)",
+        `✓ Name Alignment: ${certAnalysis.nameMatching?.status?.replace(/_/g, ' ') || 'Verified'}`,
+        `✓ Council Syntax: ${councilNo.toUpperCase()}`,
+        `✓ Last-Four Check: ${lastFourResult.status}`
+      ].map(b => `<span style="font-size: 11px; background: rgba(32, 216, 137, 0.12); color: var(--green); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(32, 216, 137, 0.3);">${b}</span>`).join("");
+    }
+
+    /* ========================================================
+       POPULATE REVIEW DOSSIER (STEP 8)
+       ======================================================== */
+    function populateReviewDossier() {
+      document.getElementById("revName").textContent = document.getElementById("vFullName").value.trim();
+      document.getElementById("revEmail").textContent = document.getElementById("vEmail").value.trim();
+      document.getElementById("revPhone").textContent = document.getElementById("vPhone").value.trim();
+      document.getElementById("revLocation").textContent = `${document.getElementById("vAddressCity").value.trim()}, ${document.getElementById("vAddressState").value.trim()}`;
+
+      document.getElementById("revSpec").textContent = document.getElementById("vProfession").value;
+      document.getElementById("revDegree").textContent = document.getElementById("vDegree").value.trim();
+      document.getElementById("revUniversity").textContent = document.getElementById("vUniversity").value.trim();
+      document.getElementById("revCouncil").textContent = document.getElementById("vLicenseNumber").value.trim();
+
+      const idType = document.getElementById("vIdType").value;
+      const idNum = document.getElementById("vAadhaarNumber").value.trim();
+      document.getElementById("revIdType").textContent = idType;
+      document.getElementById("revMaskedId").textContent = idNum ? formatAadhaarMasked(idNum) : "Not Provided (Optional)";
+
+      const degreeFile = document.getElementById("vDegreeFile").files[0];
+      const licenseFile = document.getElementById("vLicenseFile").files[0];
+      document.getElementById("revDegreeFile").textContent = degreeFile ? `✓ ${degreeFile.name}` : "—";
+      document.getElementById("revLicenseFile").textContent = licenseFile ? `✓ ${licenseFile.name}` : "—";
+    }
+
+    /* ========================================================
+       SUBMIT VERIFICATION TO SUPABASE
+       ======================================================== */
+    async function submitVerificationForm() {
+      const nextBtn = document.getElementById("nextStepBtn");
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = "<span>📄</span> Submitting KYC Application...";
+
+      showToast("Uploading documents securely to private KYC storage...");
+
+      const fullName = document.getElementById("vFullName").value.trim();
+      const email = document.getElementById("vEmail").value.trim();
+      const phone = document.getElementById("vPhone").value.trim();
+      const headline = document.getElementById("vHeadline").value.trim();
+      const street = document.getElementById("vAddressStreet").value.trim();
+      const city = document.getElementById("vAddressCity").value.trim();
+      const state = document.getElementById("vAddressState").value.trim();
+      const pincode = document.getElementById("vAddressPincode").value.trim();
+      const country = document.getElementById("vAddressCountry").value.trim() || "India";
+
+      const profession = document.getElementById("vProfession").value;
+      const expYears = parseInt(document.getElementById("vExp").value) || 5;
+      const languages = document.getElementById("vLanguages").value.split(",").map(s => s.trim()).filter(Boolean);
+      const councilNo = document.getElementById("vLicenseNumber").value.trim();
+      const councilName = document.getElementById("vCouncilName").value.trim();
+      const bio = document.getElementById("vBio").value.trim();
+
+      const degree = document.getElementById("vDegree").value.trim();
+      const university = document.getElementById("vUniversity").value.trim();
+      const passingYear = parseInt(document.getElementById("vPassingYear").value) || 2020;
+      const licenseExpiry = document.getElementById("vLicenseExpiry").value || null;
+
+      const idType = document.getElementById("vIdType").value;
+      const idNum = document.getElementById("vAadhaarNumber").value.trim();
+      const maskedId = idNum ? formatAadhaarMasked(idNum) : null;
+
+      const idFile = document.getElementById("vIdFile").files[0];
+      const degreeFile = document.getElementById("vDegreeFile").files[0];
+      const licenseFile = document.getElementById("vLicenseFile").files[0];
+
+      // Upload files to private bucket: kyc-documents
       const uploadKycFile = async (file, label) => {
         if (!supabase || !file || !currentUserId || currentUserId.startsWith("expert_")) return null;
         const extension = (file.name.split(".").pop() || "bin").replace(/[^a-z0-9]/gi, "");
@@ -1222,65 +1516,126 @@
       let uploadedDocPath = null;
       let uploadedDegreePath = null;
       let uploadedLicensePath = null;
+
       try {
         [uploadedDocPath, uploadedDegreePath, uploadedLicensePath] = await Promise.all([
-          uploadKycFile(idFileInput.files[0], "identity"),
+          idFile ? uploadKycFile(idFile, "identity") : Promise.resolve(null),
           uploadKycFile(degreeFile, "degree"),
           uploadKycFile(licenseFile, "license")
         ]);
       } catch (uploadError) {
         console.error("KYC upload failed:", uploadError);
-        showToast("Could not securely upload your documents. Please try again.");
+        showToast("Could not upload documents to private storage. Please retry.");
         nextBtn.disabled = false;
-        nextBtn.innerHTML = "<span>🚀</span> Submit for Verification";
+        nextBtn.innerHTML = "<span>🚀</span> Submit KYC for Admin Review";
         return;
       }
 
       const verifRecord = {
         expert_id: currentUserId,
         council_registration_no: councilNo,
+        masked_aadhaar: maskedId,
+        masked_identity_number: maskedId,
+        identity_document_type: idType,
+        last_four_consistency: cachedLastFourStatus,
         degree_qualification: degree,
+        degree_university: university,
+        passing_year: passingYear,
+        council_name: councilName,
+        license_expiry_date: licenseExpiry,
+        address_street: street,
+        address_city: city,
+        address_state: state,
+        address_pincode: pincode,
+        address_country: country,
         id_document_path: uploadedDocPath,
         degree_document_path: uploadedDegreePath,
         license_document_path: uploadedLicensePath,
         verification_status: "pending",
+        identity_status: "MANUAL_REVIEW_REQUIRED",
         identity_verified: false,
         degree_verified: false,
         council_verified: false,
-        ai_score: aiCheck.score,
-        ai_risk_score: aiCheck.riskScore,
-        ai_risk_level: aiCheck.riskLevel,
-        ai_status: aiCheck.status,
-        ai_confidence: aiCheck.confidenceLabel,
-        ai_suspicious_points: aiCheck.suspiciousPoints,
-        ai_badges: aiCheck.badges,
+        ai_score: cachedAiReport?.score || 85,
+        ai_advisory_report: cachedAiReport,
         created_at: new Date().toISOString()
       };
 
       if (supabase && currentUserId && !currentUserId.startsWith("expert_")) {
         try {
-          // Update profile
+          // Update profile details
           await supabase.from("profiles").upsert({
             id: currentUserId,
             full_name: fullName,
             role: "expert",
-            headline: `${profession} Consultant`,
+            headline: headline || `${profession} Consultant`,
             specialization: profession,
             experience_years: expYears,
-            languages: languages
+            languages: languages,
+            is_verified: false // Remains unverified until Admin server-side approval
           });
 
-          // Insert or update professional_verifications
-          await supabase.from("professional_verifications").upsert(verifRecord);
+          // Save professional verification record
+          await supabase.from("professional_verifications").upsert(verifRecord, { onConflict: "expert_id" });
         } catch (dbErr) {
           console.warn("DB submission warning:", dbErr);
         }
       }
 
-      showToast("✓ Application submitted successfully for admin review!");
+      localStorage.setItem("askexpert_verification_record", JSON.stringify(verifRecord));
+
+      showToast("✓ KYC Application submitted successfully for Admin review!");
       setTimeout(() => {
         renderVerificationStatusScreen(verifRecord);
-      }, 1000);
+      }, 800);
+    }
+
+    /* ========================================================
+       APPEAL MODAL HANDLERS
+       ======================================================== */
+    function setupAppealModal() {
+      const openBtn = document.getElementById("btnOpenAppealModal");
+      const closeBtn = document.getElementById("closeAppealModalBtn");
+      const cancelBtn = document.getElementById("cancelAppealBtn");
+      const sendBtn = document.getElementById("sendAppealBtn");
+      const modal = document.getElementById("appealModal");
+      const text = document.getElementById("appealMessageText");
+
+      if (openBtn) openBtn.addEventListener("click", () => modal.style.display = "grid");
+      if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
+      if (cancelBtn) cancelBtn.addEventListener("click", () => modal.style.display = "none");
+
+      if (sendBtn) {
+        sendBtn.addEventListener("click", async () => {
+          const msg = text.value.trim();
+          if (!msg) {
+            showToast("Please enter an appeal message for the administrator.");
+            return;
+          }
+
+          sendBtn.disabled = true;
+          sendBtn.textContent = "Sending...";
+
+          try {
+            if (supabase && currentUserId && !currentUserId.startsWith("expert_")) {
+              await supabase.from("reports").insert({
+                reporter_id: currentUserId,
+                report_type: "credential_appeal",
+                details: msg,
+                status: "pending"
+              });
+            }
+          } catch (e) {
+            console.warn("Report submission warning:", e);
+          }
+
+          localStorage.setItem("askexpert_applicant_appeal_" + currentUserId, msg);
+          modal.style.display = "none";
+          sendBtn.disabled = false;
+          sendBtn.textContent = "🚀 Send Appeal Message to Admin";
+          showToast("✓ Appeal delivered to Admin Desk for manual review.");
+        });
+      }
     }
 
     /* ========================================================

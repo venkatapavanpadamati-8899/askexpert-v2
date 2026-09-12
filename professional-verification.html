@@ -1555,24 +1555,20 @@
         identity_verified: false,
         degree_verified: false,
         council_verified: false,
-        ai_score: cachedAiReport?.score || 85,
         ai_advisory_report: cachedAiReport,
         created_at: new Date().toISOString()
       };
 
       if (supabase && currentUserId && !currentUserId.startsWith("expert_")) {
         try {
-          // Update profile details
-          await supabase.from("profiles").upsert({
-            id: currentUserId,
+          // Update profile details without client-side role override
+          await supabase.from("profiles").update({
             full_name: fullName,
-            role: "expert",
             headline: headline || `${profession} Consultant`,
             specialization: profession,
             experience_years: expYears,
-            languages: languages,
-            is_verified: false // Remains unverified until Admin server-side approval
-          });
+            languages: languages
+          }).eq("id", currentUserId);
 
           // Save professional verification record
           await supabase.from("professional_verifications").upsert(verifRecord, { onConflict: "expert_id" });

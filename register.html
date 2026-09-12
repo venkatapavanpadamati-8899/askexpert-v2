@@ -718,26 +718,15 @@
       verifyOtpButton.disabled = false;
       verifyOtpButton.textContent = "Verify OTP";
 
-      if (isDevMode()) {
-        if (demoOtpCode) demoOtpCode.textContent = generatedOtp;
-        if (demoOtpBox) {
-          demoOtpBox.classList.add("show");
-          demoOtpBox.style.display = "flex";
-        }
-        showOtpStatus(
-          "⚡ Development Demo OTP: " + generatedOtp + " generated. Enter the code or click 'Auto-fill'.",
-          "success"
-        );
-      } else {
-        if (demoOtpBox) {
-          demoOtpBox.classList.remove("show");
-          demoOtpBox.style.display = "none";
-        }
-        showOtpStatus(
-          "Verification code sent to +91 " + rawPhone + ". Please enter the 6-digit OTP.",
-          "success"
-        );
+      if (demoOtpCode) demoOtpCode.textContent = generatedOtp;
+      if (demoOtpBox) {
+        demoOtpBox.classList.add("show");
+        demoOtpBox.style.display = "flex";
       }
+      showOtpStatus(
+        "⚡ Development Demo OTP: " + generatedOtp + " generated. Enter the code or click 'Auto-fill'.",
+        "success"
+      );
 
       startOtpTimer();
     });

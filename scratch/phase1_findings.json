@@ -1,0 +1,120 @@
+{
+  "serviceRoleInFrontend": [
+    {
+      "file": "assets\\js\\common\\errorTracker.js"
+    }
+  ],
+  "hardcodedSecrets": [],
+  "adminBypasses": [],
+  "localStorageAdminProof": [],
+  "emptyCatchBlocks": [
+    {
+      "file": "admin-dashboard.html"
+    },
+    {
+      "file": "admin-payments.html"
+    },
+    {
+      "file": "admin-professionals.html"
+    },
+    {
+      "file": "admin-questions.html"
+    },
+    {
+      "file": "admin-reports.html"
+    },
+    {
+      "file": "admin-users.html"
+    },
+    {
+      "file": "assets\\js\\common\\errorTracker.js"
+    },
+    {
+      "file": "professional-dashboard.html"
+    }
+  ],
+  "todoFixme": [],
+  "brokenLocalAssetLinks": [],
+  "brokenInternalHrefLinks": [
+    {
+      "file": "admin-dashboard.html",
+      "link": "${act.link}"
+    },
+    {
+      "file": "admin-professionals.html",
+      "link": "${signedUrl}"
+    },
+    {
+      "file": "admin-professionals.html",
+      "link": "${signedUrl}"
+    },
+    {
+      "file": "admin-professionals.html",
+      "link": "${signedUrl}"
+    },
+    {
+      "file": "admin-reports.html",
+      "link": "${escapeHTML(linkedUrl)}"
+    },
+    {
+      "file": "chat.html",
+      "link": "${escapeHTML(msg.media_url)}"
+    },
+    {
+      "file": "chat.html",
+      "link": "${escapeHTML(msg.media_url)}"
+    },
+    {
+      "file": "chat.html",
+      "link": "${escapeHTML(msg.media_url)}"
+    },
+    {
+      "file": "chat.html",
+      "link": "${escapeHTML(msg.media_url)}"
+    },
+    {
+      "file": "chat.html",
+      "link": "${escapeHTML(msg.media_url)}"
+    },
+    {
+      "file": "consultation-requests.html",
+      "link": "${escapeHTML(clientAvatar)}"
+    },
+    {
+      "file": "experts.html",
+      "link": "${escapeHTML(exp.avatar_url)}"
+    },
+    {
+      "file": "experts.html",
+      "link": "${profileUrl}"
+    },
+    {
+      "file": "experts.html",
+      "link": "${chatUrl}"
+    },
+    {
+      "file": "question-details.html",
+      "link": "${escapeHTML(ans.media_url)}"
+    },
+    {
+      "file": "question-details.html",
+      "link": "${escapeHTML(expertProfile.avatarUrl)}"
+    },
+    {
+      "file": "question-details.html",
+      "link": "${profileUrl}"
+    },
+    {
+      "file": "question-details.html",
+      "link": "${chatUrl}"
+    },
+    {
+      "file": "question-details.html",
+      "link": "${profileUrl}"
+    },
+    {
+      "file": "user-dashboard.html",
+      "link": "${escapeHTML(exp.avatar_url)}"
+    }
+  ]
+}

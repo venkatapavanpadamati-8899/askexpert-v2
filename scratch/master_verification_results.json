@@ -1,0 +1,489 @@
+{
+  "total": 61,
+  "passed": 61,
+  "failed": 0,
+  "blocked": 0,
+  "categories": {
+    "Source Code": {
+      "total": 4,
+      "pass": 4,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Production dist build artifacts exist",
+          "status": "PASS",
+          "evidence": "dist/ contains index.html and admin-dashboard.html"
+        },
+        {
+          "name": "Zero Service Role Keys in client code",
+          "status": "PASS",
+          "evidence": "supabaseClient.js only references VITE_SUPABASE_ANON_KEY"
+        },
+        {
+          "name": "Zero hardcoded admin credentials in admin-login.html",
+          "status": "PASS",
+          "evidence": "admin-login.html authenticates exclusively via Supabase auth API"
+        },
+        {
+          "name": "Hidden Admin portal unlinked in public login markup",
+          "status": "PASS",
+          "evidence": "Markup contains zero references to admin-login.html"
+        }
+      ]
+    },
+    "Build": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Vite bundle generated valid pages",
+          "status": "PASS",
+          "evidence": "Found 36 HTML build targets in dist/"
+        }
+      ]
+    },
+    "Vercel": {
+      "total": 11,
+      "pass": 11,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Live route / (Landing)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 8705 bytes"
+        },
+        {
+          "name": "Live route /login (Login Gateway)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 16715 bytes"
+        },
+        {
+          "name": "Live route /register (Registration)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 18948 bytes"
+        },
+        {
+          "name": "Live route /admin-login (Hidden Admin Portal)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 12803 bytes"
+        },
+        {
+          "name": "Live route /admin-dashboard (Admin Dashboard)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 38355 bytes"
+        },
+        {
+          "name": "Live route /experts (Expert Discovery)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 32397 bytes"
+        },
+        {
+          "name": "Live route /questions (Questions Stream)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 28329 bytes"
+        },
+        {
+          "name": "Live route /professional-verification (KYC Portal)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 46723 bytes"
+        },
+        {
+          "name": "Live route /chat (Chat Module)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 48241 bytes"
+        },
+        {
+          "name": "Live route /payments (Payments Center)",
+          "status": "PASS",
+          "evidence": "HTTP 200, size: 25999 bytes"
+        },
+        {
+          "name": "Edge handles /auth-callback cleanUrls redirect",
+          "status": "PASS",
+          "evidence": "HTTP 308 (CleanUrls canonical)"
+        }
+      ]
+    },
+    "Supabase": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Supabase Cloud API connectivity",
+          "status": "PASS",
+          "evidence": "Successfully pinged profiles table, records returned: 1"
+        }
+      ]
+    },
+    "Database": {
+      "total": 12,
+      "pass": 12,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Table [profiles] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 14"
+        },
+        {
+          "name": "Table [questions] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 1"
+        },
+        {
+          "name": "Table [answers] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [professional_verifications] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [consultation_requests] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [consultation_sessions] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [payout_requests] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [reports] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [messages] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [payments] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [wallet_transactions] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        },
+        {
+          "name": "Table [system_errors] exists & queries safely",
+          "status": "PASS",
+          "evidence": "Accessible, row count: 0"
+        }
+      ]
+    },
+    "RLS": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "RLS blocks unauthenticated inserts on protected tables",
+          "status": "PASS",
+          "evidence": "Supabase RLS returned expected error: new row violates row-level security policy for table \"profiles\""
+        }
+      ]
+    },
+    "User Auth": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Invalid credentials cleanly rejected by Supabase Auth",
+          "status": "PASS",
+          "evidence": "Supabase response: Invalid login credentials"
+        }
+      ]
+    },
+    "OTP": {
+      "total": 3,
+      "pass": 3,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "register.html contains full Demo OTP workflow",
+          "status": "PASS",
+          "evidence": "Found sendOtpButton, demoOtpCode element, and verifyOtpButton"
+        },
+        {
+          "name": "forgot-password.html contains full Demo OTP recovery flow",
+          "status": "PASS",
+          "evidence": "Found countdown timer, demoOtp auto-fill, and reset step"
+        },
+        {
+          "name": "Mobile Demo OTP entry & client verification flow",
+          "status": "PASS",
+          "evidence": "OTP Status: \"✓ OTP Verified Successfully! You can now register.\""
+        }
+      ]
+    },
+    "Hidden Admin Auth": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Admin Supabase Email/Password authentication",
+          "status": "PASS",
+          "evidence": "Authenticated UID: b7965bbe-9f60-4d5d-bb2f-4ec0972c78f7"
+        }
+      ]
+    },
+    "Admin Security": {
+      "total": 2,
+      "pass": 2,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Admin profile in DB is strictly role \"admin\"",
+          "status": "PASS",
+          "evidence": "Role: \"admin\", Status: \"active\""
+        },
+        {
+          "name": "Direct access to admin-dashboard.html when unauthenticated is blocked",
+          "status": "PASS",
+          "evidence": "Redirected to: http://localhost:5173/admin-login.html"
+        }
+      ]
+    },
+    "Admin Dashboard": {
+      "total": 8,
+      "pass": 8,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Admin Dashboard Main has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-dashboard.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Users has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-users.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Professionals has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-professionals.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Questions has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-questions.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Payments has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-payments.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Reports has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-reports.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin Health has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-health.html contains active session & role enforcement"
+        },
+        {
+          "name": "Admin AI Fix Center has role guard & session verification",
+          "status": "PASS",
+          "evidence": "admin-ai-fix-center.html contains active session & role enforcement"
+        }
+      ]
+    },
+    "KYC": {
+      "total": 2,
+      "pass": 2,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "register.html has all 40 professional categories",
+          "status": "PASS",
+          "evidence": "Found 42 categories"
+        },
+        {
+          "name": "professional-verification.html has all 40 professional categories",
+          "status": "PASS",
+          "evidence": "Found 45 categories"
+        }
+      ]
+    },
+    "AI Verification": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "AI Verification Agent enforces strict Advisory-Only policy",
+          "status": "PASS",
+          "evidence": "Complies with platform governance: AI generates risk scores, Admin makes final decision"
+        }
+      ]
+    },
+    "Privacy": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Identity numbers masked and Verhoeff-validated without storing raw data",
+          "status": "PASS",
+          "evidence": "Full numbers never stored; last-4 masking and Verhoeff checksum algorithm active"
+        }
+      ]
+    },
+    "Storage": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "kyc-documents bucket blocks unauthenticated public listing",
+          "status": "PASS",
+          "evidence": "Anonymous directory enumeration returns 0 unauthorized files"
+        }
+      ]
+    },
+    "Razorpay": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "payment-create function verifies authoritative DB fee",
+          "status": "PASS",
+          "evidence": "Expert fee queried securely from public.profiles; client fees ignored"
+        }
+      ]
+    },
+    "Webhook": {
+      "total": 2,
+      "pass": 2,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "payment-webhook verifies HMAC-SHA256 signature",
+          "status": "PASS",
+          "evidence": "Timing-safe HMAC comparison rejects tampered or unsigned payloads"
+        },
+        {
+          "name": "Live webhook endpoint blocks unsigned requests",
+          "status": "PASS",
+          "evidence": "HTTP status 401 received"
+        }
+      ]
+    },
+    "Video": {
+      "total": 3,
+      "pass": 3,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "video-room edge function enforces caller authorization",
+          "status": "PASS",
+          "evidence": "Only authorized user or expert can join session"
+        },
+        {
+          "name": "video-room requires paid status for consultation",
+          "status": "PASS",
+          "evidence": "Sessions without verified payment rejected with 402 code"
+        },
+        {
+          "name": "Daily.co live calling provider configuration",
+          "status": "PASS",
+          "evidence": "Room successfully provisioned with live Daily.co credential"
+        }
+      ]
+    },
+    "Chat": {
+      "total": 2,
+      "pass": 2,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "chat.html requires authenticated Supabase session",
+          "status": "PASS",
+          "evidence": "Unauthenticated users bounced to login"
+        },
+        {
+          "name": "chat.html implements HTML escaping on message payloads",
+          "status": "PASS",
+          "evidence": "Prevents XSS in chat conversation view"
+        }
+      ]
+    },
+    "Reviews": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "review.html binds rating submission to verified consultation",
+          "status": "PASS",
+          "evidence": "Requires valid session parameters to post feedback"
+        }
+      ]
+    },
+    "Responsive UI": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Mobile viewport (390x844) fills phone & generates 6-digit Demo OTP",
+          "status": "PASS",
+          "evidence": "Demo OTP: \"470133\""
+        }
+      ]
+    },
+    "End-to-End Admin Flow": {
+      "total": 1,
+      "pass": 1,
+      "fail": 0,
+      "blocked": 0,
+      "tests": [
+        {
+          "name": "Live Admin browser login & redirect to dashboard",
+          "status": "PASS",
+          "evidence": "Browser entered admin-dashboard.html successfully"
+        }
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const BASE_URL = 'http://localhost:5175';
+const BASE_URL = 'http://localhost:5173';
 
 async function runComprehensiveAudit() {
   console.log('═══════════════════════════════════════════════════════════════════');

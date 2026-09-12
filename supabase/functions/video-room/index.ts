@@ -28,6 +28,15 @@ serve(async (req: Request) => {
       });
     }
 
+    const dailyApiKey = Deno.env.get("DAILY_API_KEY");
+    if (!dailyApiKey) {
+      console.error("Missing DAILY_API_KEY environment variable");
+      return new Response(JSON.stringify({ error: "Video provider unconfigured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
 
@@ -113,28 +122,14 @@ serve(async (req: Request) => {
     }
 
     // 5. Daily.co API Secret Configuration Check
-    const dailyApiKey = Deno.env.get("DAILY_API_KEY");
-    if (!dailyApiKey) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "DAILY_API_KEY secret is not configured in Supabase Edge Function secrets. Video and audio calling requires a Daily.co API key.",
-          code: "PROVIDER_UNCONFIGURED",
-          provider: "daily",
-        }),
-        {
-          status: 422,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
+    // (Already checked at top of file)
 
     // 6. Create or Retrieve Daily.co Private Room
     const roomCleanId = session.id.replace(/[^a-zA-Z0-9]/g, "").slice(0, 16);
     const roomName = `ae_${roomCleanId}`;
     const expTime = Math.floor(Date.now() / 1000) + 3600; // 1-hour expiry
 
-    const createRoomRes = await fetch("https://api.daily.co/v1/rooms", {
+    const roomRes = await fetch("https://api.daily.co/v1/rooms", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${dailyApiKey}`,
@@ -152,12 +147,24 @@ serve(async (req: Request) => {
       }),
     });
 
+    const responseBody = await roomRes.text();
     let roomUrl = "";
-    if (createRoomRes.ok) {
-      const roomData = await createRoomRes.json();
-      roomUrl = roomData.url;
+
+    if (roomRes.ok) {
+      try {
+        const roomData = JSON.parse(responseBody);
+        roomUrl = roomData.url;
+      } catch {
+        // fallback
+      }
     } else {
-      const errJson = await createRoomRes.json();
+      let errJson;
+      try {
+        errJson = JSON.parse(responseBody);
+      } catch {
+        // ignore
+      }
+
       if (errJson?.error === "invalid-request-error" && errJson?.info?.includes("already exists")) {
         // Room already created, fetch its URL
         const getRoomRes = await fetch(`https://api.daily.co/v1/rooms/${roomName}`, {
@@ -168,9 +175,18 @@ serve(async (req: Request) => {
           roomUrl = existingRoom.url;
         }
       }
+
       if (!roomUrl) {
-        console.error("Daily room creation error:", errJson);
-        throw new Error(errJson?.info || "Failed to create Daily video room");
+        console.error("Daily API Error: Room creation failed");
+        return new Response(
+          JSON.stringify({
+            error: "Failed to create Daily video room"
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
       }
     }
 

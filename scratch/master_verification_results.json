@@ -326,7 +326,7 @@
         {
           "name": "register.html has all 40 professional categories",
           "status": "PASS",
-          "evidence": "Found 42 categories"
+          "evidence": "Found 41 categories"
         },
         {
           "name": "professional-verification.html has all 40 professional categories",
@@ -468,7 +468,7 @@
         {
           "name": "Mobile viewport (390x844) fills phone & generates 6-digit Demo OTP",
           "status": "PASS",
-          "evidence": "Demo OTP: \"783694\""
+          "evidence": "Demo OTP: \"959956\""
         }
       ]
     },

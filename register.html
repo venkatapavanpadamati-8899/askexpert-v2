@@ -532,15 +532,14 @@
         <!-- Select Account Type Dropdown -->
         <div class="custom-select-wrapper">
           <select id="accountType" class="custom-select" required>
-            <option value="user" selected>User / Client</option>
-            <option value="professional">Professional / Expert</option>
+            <option value="professional" selected>Professional / Expert</option>
           </select>
           <span class="select-chevron">▼</span>
         </div>
 
         <!-- Expert category only. Identity and professional documents are collected after
              sign-in on the dedicated professional KYC page. -->
-        <div id="expertVerificationFields" class="expert-fields" style="display: none;">
+        <div id="expertVerificationFields" class="expert-fields" style="display: flex;">
           <div class="expert-info-banner">
             <span style="font-size: 16px;">🛡️</span>
             <span><strong>Expert application:</strong> After signing in, submit professional documents through the secure verification page for Administrator review.</span>
@@ -548,8 +547,9 @@
 
           <!-- Professional Category -->
           <div class="custom-select-wrapper">
-            <select id="expertCategory" class="custom-select">
-              <option value="Law & Legal" selected>⚖️ Legal Advisor / Advocate / Lawyer</option>
+            <select id="expertCategory" class="custom-select" required>
+              <option value="" selected disabled>Select Your Professional</option>
+              <option value="Law & Legal">⚖️ Legal Advisor / Advocate / Lawyer</option>
               <option value="Finance & Accounting">📊 Chartered Accountant (CA) / Audit Specialist</option>
               <option value="Taxation">💸 Tax Consultant / GST Specialist</option>
               <option value="Banking">🏦 Banking & Financial Services Specialist</option>
@@ -926,8 +926,16 @@
         return;
       }
 
-      const selectedType = accountType.value || "user";
+      const selectedType = accountType.value || "professional";
       const dbRole = selectedType === "professional" ? "expert" : "user";
+
+      if (dbRole === "expert") {
+        if (!expertCategory.value) {
+          showFormStatus("Please select your professional category.", "error");
+          expertCategory.focus();
+          return;
+        }
+      }
 
       // Auto-generate username from Full Name
       let baseUsername = nameVal.toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");

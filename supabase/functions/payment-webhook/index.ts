@@ -56,10 +56,12 @@ serve(async (req: Request) => {
       case "charge.failed": {
         const orderId = payload.payment?.entity?.order_id || payload.order_id;
         if (orderId) {
+          // Idempotency safeguard: never overwrite an already successful payment with failed
           await supabaseClient
             .from("payments")
             .update({ status: "failed" })
-            .eq("provider_payment_id", orderId);
+            .eq("provider_payment_id", orderId)
+            .neq("status", "successful");
         }
         break;
       }
@@ -78,6 +80,23 @@ serve(async (req: Request) => {
 
       default:
         console.log(`[AskExpert Webhook] Unhandled event: ${event}`);
+    }
+
+    // Preserve audit record for every webhook event
+    try {
+      const auditOrderId = payload.payment?.entity?.order_id || payload.order_id || payload.refund?.entity?.payment_id || "unknown";
+      await supabaseClient.from("audit_logs").insert({
+        action_type: `WEBHOOK_${event.toUpperCase().replace(/\./g, "_")}`,
+        target_table: "payments",
+        details: {
+          event,
+          order_id: auditOrderId,
+          received_at: new Date().toISOString(),
+          payment_id: payload.payment?.entity?.id || payload.id || null
+        }
+      });
+    } catch (_auditErr) {
+      // Non-blocking audit record
     }
 
     return new Response(JSON.stringify({ status: "processed" }), {

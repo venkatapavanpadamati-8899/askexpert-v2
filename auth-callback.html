@@ -157,23 +157,47 @@
     const statusDesc = document.getElementById("statusDesc");
     const actionArea = document.getElementById("actionArea");
 
+    function sanitizeRedirectUrl(url) {
+      if (!url) return null;
+      const clean = String(url).trim();
+      if (
+        clean.startsWith("http://") ||
+        clean.startsWith("https://") ||
+        clean.startsWith("//") ||
+        clean.startsWith("\\") ||
+        clean.toLowerCase().startsWith("javascript:") ||
+        clean.toLowerCase().startsWith("data:")
+      ) {
+        return null;
+      }
+      return clean;
+    }
+
+    let isProcessed = false;
+
     async function handleAuthCallback() {
       try {
         if (!supabase) {
           throw new Error("Authentication client could not be initialized. Please try again.");
         }
 
-        // Check URL hash or search params
-        const hash = window.location.hash;
+        // Check URL search params and hash params
         const search = window.location.search;
-        const urlParams = new URLSearchParams(search || hash.replace(/^#/, "?"));
+        const hash = window.location.hash;
+        const searchParams = new URLSearchParams(search);
+        const hashParams = new URLSearchParams(hash.replace(/^#/, "?"));
 
-        const error = urlParams.get("error");
-        const errorDesc = urlParams.get("error_description");
-        const type = urlParams.get("type");
+        const error = searchParams.get("error") || hashParams.get("error");
+        const errorDesc = searchParams.get("error_description") || hashParams.get("error_description");
+        const type = searchParams.get("type") || hashParams.get("type");
+        const code = searchParams.get("code");
+        const requestedRedirect = sanitizeRedirectUrl(searchParams.get("redirect") || hashParams.get("redirect"));
 
         if (error) {
-          throw new Error(errorDesc || "Authentication link is invalid or has expired.");
+          if (error === "access_denied") {
+            throw new Error("Google Sign In was cancelled. Please try again.");
+          }
+          throw new Error(errorDesc || "Authentication was unsuccessful or the link has expired.");
         }
 
         if (type === "recovery") {
@@ -185,74 +209,122 @@
           return;
         }
 
-        // Fetch authoritative session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        // 1. Check existing session
+        let activeSession = null;
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
+        activeSession = sessionData?.session;
 
-        if (!session || !session.user) {
-          // Listen for onAuthStateChange
-          supabase.auth.onAuthStateChange(async (event, currentSession) => {
-            if (currentSession?.user) {
-              await processVerifiedUser(currentSession.user);
+        // 2. If code is present and no active session yet, exchange code for session (PKCE)
+        if (!activeSession && code) {
+          statusTitle.textContent = "Completing Google Authentication...";
+          statusDesc.textContent = "Exchanging security credentials with Supabase...";
+          try {
+            const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+            if (!exchangeError && exchangeData?.session) {
+              activeSession = exchangeData.session;
+            } else if (exchangeError) {
+              console.warn("[Auth Notice] Code exchange warning:", exchangeError.message);
+              // Check if getSession now has it (detectSessionInUrl might have handled it)
+              const { data: retryData } = await supabase.auth.getSession();
+              if (retryData?.session) {
+                activeSession = retryData.session;
+              }
             }
-          });
+          } catch (e) {
+            console.warn("[Auth Warning] Code exchange caught:", e);
+          }
+        }
 
-          // Timeout fallback
-          setTimeout(() => {
-            if (!session) {
-              loadingSpinner.style.display = "none";
-              iconBox.style.display = "block";
-              iconBox.textContent = "ℹ️";
-              statusTitle.textContent = "Session Verified";
-              statusDesc.textContent = "Your authentication status has been processed. Please continue to Login.";
-              actionArea.style.display = "block";
-            }
-          }, 3000);
+        // 3. Process user if session is established
+        if (activeSession && activeSession.user) {
+          await processVerifiedUser(activeSession.user, requestedRedirect);
           return;
         }
 
-        await processVerifiedUser(session.user);
+        // 4. Fallback listener for asynchronous auth state resolution
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+          if (!isProcessed && currentSession?.user) {
+            authListener?.subscription?.unsubscribe();
+            await processVerifiedUser(currentSession.user, requestedRedirect);
+          }
+        });
+
+        // 5. Timeout safety fallback
+        setTimeout(() => {
+          if (!isProcessed) {
+            authListener?.subscription?.unsubscribe();
+            loadingSpinner.style.display = "none";
+            iconBox.style.display = "block";
+            iconBox.textContent = "ℹ️";
+            statusTitle.textContent = "Authentication Notice";
+            statusDesc.textContent = "No active session detected. Please return to the login page to continue.";
+            actionArea.style.display = "block";
+          }
+        }, 4000);
 
       } catch (err) {
         console.error("Callback Error:", err);
         loadingSpinner.style.display = "none";
         iconBox.style.display = "block";
         iconBox.textContent = "❌";
-        statusTitle.textContent = "Verification Notice";
+        statusTitle.textContent = "Authentication Notice";
         statusDesc.textContent = err.message || "Unable to complete authentication callback. Please log in directly.";
         actionArea.style.display = "block";
       }
     }
 
-    async function processVerifiedUser(user) {
+    async function processVerifiedUser(user, redirectPath) {
+      if (isProcessed) return;
+      isProcessed = true;
+
       loadingSpinner.style.display = "none";
       iconBox.style.display = "block";
       iconBox.textContent = "✅";
       statusTitle.textContent = "Authentication Verified!";
       statusDesc.textContent = "Loading your account profile and redirecting...";
 
-      // Fetch server profile
+      // Authoritative database profile lookup
       const { data: profile } = await supabase
         .from("profiles")
-        .select("id, role, is_blocked, is_verified")
+        .select("id, role, full_name, email, is_verified, account_status, is_blocked")
         .eq("id", user.id)
         .maybeSingle();
 
-      const userRole = profile?.role || "user";
+      // Check account restriction
+      if (profile?.account_status === "suspended" || profile?.account_status === "blocked" || profile?.is_blocked === true) {
+        await supabase.auth.signOut();
+        sessionStorage.clear();
+        localStorage.removeItem("askexpert_user_id");
+        localStorage.removeItem("askexpert_user_role");
+        iconBox.textContent = "⚠️";
+        statusTitle.textContent = "Account Restricted";
+        statusDesc.textContent = "Your account has been suspended or restricted. Please contact support.";
+        actionArea.style.display = "block";
+        return;
+      }
+
+      const userRole = profile?.role || user.user_metadata?.role || "user";
       sessionStorage.setItem("askexpert_user_id", user.id);
       sessionStorage.setItem("askexpert_user_role", userRole);
       localStorage.setItem("askexpert_user_id", user.id);
       localStorage.setItem("askexpert_user_role", userRole);
 
       setTimeout(() => {
-        if (userRole === "admin") {
+        if (redirectPath) {
+          window.location.replace(redirectPath);
+        } else if (userRole === "admin") {
           window.location.replace("admin-dashboard.html");
         } else if (userRole === "expert" || userRole === "professional") {
-          window.location.replace("professional-dashboard.html");
+          if (profile && profile.is_verified !== true) {
+            window.location.replace("professional-verification.html");
+          } else {
+            window.location.replace("professional-dashboard.html");
+          }
         } else {
           window.location.replace("user-dashboard.html");
         }
-      }, 700);
+      }, 500);
     }
 
     handleAuthCallback();

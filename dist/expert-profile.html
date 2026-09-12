@@ -203,7 +203,8 @@
        HERO PROFILE CARD
        ======================================================== */
     .hero-card {
-      background: var(--card-bg);
+      background: linear-gradient(135deg, rgba(15, 4, 23, 0.94) 0%, rgba(28, 8, 43, 0.88) 50%, rgba(13, 26, 45, 0.92) 100%),
+                  url('/assets/experts_hero_art-RfsFMPaZ.jpg') center right / cover no-repeat;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--card-border);
@@ -226,6 +227,21 @@
       right: 10%;
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+      z-index: 2;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 20%, rgba(0, 217, 255, 0.08), transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-left, .hero-mid, .hero-actions {
+      position: relative;
+      z-index: 2;
     }
 
     @media (max-width: 900px) {
@@ -233,6 +249,7 @@
         grid-template-columns: 1fr;
         text-align: center;
         gap: 20px;
+        background-position: center;
       }
       .hero-left {
         margin: 0 auto;

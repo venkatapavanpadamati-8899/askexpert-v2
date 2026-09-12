@@ -917,7 +917,8 @@
 
           const urlParams = new URLSearchParams(window.location.search);
           const requestedRedirect = sanitizeRedirectUrl(urlParams.get("redirect"));
-          const callbackUrl = new URL("/auth-callback.html", window.location.origin);
+          const callbackPath = window.location.protocol === "file:" ? "/auth-callback.html" : "/auth-callback";
+          const callbackUrl = new URL(callbackPath, window.location.origin);
           if (requestedRedirect) {
             callbackUrl.searchParams.set("redirect", requestedRedirect);
           }

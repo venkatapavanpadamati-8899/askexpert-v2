@@ -445,7 +445,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/register-CpP3UAv7.js"></script>
+  <script type="module" crossorigin src="/assets/register-Cc5HZORa.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
 </head>
 
@@ -534,14 +534,15 @@
         <!-- Select Account Type Dropdown -->
         <div class="custom-select-wrapper">
           <select id="accountType" class="custom-select" required>
-            <option value="professional" selected>Professional / Expert</option>
+            <option value="user" selected>User / Client</option>
+            <option value="professional">Professional / Expert</option>
           </select>
           <span class="select-chevron">▼</span>
         </div>
 
         <!-- Expert category only. Identity and professional documents are collected after
              sign-in on the dedicated professional KYC page. -->
-        <div id="expertVerificationFields" class="expert-fields" style="display: flex;">
+        <div id="expertVerificationFields" class="expert-fields" style="display: none;">
           <div class="expert-info-banner">
             <span style="font-size: 16px;">🛡️</span>
             <span><strong>Expert application:</strong> After signing in, submit professional documents through the secure verification page for Administrator review.</span>

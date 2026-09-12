@@ -64,7 +64,7 @@
         {
           "name": "Live route /register (Registration)",
           "status": "PASS",
-          "evidence": "HTTP 200, size: 18948 bytes"
+          "evidence": "HTTP 200, size: 18975 bytes"
         },
         {
           "name": "Live route /admin-login (Hidden Admin Portal)",
@@ -326,7 +326,7 @@
         {
           "name": "register.html has all 40 professional categories",
           "status": "PASS",
-          "evidence": "Found 41 categories"
+          "evidence": "Found 42 categories"
         },
         {
           "name": "professional-verification.html has all 40 professional categories",
@@ -468,7 +468,7 @@
         {
           "name": "Mobile viewport (390x844) fills phone & generates 6-digit Demo OTP",
           "status": "PASS",
-          "evidence": "Demo OTP: \"959956\""
+          "evidence": "Demo OTP: \"835853\""
         }
       ]
     },

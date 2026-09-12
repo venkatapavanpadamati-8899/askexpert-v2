@@ -547,9 +547,9 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/adminProfessionals-hhLD7Cb_.js"></script>
+  <script type="module" crossorigin src="/assets/adminProfessionals-BkFOaiiz.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
-  <link rel="modulepreload" crossorigin href="/assets/aiCertificateVerifier-CcBrbPKY.js">
+  <link rel="modulepreload" crossorigin href="/assets/aiCertificateVerifier-DqDvSQr8.js">
   <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
 <body>
@@ -700,10 +700,11 @@
   <!-- Review Modal -->
   <div id="reviewModal" class="modal-backdrop">
     <div class="modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
         <div>
+          <span style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px;">EXPERT VERIFICATION REPORT</span>
           <h2 style="font-size: 20px; font-weight: 850; color: var(--white);" id="modalApplicantName">Applicant Dossier</h2>
-          <span style="font-size: 12px; color: var(--cyan);" id="modalLicenseNo">Bar Council #MH/2014/9842</span>
+          <span style="font-size: 11.5px; color: var(--muted); font-family: monospace;" id="modalExpertId">Expert ID: #EXP-123456</span>
         </div>
         <button type="button" id="closeReviewModalBtn" style="background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;">✕</button>
       </div>
@@ -712,31 +713,114 @@
       <div class="review-grid">
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Primary Email</span>
-          <strong style="color: var(--white);" id="modalEmail">ananya.iyer@legal.in</strong>
+          <strong style="color: var(--white);" id="modalEmail">applicant@askexpert.com</strong>
         </div>
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Mobile Contact</span>
-          <strong style="color: var(--white);" id="modalPhone">+91 98223 34455</strong>
+          <strong style="color: var(--white);" id="modalPhone">+91 98000 00000</strong>
         </div>
         <div>
-          <span style="color: var(--muted); display: block; font-size: 11px;">Domain Specialization</span>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Domain / Profession</span>
           <strong style="color: var(--cyan);" id="modalSpec">Legal Advisor</strong>
         </div>
         <div>
           <span style="color: var(--muted); display: block; font-size: 11px;">Experience</span>
-          <strong style="color: var(--white);" id="modalExp">9 Years</strong>
+          <strong style="color: var(--white);" id="modalExp">8 Years</strong>
         </div>
-        <div style="grid-column: 1 / -1;">
-          <span style="color: var(--muted); display: block; font-size: 11px;">Highest Degree & Institution</span>
-          <strong style="color: var(--white);" id="modalDegree">LL.M Corporate Law (NLSIU Bangalore)</strong>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Address Location</span>
+          <strong style="color: var(--white);" id="modalAddress">Mumbai, Maharashtra</strong>
+        </div>
+        <div>
+          <span style="color: var(--muted); display: block; font-size: 11px;">Submission Date</span>
+          <strong style="color: var(--white);" id="modalSubmitDate">Just Now</strong>
+        </div>
+      </div>
+
+      <!-- Identity Verification & Free-KYC Audit Card -->
+      <div style="background: rgba(13, 27, 44, 0.85); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>🪪</span> Identity Verification (Free-KYC)
+          </strong>
+          <span id="modalIdentityStatusPill" style="font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 800; background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid var(--gold);">PENDING_ADMIN_REVIEW</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; font-size: 12px;">
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Document Type</span>
+            <strong style="color: var(--white);" id="modalIdDocType">Aadhaar / VID</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Masked Identifier</span>
+            <strong style="color: var(--cyan); font-family: monospace;" id="modalMaskedAadhaar">XXXX-XXXX-1234</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Last-Four Consistency</span>
+            <strong style="color: var(--green);" id="modalLastFourConsistency">CONSISTENT</strong>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Review Mechanism</span>
+            <span style="color: #cbd5e1; font-size: 11.5px;">Admin Signed Document Inspection</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualification & License Consistency Card -->
+      <div style="background: rgba(13, 27, 44, 0.85); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
+        <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+          <span>🎓</span> Academic Qualification & Statutory License
+        </strong>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+          <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Degree & Institution</span>
+            <strong style="color: var(--white); font-size: 12.5px;" id="modalDegree">LL.M (NLSIU Bangalore)</strong>
+            <span style="color: var(--green); display: block; font-size: 11px; margin-top: 4px;">✓ Qualification Consistent</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            <span style="color: var(--muted); font-size: 11px; display: block;">Statutory License & Registration</span>
+            <strong style="color: var(--white); font-size: 12.5px;" id="modalLicenseNo">Bar Council #MH/2014/9842</strong>
+            <span style="color: var(--green); display: block; font-size: 11px; margin-top: 4px;" id="modalLicenseExpiry">Active / Valid</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-Assisted Document Pre-check (Advisory Only) -->
+      <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>🤖</span> AI-Assisted Document Pre-check (Advisory Only)
+          </strong>
+          <span id="modalAiScoreBadge" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-size: 12px;">AI_PRECHECK_PASSED</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Document Quality & Format</span>
+            <strong style="color: var(--green); font-size: 12px;">✓ High Resolution Scan</strong>
+          </div>
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Name Alignment</span>
+            <strong style="color: var(--green); font-size: 12px;" id="modalAiNameMatch">100% Exact Match</strong>
+          </div>
+          <div>
+            <span style="color: var(--muted); font-size: 11px; display: block;">Overall Advisory Score</span>
+            <strong style="color: var(--cyan); font-size: 12px;" id="modalAiRiskScore">90 / 100</strong>
+          </div>
+        </div>
+
+        <!-- AI Advisory Policy Banner -->
+        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 11.5px; color: #fbbf24;">
+          🛡️ <strong>AI Advisory Policy:</strong> AI-Assisted Document Pre-check is advisory only. AI never auto-approves applications. The final verification decision rests strictly with the Admin.
         </div>
       </div>
 
       <!-- Uploaded Verification Documents (Private Storage Signed URLs) -->
-      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
+      <div id="kycDocumentsBox" style="background: rgba(13, 27, 44, 0.7); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
           <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
-            <span>📁</span> Uploaded KYC Documents (Private Storage • 1-Hr Signed URLs)
+            <span>📁</span> Uploaded Private KYC Documents (1-Hour Signed URLs)
           </strong>
           <span style="font-size: 11px; color: var(--cyan); background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.25); padding: 2px 8px; border-radius: 6px;">
             🔒 Private Bucket Protected
@@ -747,123 +831,15 @@
         </div>
       </div>
 
-      <!-- AI Certificate Risk Analysis & Suspicious Element Assessment Box -->
-      <div id="aiCertAssessmentBox" style="background: rgba(0, 217, 255, 0.05); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <strong style="color: var(--white); font-size: 13px; display: flex; align-items: center; gap: 6px;">
-            <span>🤖</span> AI Certificate Risk Analysis & Document Verification
-          </strong>
-          <span id="modalAiScoreBadge" style="background: rgba(0, 217, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-size: 12px;">FORMAT VALIDATED</span>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 12px; color: var(--muted);">AI Risk Assessment: <strong id="modalAiRiskLevel" style="color: var(--green);">LOW RISK</strong></span>
-          <span style="font-size: 12px; color: var(--muted);">Risk Score: <strong id="modalAiRiskScore" style="color: var(--cyan);">10/100</strong></span>
-        </div>
-
-        <!-- Entity Extraction & Cross-Match Badges -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-          <div>
-            <span style="color: var(--muted); font-size: 11px; display: block;">Inferred Issuing Authority</span>
-            <strong style="color: var(--white); font-size: 12px;" id="modalAiAuthority">Bar Council of India / State Bar Council</strong>
-          </div>
-          <div>
-            <span style="color: var(--muted); font-size: 11px; display: block;">Profile vs Certificate Name Match</span>
-            <strong style="color: var(--green); font-size: 12px;" id="modalAiNameMatch">100% Exact Match</strong>
-          </div>
-        </div>
-
-        <div id="modalAiConfidenceLabel" style="font-size: 12px; color: var(--cyan); font-weight: 700; margin-top: 8px;">
-          Document Structure & Syntax Validated (Low Risk Advisory)
-        </div>
-
-        <!-- Suspicious Indicators -->
-        <div style="margin-top: 8px;">
-          <span style="font-size: 11.5px; color: var(--muted); font-weight: 700; display: block; margin-bottom: 4px;">Detected Discrepancies & Suspicious Elements:</span>
-          <div id="modalAiSuspiciousPoints" style="font-size: 11.5px; color: #fca5a5; display: flex; flex-direction: column; gap: 4px;"></div>
-        </div>
-
-        <!-- AI Badges -->
-        <div id="modalAiBadges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;"></div>
-
-        <!-- AI Recommended Next Step for Admin -->
-        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 8px; font-size: 11.5px; color: #bae6fd;">
-          💡 <strong>AI Recommendation:</strong> <span id="modalAiRecommendationText">Compare uploaded document visuals against State Council registry before granting verified badge.</span>
-        </div>
-
-        <!-- Official Government Registry Notice -->
-        <div style="margin-top: 10px; padding: 10px 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; font-size: 11.5px; color: #fca5a5;">
-          🏛️ <strong>Official Government Registry Status:</strong> No Direct API Connection Available — Manual Admin Statutory Review Mandatory.<br>
-          <span style="color: #cbd5e1; font-size: 11px;">(అధికారిక ప్రభుత్వ రిజిస్ట్రీతో ప్రత్యక్ష కనెక్షన్ లేదు. అడ్మిన్ ద్వారా మాన్యువల్ పరిశీలన తప్పనిసరి.)</span>
-        </div>
-
-        <!-- AI Advisory Policy Banner -->
-        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 11.5px; color: #fbbf24;">
-          🛡️ <strong>AI Advisory Policy:</strong> The AI provides analysis, risk score, and flags suspicious indicators only. AI never auto-approves or auto-rejects applications. The final decision rests strictly with the Admin.
-        </div>
-      </div>
-
-      <!-- AI OCR Extracted Document Text Stream Box -->
-      <div id="aiOcrStreamCard" style="background: rgba(0, 0, 0, 0.45); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong style="color: var(--cyan); font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
-            <span>📜</span> Raw AI OCR Extracted Document Text Stream
-          </strong>
-          <span id="modalAiConfidenceScoreBadge" style="font-size: 11px; color: #86efac; background: rgba(16,185,129,0.15); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.3);">90% OCR Confidence</span>
-        </div>
-        <pre id="modalOcrTextStream" style="max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #bad3eb; white-space: pre-wrap; line-height: 1.5; border: 1px solid rgba(255,255,255,0.06);">[OCR Text stream will appear here]</pre>
-      </div>
-
-      <!-- Applicant Manual Appeal Alert Box -->
-      <div id="modalAppealAlertBox" style="background: rgba(121, 82, 255, 0.1); border: 1px dashed var(--purple); border-radius: 12px; padding: 14px; margin-top: 14px;">
-        <strong style="color: #c084fc; font-size: 12px; display: flex; align-items: center; gap: 6px;">
-          <span>📩</span> APPLICANT MANUAL APPEAL MESSAGE TO ADMIN
-        </strong>
-        <p id="modalAppealMessageText" style="font-size: 12.5px; color: var(--white); font-weight: 600; margin-top: 4px;">
-          "Please inspect my uploaded documents and let me know if a clearer or replacement file is required."
-        </p>
-      </div>
-
-      <!-- Private Document Inspection Box -->
-      <h3 style="font-size: 14.5px; font-weight: 800; color: var(--white); margin-top: 14px;">
-        <span>🔒</span> Encrypted Verification Documents (Private Storage)
-      </h3>
-
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;" id="modalDocAadhaarTitle">🪪 Government Aadhaar Card (UIDAI)</strong>
-            <small style="color: var(--muted);" id="modalDocAadhaarSub">Encrypted UIDAI proof document</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing protected Aadhaar identity document via secure authenticated token.')">Inspect File</button>
-        </div>
-
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;">🎓 Certified Degree Certificate</strong>
-            <small style="color: var(--muted);">Post-graduate degree certificate copy</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing certified degree certificate via secure authenticated token.')">Inspect File</button>
-        </div>
-
-        <div class="doc-preview-box">
-          <div>
-            <strong style="font-size: 13px; color: var(--white); display: block;">📜 Council License Certificate (COP)</strong>
-            <small style="color: var(--muted);">Active practice certificate verification</small>
-          </div>
-          <button type="button" class="btn btn-secondary" style="font-size: 11.5px;" onclick="alert('Viewing state council license via secure authenticated token.')">Inspect File</button>
-        </div>
-      </div>
-
-      <!-- Mandatory Certificate Verification Audit Checklist -->
-      <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 12px; padding: 14px; margin-top: 14px;">
+      <!-- Mandatory Admin Verification Checklist -->
+      <div style="background: rgba(0, 217, 255, 0.04); border: 1px solid rgba(0, 217, 255, 0.25); border-radius: 12px; padding: 14px;">
         <strong style="color: var(--cyan); font-size: 13px; display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-          <span>📋</span> Mandatory Certificate Verification Audit Checklist (Required before Approval)
+          <span>📋</span> Mandatory Administrator Checklist (Required before Approval)
         </strong>
         <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
           <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
             <input type="checkbox" id="chkIdentityVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
-            <span>Identity Proof (Aadhaar / Passport) Inspected & Verified</span>
+            <span>Identity Proof / Government Document Inspected & Verified</span>
           </label>
           <label style="display: flex; align-items: center; gap: 8px; color: var(--white); cursor: pointer;">
             <input type="checkbox" id="chkDegreeVerified" style="accent-color: var(--cyan); width: 16px; height: 16px;" />
@@ -877,7 +853,7 @@
       </div>
 
       <!-- Decision Actions -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--card-border); flex-wrap: wrap; gap: 10px;">
         <div style="display: flex; gap: 8px;">
           <button type="button" id="btnRequestResubmit" class="btn btn-secondary" style="color: var(--gold); border-color: rgba(255, 183, 3, 0.3); font-size: 12px;">
             <span>🔄</span> Request Resubmission
@@ -902,16 +878,16 @@
   <!-- Rejection Reason Modal -->
   <div id="rejectReasonModal" class="modal-backdrop">
     <div class="modal-card" style="width: min(460px, 100%);">
-      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">Specify Rejection Reason</h3>
+      <h3 style="font-size: 18px; font-weight: 850; color: var(--red);">Specify Rejection / Resubmission Reason</h3>
       <p style="font-size: 13px; color: #bad3eb;">
-        Please state why this application was rejected. The professional will receive this feedback to guide resubmission.
+        Please state why this application was rejected or requires resubmission. The expert will receive this feedback.
       </p>
 
-      <textarea id="rejectionReasonText" style="width: 100%; height: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 13px;" placeholder="e.g. Council certificate registration date is blurred; please upload a clear scanned PDF copy."></textarea>
+      <textarea id="rejectionReasonText" style="width: 100%; height: 100px; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 10px; color: var(--white); padding: 12px; font-size: 13px;" placeholder="e.g. Council certificate registration date is blurred; please upload a clear scanned copy."></textarea>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
         <button type="button" id="cancelRejectBtn" class="btn btn-secondary">Cancel</button>
-        <button type="button" id="confirmRejectBtn" class="btn btn-reject">Submit Rejection</button>
+        <button type="button" id="confirmRejectBtn" class="btn btn-reject">Submit Decision</button>
       </div>
     </div>
   </div>

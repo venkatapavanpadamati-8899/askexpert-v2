@@ -336,11 +336,11 @@ export function analyzeCertificateAuthenticity(documentData = {}) {
       isConnected: false,
       statusLabel: 'NO DIRECT GOV REGISTRY API CONNECTION',
       noticeTelugu: 'అధికారిక ప్రభుత్వ రిజిస్ట్రీతో ప్రత్యక్ష కనెక్షన్ లేదు. అడ్మిన్ ద్వారా మాన్యువల్ పరిశీలన తప్పనిసరి.',
-      noticeEnglish: 'No Direct Official Government Registry API Integration. AI provides preliminary structural analysis only. Physical/Registry manual audit by Platform Administrator is mandatory.'
+      noticeEnglish: 'AI-Assisted Document Pre-check — Advisory Only. No Direct Official Government Registry API Integration. Preliminary structural analysis only. Physical/Registry manual audit by Platform Administrator is mandatory.'
     },
 
     // Strict Non-Autonomous Policy Mandate
-    adminMandate: 'Advisory AI Analysis Only: AI cannot approve or reject applications. The final verification decision is strictly reserved for the authorized platform Administrator.',
+    adminMandate: 'AI-Assisted Document Pre-check — Advisory Only: AI cannot approve or reject applications. The final verification decision is strictly reserved for the authorized platform Administrator.',
     decisionMode: 'STRICT_ADMIN_APPROVAL_REQUIRED',
     verifiedAt: new Date().toISOString()
   };

@@ -445,8 +445,9 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/register-BaKYiwdG.js"></script>
+  <script type="module" crossorigin src="/assets/register-CgkGrSmo.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
+  <link rel="modulepreload" crossorigin href="/assets/aiAadhaarVerifier-DD8jQ3YQ.js">
 </head>
 
 <body>
@@ -540,12 +541,11 @@
           <span class="select-chevron">▼</span>
         </div>
 
-        <!-- Expert Identity Verification Section (Shown only when Professional / Expert is selected) -->
+        <!-- Expert Registration & Aadhaar Identity Verification (Shown when Professional / Expert is selected) -->
         <div id="expertVerificationFields" class="expert-fields" style="display: none;">
           <div class="expert-info-banner">
             <span style="font-size: 16px;">🛡️</span>
-            <span><strong>Expert Verification:</strong> Upload your Aadhaar / Govt ID proof. Educational degrees and
-              council licenses can be uploaded in your dashboard after registration.</span>
+            <span><strong>Expert Identity Verification:</strong> Attach your Aadhaar document and enter your 12-digit Aadhaar number. Both will be cross-verified before expert registration is enabled.</span>
           </div>
 
           <!-- Professional Category -->
@@ -561,24 +561,35 @@
             <span class="select-chevron">▼</span>
           </div>
 
-          <!-- Aadhaar Card Number -->
-          <div class="input-wrapper">
-            <span class="input-icon">🪪</span>
-            <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-input"
-              placeholder="Aadhaar Card Number (12 digits)" maxlength="14" inputmode="numeric" />
-          </div>
-
-          <!-- Upload Aadhaar Card Photo / Document -->
-          <div class="aadhaar-upload-box" id="aadhaarUploadZone">
-            <input type="file" id="aadhaarFile" accept="image/*,.pdf" style="display: none;" />
+          <!-- Aadhaar Document Upload Box -->
+          <label class="aadhaar-upload-box" for="expertAadhaarFile" id="aadhaarUploadZone" style="cursor: pointer;">
+            <input type="file" id="expertAadhaarFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="display: none;" />
             <div class="upload-inner">
-              <span class="upload-icon">📷</span>
+              <span class="upload-icon" id="aadhaarFileIcon">🪪</span>
               <div class="upload-text-group">
-                <span class="upload-title" id="aadhaarUploadLabel">Upload Aadhaar Photo / Document</span>
-                <span class="upload-hint" id="aadhaarFileName">Supports JPG, PNG, PDF (Click to select)</span>
+                <span class="upload-title" id="aadhaarFileTitle">Attach Aadhaar Document *</span>
+                <span class="upload-hint" id="aadhaarFileHint">PDF, JPG, PNG or WEBP (Max 10 MB)</span>
               </div>
             </div>
+          </label>
+
+          <!-- Aadhaar Number Input -->
+          <div class="input-wrapper">
+            <span class="input-icon">🔢</span>
+            <input type="text" id="expertAadhaarNumber" name="expertAadhaarNumber" class="form-input"
+              placeholder="Enter 12-Digit Aadhaar Number" inputmode="numeric" maxlength="14" autocomplete="off" />
           </div>
+
+          <!-- Masked Preview -->
+          <div id="aadhaarMaskedPreview" style="font-size: 11.5px; color: #38bdf8; text-align: left; padding: 0 4px; display: none;"></div>
+
+          <!-- Verify Aadhaar Document & Number Button -->
+          <button type="button" id="verifyAadhaarButton" class="btn-full btn-orange" style="height: 46px; font-size: 14.5px;">
+            Verify Aadhaar Document & Number
+          </button>
+
+          <!-- Aadhaar Verification Status Box -->
+          <div id="aadhaarStatus" class="status-box"></div>
         </div>
 
         <!-- Terms Checkbox (Internal Support) -->

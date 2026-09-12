@@ -310,8 +310,25 @@
       localStorage.setItem("askexpert_user_id", user.id);
       localStorage.setItem("askexpert_user_role", userRole);
 
+      // Strict protection: check if an administrative route was requested
+      const isAdminRoute = redirectPath && (redirectPath.includes("admin") || redirectPath.includes("admin-dashboard"));
+
+      if (isAdminRoute && userRole !== "admin") {
+        await supabase.auth.signOut();
+        sessionStorage.clear();
+        localStorage.removeItem("askexpert_user_id");
+        localStorage.removeItem("askexpert_user_role");
+        iconBox.textContent = "⛔";
+        statusTitle.textContent = "Admin Access Denied";
+        statusDesc.textContent = "This account lacks administrative privileges. Admin access is strictly restricted to authorized personnel.";
+        actionArea.style.display = "block";
+        return;
+      }
+
       setTimeout(() => {
-        if (redirectPath) {
+        if (isAdminRoute && userRole === "admin") {
+          window.location.replace("admin-dashboard.html");
+        } else if (redirectPath && !isAdminRoute) {
           window.location.replace(redirectPath);
         } else if (userRole === "admin") {
           window.location.replace("admin-dashboard.html");

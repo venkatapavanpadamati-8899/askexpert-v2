@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ask questions from verified professionals">
-  <title>Ask Expert</title>
+  <meta name="description" content="AskExpert - Log in to consult verified professionals like Lawyers, Doctors, Teachers, and Engineers.">
+  <title>AskExpert | Login</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,19 +60,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 72px 16px;
+      padding: 76px 16px 84px;
       width: 100%;
       z-index: 10;
     }
 
     .glass-card {
-      background: rgba(45, 52, 60, 0.68);
+      background: rgba(45, 52, 60, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       padding: 34px 26px;
-      width: min(440px, 92%);
+      width: min(440px, 94%);
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
       text-align: center;
       display: flex;
@@ -101,15 +101,75 @@
       font-size: 32px;
       font-weight: 800;
       letter-spacing: -0.5px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .card-subtitle {
       color: #f1f5f9;
       font-size: 14.5px;
       line-height: 1.45;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       text-align: center;
+    }
+
+    /* Active Session Banner */
+    .active-session-banner {
+      display: none;
+      width: 100%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      text-align: left;
+      font-size: 13px;
+      color: #d1fae5;
+    }
+
+    .active-session-banner.show {
+      display: block;
+    }
+
+    .active-session-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #34d399;
+    }
+
+    .active-session-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-session-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-go-dashboard {
+      background: #10b981;
+      color: #ffffff;
+    }
+    .btn-go-dashboard:hover {
+      background: #059669;
+    }
+
+    .btn-session-signout {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+    .btn-session-signout:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
 
     /* Form Fields */
@@ -156,7 +216,7 @@
       font-size: 15px;
       padding: 0 46px 0 46px;
       outline: none;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .form-input::placeholder {
@@ -166,7 +226,8 @@
 
     .form-input:focus {
       background: rgba(255, 255, 255, 0.28);
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(0, 153, 255, 0.8);
+      box-shadow: 0 0 0 3px rgba(0, 153, 255, 0.25);
     }
 
     .input-action {
@@ -179,7 +240,50 @@
       color: rgba(255, 255, 255, 0.7);
       cursor: pointer;
       font-size: 16px;
-      padding: 4px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .input-action:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .input-action svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Sub-row: Forgot Password link aligned nicely */
+    .form-sub-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      margin-top: -4px;
+      margin-bottom: 2px;
+    }
+
+    .forgot-link {
+      color: #38bdf8;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease, text-decoration 0.2s ease;
+    }
+
+    .forgot-link:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
     }
 
     /* Buttons */
@@ -194,8 +298,8 @@
       border: none;
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(0, 153, 255, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      margin-top: 2px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      margin-top: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -209,6 +313,7 @@
     .btn-login-main:disabled {
       opacity: 0.65;
       cursor: not-allowed;
+      transform: none;
     }
 
     /* Divider */
@@ -216,7 +321,7 @@
       display: flex;
       align-items: center;
       text-align: center;
-      margin: 8px 0 6px;
+      margin: 10px 0 8px;
       width: 100%;
     }
 
@@ -251,7 +356,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
       text-decoration: none;
     }
 
@@ -264,6 +369,7 @@
     .btn-google:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+      transform: none;
     }
 
     .btn-google svg {
@@ -312,10 +418,11 @@
       width: 100%;
       padding: 10px 14px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 13.5px;
       line-height: 1.4;
       text-align: center;
-      margin-top: 4px;
+      margin-top: 2px;
+      word-break: break-word;
     }
 
     .status-message.show {
@@ -323,15 +430,15 @@
     }
 
     .status-message.error {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.22);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fecaca;
     }
 
     .status-message.success {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      color: #86efac;
+      background: rgba(16, 185, 129, 0.22);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #a7f3d0;
     }
 
     /* Bottom Blue Bar */
@@ -384,7 +491,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/login-roRSGZob.js"></script>
+  <script type="module" crossorigin src="/assets/login-rgVBgznx.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
 </head>
 
@@ -409,10 +516,23 @@
       <h1 class="card-title">Ask Expert</h1>
       <p class="card-subtitle">Ask questions from verified professionals</p>
 
-      <form id="loginForm" novalidate onsubmit="return false;">
-        <!-- Email Input -->
+      <!-- Already Signed In Alert Banner (Dynamically shown if already logged in) -->
+      <div id="alreadySignedInBox" class="active-session-banner" role="status">
+        <div class="active-session-header">
+          <span>✓</span>
+          <span>Already Signed In</span>
+        </div>
+        <div id="activeSessionUserText">You are currently signed in.</div>
+        <div class="active-session-actions">
+          <a id="continueDashboardBtn" href="user-dashboard.html" class="btn-session-action btn-go-dashboard">Go to Dashboard</a>
+          <button type="button" id="signOutOtherBtn" class="btn-session-action btn-session-signout">Sign Out</button>
+        </div>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <!-- Email or Username Input -->
         <div class="input-wrapper">
-          <span class="input-icon">
+          <span class="input-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
               <polyline points="22,6 12,13 2,6"></polyline>
@@ -421,17 +541,20 @@
           <input
             type="text"
             id="email"
+            name="username"
             class="form-input"
-            placeholder="Email Address"
+            placeholder="Email or Username"
             autocomplete="username"
             required
             maxlength="120"
+            aria-label="Email Address or Username"
+            aria-describedby="statusMessage"
           />
         </div>
 
         <!-- Password Input -->
         <div class="input-wrapper">
-          <span class="input-icon">
+          <span class="input-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -440,11 +563,14 @@
           <input
             type="password"
             id="password"
+            name="password"
             class="form-input"
             placeholder="Password"
             autocomplete="current-password"
             required
             maxlength="128"
+            aria-label="Password"
+            aria-describedby="statusMessage"
           />
           <button
             type="button"
@@ -452,14 +578,25 @@
             class="input-action"
             aria-label="Show password"
             title="Show password"
-          >👁</button>
+          >
+            <!-- Eye SVG Icon -->
+            <svg id="eyeIcon" viewBox="0 0 24 24">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Forgot Password Sub-row -->
+        <div class="form-sub-row">
+          <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
         </div>
 
         <!-- Status Message -->
-        <div id="statusMessage" class="status-message" role="alert" aria-live="polite"></div>
+        <div id="statusMessage" class="status-message" role="alert" aria-live="assertive"></div>
 
         <!-- Login Button -->
-        <button type="button" id="loginButton" class="btn-login-main">
+        <button type="submit" id="loginButton" class="btn-login-main">
           Login
         </button>
 
@@ -481,15 +618,8 @@
 
         <!-- Register Button Row -->
         <div class="btn-row" style="display: flex; justify-content: center; width: 100%; margin-top: 4px;">
-          <button type="button" id="registerButton" class="btn-secondary btn-register-green" style="width: 100%;">
+          <a href="register.html" id="registerButton" class="btn-secondary btn-register-green" style="width: 100%;">
             Register
-          </button>
-        </div>
-
-        <!-- Forgot Password Link -->
-        <div style="text-align: center; width: 100%; margin-top: 14px;">
-          <a href="forgot-password.html" style="color: #00d9ff; font-weight: 700; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 10px; background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.3); box-shadow: 0 0 12px rgba(0, 217, 255, 0.15); transition: all 0.2s ease;">
-            <span>🔑</span> Forgot Password?
           </a>
         </div>
       </form>

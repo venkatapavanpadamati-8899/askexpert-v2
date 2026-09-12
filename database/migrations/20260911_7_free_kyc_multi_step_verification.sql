@@ -11,6 +11,7 @@ BEGIN;
 ALTER TABLE public.professional_verifications
   ADD COLUMN IF NOT EXISTS identity_document_type TEXT DEFAULT 'Aadhaar',
   ADD COLUMN IF NOT EXISTS masked_identity_number TEXT,
+  ADD COLUMN IF NOT EXISTS identity_status TEXT DEFAULT 'MANUAL_REVIEW_REQUIRED',
   ADD COLUMN IF NOT EXISTS last_four_consistency TEXT DEFAULT 'UNABLE_TO_DETERMINE',
   ADD COLUMN IF NOT EXISTS address_street TEXT,
   ADD COLUMN IF NOT EXISTS address_city TEXT,
@@ -88,15 +89,13 @@ BEGIN
         degree_verified = true,
         council_verified = true,
         rejection_reason = NULL,
-        identity_status = 'MANUAL_REVIEW_REQUIRED',
-        updated_at = now()
+        identity_status = 'MANUAL_REVIEW_REQUIRED'
     WHERE expert_id = p_expert_id;
 
     -- Grant verified status to expert profile
     UPDATE public.profiles
     SET is_verified = true,
-        is_blocked = false,
-        updated_at = now()
+        is_blocked = false
     WHERE id = p_expert_id;
   ELSE
     -- Rejection or Resubmission Required
@@ -105,14 +104,12 @@ BEGIN
         identity_verified = false,
         degree_verified = false,
         council_verified = false,
-        rejection_reason = trim(p_reason),
-        updated_at = now()
+        rejection_reason = trim(p_reason)
     WHERE expert_id = p_expert_id;
 
     -- Unset verified status
     UPDATE public.profiles
-    SET is_verified = false,
-        updated_at = now()
+    SET is_verified = false
     WHERE id = p_expert_id;
   END IF;
 

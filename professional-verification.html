@@ -1534,7 +1534,6 @@
       const verifRecord = {
         expert_id: currentUserId,
         council_registration_no: councilNo,
-        masked_aadhaar: maskedId,
         masked_identity_number: maskedId,
         identity_document_type: idType,
         last_four_consistency: cachedLastFourStatus,
@@ -1582,7 +1581,10 @@
         }
       }
 
-      localStorage.setItem("askexpert_verification_record", JSON.stringify(verifRecord));
+      // Do not retain KYC data or document paths in browser storage. The status is
+      // rendered from this in-memory submission only; later visits read the
+      // authorised server-side record.
+      localStorage.removeItem("askexpert_verification_record");
 
       showToast("✓ KYC Application submitted successfully for Admin review!");
       setTimeout(() => {

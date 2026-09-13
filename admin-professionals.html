@@ -969,7 +969,7 @@
             degree_qualification, degree_university, passing_year,
             council_name, license_expiry_date,
             address_street, address_city, address_state, address_pincode, address_country,
-            identity_document_type, masked_identity_number, masked_aadhaar,
+            identity_document_type, masked_identity_number,
             last_four_consistency, created_at, rejection_reason,
             ai_advisory_report,
             id_document_path, degree_document_path, license_document_path,
@@ -1056,7 +1056,7 @@
         const email = prof.email || "";
         const phone = prof.phone || "";
         const idType = p.identity_document_type || "Aadhaar / ID";
-        const maskedId = p.masked_identity_number || p.masked_aadhaar || "Not Provided";
+        const maskedId = p.masked_identity_number || "Not Provided";
         const lastFour = p.last_four_consistency || "UNABLE_TO_DETERMINE";
         const location = [p.address_city, p.address_state].filter(Boolean).join(", ") || "India";
         const submitDate = p.created_at ? new Date(p.created_at).toLocaleDateString() : "Recent";

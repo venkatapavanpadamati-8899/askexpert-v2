@@ -496,11 +496,19 @@
             autocomplete="new-password" required maxlength="128" />
         </div>
 
+        <!-- Confirm Password -->
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Confirm Password"
+            autocomplete="new-password" required maxlength="128" />
+        </div>
+
         <!-- Mobile Number -->
         <div class="input-wrapper">
           <span class="input-icon">📞</span>
+          <span style="position: absolute; left: 42px; top: 50%; transform: translateY(-50%); color: #ffffff; font-size: 14.5px; pointer-events: none;">+91</span>
           <input type="tel" id="phone" name="phone" class="form-input" placeholder="Mobile Number" autocomplete="tel"
-            required maxlength="15" />
+            required maxlength="10" style="padding-left: 76px;" />
         </div>
 
         <!-- Send OTP Button (Orange) -->
@@ -594,6 +602,12 @@
             <span class="select-chevron">▼</span>
           </div>
 
+          <!-- Expert Date of Birth (Age 25+ Required) -->
+          <div class="input-wrapper" style="margin-top: 12px;">
+            <span class="input-icon">📅</span>
+            <input type="date" id="expertDob" name="expertDob" class="form-input" placeholder="Date of Birth" required />
+          </div>
+
         </div>
 
         <!-- Terms Checkbox (Internal Support) -->
@@ -651,6 +665,7 @@
     // after authentication by professional-verification.html.
     const expertVerificationFields = document.getElementById("expertVerificationFields");
     const expertCategory = document.getElementById("expertCategory");
+    const expertDob = document.getElementById("expertDob");
     // Toggle the non-sensitive expert category on account type change.
     accountType.addEventListener("change", function () {
       if (accountType.value === "professional") {
@@ -735,8 +750,8 @@
       clearFormStatus();
       let rawPhone = phone.value.trim().replace(/\D/g, "");
 
-      if (!rawPhone || rawPhone.length < 7 || rawPhone.length > 15) {
-        showOtpStatus("Please enter a valid mobile number first.", "error");
+      if (!rawPhone || rawPhone.length !== 10) {
+        showOtpStatus("Please enter a valid 10-digit mobile number.", "error");
         phone.focus();
         return;
       }
@@ -856,7 +871,7 @@
     });
 
     phone.addEventListener("input", function () {
-      phone.value = phone.value.replace(/\D/g, "").slice(0, 15);
+      phone.value = phone.value.replace(/\D/g, "").slice(0, 10);
       if (generatedOtp || otpVerified) {
         generatedOtp = null;
         otpGeneratedAt = null;
@@ -897,6 +912,7 @@
       const emailVal = email.value.trim();
       const phoneVal = phone.value.trim();
       const passwordVal = password.value;
+      const confirmPasswordVal = document.getElementById("confirmPassword").value;
 
       if (nameVal.length < 2) {
         showFormStatus("Please enter your full name.", "error");
@@ -910,14 +926,21 @@
         return;
       }
 
-      if (passwordVal.length < 6) {
-        showFormStatus("Password must contain at least 6 characters.", "error");
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if (!passwordRegex.test(passwordVal)) {
+        showFormStatus("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.", "error");
         password.focus();
         return;
       }
 
-      if (phoneVal.length < 7) {
-        showFormStatus("Please enter a valid mobile number.", "error");
+      if (passwordVal !== confirmPasswordVal) {
+        showFormStatus("Passwords do not match.", "error");
+        document.getElementById("confirmPassword").focus();
+        return;
+      }
+
+      if (phoneVal.length !== 10) {
+        showFormStatus("Please enter a valid 10-digit mobile number.", "error");
         phone.focus();
         return;
       }
@@ -934,6 +957,26 @@
         if (!expertCategory.value) {
           showFormStatus("Please select your professional category.", "error");
           expertCategory.focus();
+          return;
+        }
+
+        if (!expertDob.value) {
+          showFormStatus("Please enter your Date of Birth.", "error");
+          expertDob.focus();
+          return;
+        }
+
+        const dobDate = new Date(expertDob.value);
+        const today = new Date();
+        let age = today.getFullYear() - dobDate.getFullYear();
+        const m = today.getMonth() - dobDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+          age--;
+        }
+        
+        if (age < 25) {
+          showFormStatus("Experts must be at least 25 years of age.", "error");
+          expertDob.focus();
           return;
         }
       }

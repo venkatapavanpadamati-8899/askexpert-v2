@@ -322,7 +322,10 @@
 
           <div class="form-group">
             <label class="form-label" for="inputPhone">Phone Number</label>
-            <input type="tel" id="inputPhone" class="form-input" placeholder="e.g. +91 98765 43210" />
+            <div style="position: relative; display: flex; align-items: center;">
+              <span style="position: absolute; left: 16px; color: #ffffff; font-size: 14px; pointer-events: none;">+91</span>
+              <input type="tel" id="inputPhone" class="form-input" placeholder="e.g. 9876543210" required maxlength="10" style="padding-left: 48px; width: 100%;" />
+            </div>
           </div>
 
           <div class="form-group full">
@@ -430,7 +433,12 @@
 
     function populateForm(data, privacy = {}) {
       document.getElementById("inputFullName").value = data.full_name || "";
-      document.getElementById("inputPhone").value = data.phone || "";
+      
+      let dbPhone = data.phone || "";
+      if(dbPhone.startsWith("+91")) dbPhone = dbPhone.substring(3).trim();
+      else if(dbPhone.startsWith("91") && dbPhone.length == 12) dbPhone = dbPhone.substring(2);
+      document.getElementById("inputPhone").value = dbPhone.replace(/\D/g, "").slice(0, 10);
+      
       const langs = Array.isArray(data.languages) ? data.languages.join(", ") : (data.languages || "English, Hindi");
       document.getElementById("inputLanguages").value = langs;
       document.getElementById("inputBio").value = data.bio || "";
@@ -452,7 +460,17 @@
       saveBtn.innerHTML = "<span>⏳</span> Saving...";
 
       const fullName = document.getElementById("inputFullName").value.trim();
-      const phone = document.getElementById("inputPhone").value.trim();
+      const phoneRaw = document.getElementById("inputPhone").value.trim();
+      
+      if(phoneRaw.length !== 10) {
+        showToast("Please enter a valid 10-digit mobile number.");
+        document.getElementById("inputPhone").focus();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = "<span>💾</span> Save Changes";
+        return;
+      }
+      const phone = "+91" + phoneRaw;
+
       const langs = document.getElementById("inputLanguages").value.split(",").map(s => s.trim()).filter(Boolean);
       const bio = document.getElementById("inputBio").value.trim();
 
@@ -500,6 +518,10 @@
       setTimeout(() => {
         window.location.href = "profile.html";
       }, 1000);
+    });
+
+    document.getElementById("inputPhone").addEventListener("input", function() {
+      this.value = this.value.replace(/\D/g, "").slice(0, 10);
     });
 
     function showToast(msg) {

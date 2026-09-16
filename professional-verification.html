@@ -725,7 +725,10 @@
 
               <div class="field-group">
                 <label class="form-label" for="vPhone">Mobile Phone Number *</label>
-                <input type="tel" id="vPhone" class="form-input" placeholder="e.g. +91 98765 43210" required />
+                <div style="position: relative; display: flex; align-items: center;">
+                  <span style="position: absolute; left: 16px; color: #ffffff; font-size: 14px; pointer-events: none;">+91</span>
+                  <input type="tel" id="vPhone" class="form-input" placeholder="e.g. 9876543210" required maxlength="10" style="padding-left: 48px; width: 100%;" />
+                </div>
               </div>
 
               <div class="field-group">
@@ -1136,6 +1139,16 @@
       setupFileInputs();
       setupOptionalIdentityMasking();
       setupAppealModal();
+      setupPhoneInput();
+    }
+
+    function setupPhoneInput() {
+      const vPhone = document.getElementById("vPhone");
+      if (vPhone) {
+        vPhone.addEventListener("input", function() {
+          this.value = this.value.replace(/\D/g, "").slice(0, 10);
+        });
+      }
     }
 
     /* ========================================================
@@ -1150,7 +1163,12 @@
             const meta = session.user.user_metadata || {};
             if (meta.full_name) document.getElementById("vFullName").value = meta.full_name;
             if (session.user.email) document.getElementById("vEmail").value = session.user.email;
-            if (session.user.phone) document.getElementById("vPhone").value = session.user.phone;
+            if (session.user.phone) {
+              let p = session.user.phone;
+              if(p.startsWith("+91")) p = p.substring(3).trim();
+              else if(p.startsWith("91") && p.length == 12) p = p.substring(2);
+              document.getElementById("vPhone").value = p.replace(/\D/g, "").slice(0, 10);
+            }
           }
         }
       } catch (err) {
@@ -1507,7 +1525,17 @@
 
       const fullName = document.getElementById("vFullName").value.trim();
       const email = document.getElementById("vEmail").value.trim();
-      const phone = document.getElementById("vPhone").value.trim();
+      const phoneRaw = document.getElementById("vPhone").value.trim();
+      
+      if(phoneRaw.length !== 10) {
+        showToast("Please enter a valid 10-digit mobile number.");
+        document.getElementById("vPhone").focus();
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = "<span>🚀</span> Submit KYC for Admin Review";
+        return;
+      }
+      const phone = "+91" + phoneRaw;
+
       const headline = document.getElementById("vHeadline").value.trim();
       const street = document.getElementById("vAddressStreet").value.trim();
       const city = document.getElementById("vAddressCity").value.trim();

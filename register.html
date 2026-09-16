@@ -496,13 +496,6 @@
             autocomplete="new-password" required maxlength="128" />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="input-wrapper">
-          <span class="input-icon">🔒</span>
-          <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Confirm Password"
-            autocomplete="new-password" required maxlength="128" />
-        </div>
-
         <!-- Mobile Number -->
         <div class="input-wrapper">
           <span class="input-icon">📞</span>
@@ -912,7 +905,6 @@
       const emailVal = email.value.trim();
       const phoneVal = phone.value.trim();
       const passwordVal = password.value;
-      const confirmPasswordVal = document.getElementById("confirmPassword").value;
 
       if (nameVal.length < 2) {
         showFormStatus("Please enter your full name.", "error");
@@ -930,12 +922,6 @@
       if (!passwordRegex.test(passwordVal)) {
         showFormStatus("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.", "error");
         password.focus();
-        return;
-      }
-
-      if (passwordVal !== confirmPasswordVal) {
-        showFormStatus("Passwords do not match.", "error");
-        document.getElementById("confirmPassword").focus();
         return;
       }
 

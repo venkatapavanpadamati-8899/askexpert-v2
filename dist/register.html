@@ -445,7 +445,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/register-Cc5HZORa.js"></script>
+  <script type="module" crossorigin src="/assets/register-DbcqcJqA.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
 </head>
 
@@ -501,20 +501,15 @@
         <!-- Mobile Number -->
         <div class="input-wrapper">
           <span class="input-icon">📞</span>
+          <span style="position: absolute; left: 42px; top: 50%; transform: translateY(-50%); color: #ffffff; font-size: 14.5px; pointer-events: none;">+91</span>
           <input type="tel" id="phone" name="phone" class="form-input" placeholder="Mobile Number" autocomplete="tel"
-            required maxlength="15" />
+            required maxlength="10" style="padding-left: 76px;" />
         </div>
 
         <!-- Send OTP Button (Orange) -->
         <button type="button" id="sendOtpButton" class="btn-full btn-orange">
           Send OTP
         </button>
-
-        <!-- Demo OTP Display Box (For Quick Testing) -->
-        <div id="demoOtpBox" class="demo-otp-box" style="display:none;">
-          <span>⚡ Development Demo OTP: <strong id="demoOtpCode"></strong></span>
-          <button type="button" id="autoFillOtpButton" class="demo-otp-btn">Auto-fill</button>
-        </div>
 
         <!-- OTP Status -->
         <div id="otpStatus" class="status-box"></div>
@@ -594,6 +589,12 @@
               <option value="Other Professional Services">🛠️ Other Professional Services</option>
             </select>
             <span class="select-chevron">▼</span>
+          </div>
+
+          <!-- Expert Date of Birth (Age 25+ Required) -->
+          <div class="input-wrapper" style="margin-top: 12px;">
+            <span class="input-icon">📅</span>
+            <input type="date" id="expertDob" name="expertDob" class="form-input" placeholder="Date of Birth" required />
           </div>
 
         </div>

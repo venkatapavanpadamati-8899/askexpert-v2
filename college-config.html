@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AskExpert | College Configuration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-mesh: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.94);
+      --card-border: rgba(56, 189, 248, 0.22);
+      --white: #ffffff;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --primary: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    body { margin: 0; background: var(--bg-mesh); color: var(--text); font-family: 'Inter', system-ui; }
+    .wrap { max-width: 900px; margin: auto; padding: 24px; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 24px; margin: 16px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
+    h1, h2, h3 { margin-top: 0; color: var(--white); }
+    label { display: block; font-weight: 600; margin-top: 14px; color: var(--text-muted); font-size: 14px; }
+    input, select, textarea { box-sizing: border-box; width: 100%; padding: 12px; margin-top: 6px; border: 1px solid var(--card-border); border-radius: 8px; font: inherit; background: rgba(255,255,255,0.05); color: var(--white); }
+    .btn { padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 15px; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    .notice { min-height: 22px; font-size: 14px; margin-top: 8px; }
+    .notice.error { color: #ff6b6b; }
+    .notice.success { color: #20d889; }
+    a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .staff-card { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .staff-card .info { flex: 1; }
+    .staff-card .info p { margin: 2px 0; font-size: 14px; }
+    .badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 99px; }
+    .badge.manager { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .badge.hod { background: rgba(56,189,248,0.2); color: #7dd3fc; }
+    .badge.principal { background: rgba(168,85,247,0.2); color: #c4b5fd; }
+    .badge.security { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .badge.responder { background: rgba(34,197,94,0.2); color: #86efac; }
+    .badge.women_safety_cell { background: rgba(236,72,153,0.2); color: #f9a8d4; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    .empty { text-align: center; padding: 32px; color: var(--text-muted); }
+    .section-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .section-tabs button { padding: 8px 16px; border-radius: 8px; font-weight: 600; border: 1px solid var(--card-border); background: transparent; color: var(--text-muted); cursor: pointer; }
+    .section-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a href="admin-dashboard.html">← Admin Dashboard</a>
+    <h1>🎓 College Configuration</h1>
+    <p id="notice" class="notice" aria-live="polite"></p>
+
+    <div class="section-tabs">
+      <button class="active" data-tab="college">College Info</button>
+      <button data-tab="departments">Departments</button>
+      <button data-tab="staff">Safety Staff</button>
+      <button data-tab="contacts">Emergency Contacts</button>
+      <button data-tab="policy">Escalation Policy</button>
+    </div>
+
+    <!-- TAB: College Info -->
+    <section id="tab-college" class="card">
+      <h2>College Information</h2>
+      <div class="grid-2">
+        <div>
+          <label>College Name
+            <input type="text" id="collegeName" placeholder="e.g. SRK Reddy Engineering College" />
+          </label>
+          <label>College Code
+            <input type="text" id="collegeCode" placeholder="e.g. SRKEC" maxlength="20" />
+          </label>
+        </div>
+        <div>
+          <label>Official Email
+            <input type="email" id="collegeEmail" placeholder="admin@college.edu" />
+          </label>
+          <label>Emergency Contact Number
+            <input type="tel" id="collegePhone" placeholder="+91-XXXXXXXXXX" />
+          </label>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="btn btn-primary" id="btnSaveCollege">Save College Info</button>
+      </div>
+    </section>
+
+    <!-- TAB: Departments -->
+    <section id="tab-departments" class="card" style="display:none;">
+      <h2>Departments</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">Departments are derived from student/staff profiles. Common departments include CSE, ECE, EEE, ME, Civil, etc. To add a department, assign a student or staff member to it.</p>
+      <div id="departmentList" class="empty">Loading departments…</div>
+    </section>
+
+    <!-- TAB: Safety Staff -->
+    <section id="tab-staff" class="card" style="display:none;">
+      <h2>Safety Authority Staff</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">Manage who can access and respond to safety incidents for this college. Only admins can assign roles.</p>
+      
+      <div id="staffList">Loading staff…</div>
+
+      <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+        <h3>Add Staff Member</h3>
+        <div class="grid-2">
+          <div>
+            <label>User Email
+              <input type="email" id="newStaffEmail" placeholder="faculty@college.edu" />
+            </label>
+          </div>
+          <div>
+            <label>Safety Role
+              <select id="newStaffRole">
+                <option value="responder">Responder</option>
+                <option value="security">Security Officer</option>
+                <option value="hod">HOD</option>
+                <option value="women_safety_cell">Women Safety Cell</option>
+                <option value="manager">Safety Manager</option>
+                <option value="principal">Principal</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btnAddStaff" style="margin-top: 12px;">Add Staff</button>
+      </div>
+    </section>
+
+    <!-- TAB: Emergency Contacts -->
+    <section id="tab-contacts" class="card" style="display:none;">
+      <h2>College Emergency Contacts</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">These contacts are shown to students on the safety page. Use only official college-approved contact information.</p>
+      
+      <div id="contactList">Loading contacts…</div>
+
+      <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+        <h3>Add Emergency Contact</h3>
+        <div class="grid-2">
+          <div>
+            <label>Contact Name
+              <input type="text" id="contactName" placeholder="e.g. Dr. Safety Officer" />
+            </label>
+            <label>Role / Designation
+              <input type="text" id="contactRole" placeholder="e.g. Women Safety Cell Coordinator" />
+            </label>
+          </div>
+          <div>
+            <label>Official Phone
+              <input type="tel" id="contactPhone" placeholder="+91-XXXXXXXXXX" />
+            </label>
+            <label>Official Email
+              <input type="email" id="contactEmail" placeholder="officer@college.edu" />
+            </label>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btnAddContact" style="margin-top: 12px;">Add Contact</button>
+      </div>
+    </section>
+
+    <!-- TAB: Escalation Policy -->
+    <section id="tab-policy" class="card" style="display:none;">
+      <h2>College Escalation Policy</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">
+        This application follows your college's approved escalation procedure. 
+        The system does <strong>not</strong> independently contact police or external emergency services.
+      </p>
+      <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-top: 16px;">
+        <h3 style="color: var(--warning);">Default Escalation Flow</h3>
+        <ol style="line-height: 2; color: var(--text-muted);">
+          <li><strong style="color: var(--text);">Emergency SOS</strong> → Security / Authorized Responder</li>
+          <li><strong style="color: var(--text);">Level 1</strong> → HOD / Women Safety Cell</li>
+          <li><strong style="color: var(--text);">Level 2</strong> → Principal / Designated Authority</li>
+          <li><strong style="color: var(--text);">Level 3</strong> → External Emergency Service (per college-approved protocol only)</li>
+        </ol>
+        <p style="font-size: 13px; color: var(--danger); margin-top: 16px;">
+          ⚠ External escalation is controlled by the college administration, not by this application.
+        </p>
+      </div>
+      <div style="margin-top: 20px;">
+        <h3>SLA Configuration</h3>
+        <div class="grid-2">
+          <label>CRITICAL Response Time
+            <select id="slaCritical">
+              <option value="5">5 minutes</option>
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+            </select>
+          </label>
+          <label>HIGH Response Time
+            <select id="slaHigh">
+              <option value="15" selected>15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="60">1 hour</option>
+            </select>
+          </label>
+          <label>MEDIUM Response Time
+            <select id="slaMedium">
+              <option value="30" selected>30 minutes</option>
+              <option value="60">1 hour</option>
+              <option value="120">2 hours</option>
+            </select>
+          </label>
+          <label>LOW Response Time
+            <select id="slaLow">
+              <option value="60" selected>1 hour</option>
+              <option value="120">2 hours</option>
+              <option value="240">4 hours</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="assets/js/safety/college-config.js"></script>
+</body>
+</html>

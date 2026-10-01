@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Emergency Command Center | AskExpert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-mesh: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.94);
+      --card-border: rgba(56, 189, 248, 0.22);
+      --white: #ffffff;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --primary: #38bdf8;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+    body { margin: 0; background: var(--bg-mesh); color: var(--text); font-family: 'Inter', system-ui; }
+    .wrap { max-width: 1200px; margin: auto; padding: 24px; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .top h1 { margin: 0; color: var(--white); display: flex; align-items: center; gap: 12px; }
+    .network-status { font-size: 14px; font-weight: 600; padding: 6px 12px; border-radius: 99px; background: rgba(16,185,129,0.2); color: var(--success); }
+    .network-status.offline { background: rgba(239,68,68,0.2); color: var(--danger); }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
+    .stat-card h3 { margin: 0 0 8px; font-size: 14px; color: var(--text-muted); text-transform: uppercase; }
+    .stat-card .value { font-size: 36px; font-weight: 900; color: var(--white); margin: 0; }
+    .stat-card.danger .value { color: var(--danger); }
+    .stat-card.warning .value { color: var(--warning); }
+    
+    .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; }
+    .incident-list { display: flex; flex-direction: column; gap: 16px; }
+    .incident { background: rgba(255,255,255,0.03); border-left: 5px solid var(--primary); padding: 16px; border-radius: 8px; position: relative; }
+    .incident.CRITICAL { border-left-color: var(--danger); background: rgba(239,68,68,0.05); }
+    .incident.HIGH { border-left-color: var(--warning); }
+    .incident-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: flex-start; }
+    .incident-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .badge { font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text); }
+    .badge.UNACKNOWLEDGED { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    
+    .timer { font-family: monospace; font-size: 18px; font-weight: bold; color: var(--warning); }
+    .timer.breached { color: var(--danger); }
+    
+    .actions-grid { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    button { padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    
+    .availability-toggle { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; }
+    .availability-toggle select { background: var(--bg-mesh); color: var(--white); border: 1px solid var(--card-border); padding: 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <h1>🚨 Emergency Command Center
+        <span id="networkStatus" class="network-status">● ONLINE</span>
+      </h1>
+      <div class="availability-toggle">
+        <label for="staffAvailability">My Status:</label>
+        <select id="staffAvailability">
+          <option value="AVAILABLE">Available</option>
+          <option value="BUSY">Busy</option>
+          <option value="EMERGENCY_ONLY">Emergency Only</option>
+          <option value="OFFLINE">Offline</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card danger">
+        <h3>Active SOS</h3>
+        <p class="value" id="statActiveSos">0</p>
+      </div>
+      <div class="stat-card warning">
+        <h3>Unacknowledged</h3>
+        <p class="value" id="statUnack">0</p>
+      </div>
+      <div class="stat-card danger">
+        <h3>Overdue</h3>
+        <p class="value" id="statOverdue">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active Responders</h3>
+        <p class="value" id="statResponders">0</p>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <section class="card">
+        <h2 style="margin-top:0;">Live Incidents</h2>
+        <div id="incidentList" class="incident-list">
+          <!-- Incidents rendered here -->
+          <p style="color:var(--text-muted);">Loading emergency cases...</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top:0;">Security & Anomaly Logs</h2>
+        <div id="securityLogs" style="font-size:13px; color:var(--text-muted); display:flex; flex-direction:column; gap:12px;">
+          <p>Loading anomalies...</p>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--card-border); margin:24px 0;">
+        <h2 style="margin-top:0;">Location Tracker</h2>
+        <div id="locationTracker" style="background:rgba(0,0,0,0.3); border-radius:8px; padding:16px; text-align:center; color:var(--text-muted);">
+          Select an incident to view live authorized coordinates.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="/assets/js/emergency/command-center.js"></script>
+</body>
+</html>

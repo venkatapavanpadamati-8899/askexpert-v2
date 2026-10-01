@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AskExpert | College Safety Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-mesh: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.94);
+      --card-border: rgba(56, 189, 248, 0.22);
+      --white: #ffffff;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --primary: #38bdf8;
+      --warning: #f59e0b;
+    }
+    body { margin: 0; background: var(--bg-mesh); color: var(--text); font-family: 'Inter', system-ui; }
+    .wrap { max-width: 1050px; margin: auto; padding: 24px; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 24px; }
+    .top h1 { margin: 0; color: var(--white); }
+    .card, .incident { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; margin: 16px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
+    .incident { display: flex; justify-content: space-between; gap: 24px; border-left: 5px solid var(--primary); }
+    .incident.CRITICAL { border-left-color: var(--danger); }
+    .incident.HIGH { border-left-color: var(--warning); }
+    h2, h3 { margin-top: 0; color: var(--white); }
+    .badge { font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 99px; background: rgba(255,255,255,0.1); color: var(--text); }
+    .badge.CRITICAL { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .badge.ACTIVE { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .meta, small { color: var(--text-muted); }
+    .actions { min-width: 155px; }
+    .actions button { display: block; width: 100%; margin: 0 0 8px; padding: 9px; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 7px; cursor: pointer; font-weight: 600; }
+    .actions button:hover { background: rgba(56,189,248,0.1); }
+    .evidence-links a { display: inline-block; margin-right: 12px; color: var(--primary); text-decoration: underline; }
+    a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    @media (max-width: 650px) { .incident { display: block; } .top { align-items: flex-start; flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <div>
+        <a href="admin-dashboard.html">← Admin dashboard</a>
+        <h1>🚨 College Safety Management</h1>
+        <p><strong id="count">0</strong> active incident(s). You are viewing incidents authorized for your college.</p>
+      </div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+      <button class="tab-button active" id="tabIncidents" style="padding: 10px 16px; border-radius: 8px; font-weight: bold; background: var(--primary); color: #fff; border: none; cursor: pointer;">Incidents</button>
+      <button class="tab-button" id="tabAnalytics" style="padding: 10px 16px; border-radius: 8px; font-weight: bold; background: rgba(255,255,255,0.1); color: var(--text); border: none; cursor: pointer;">Analytics</button>
+    </div>
+
+    <section id="location" class="card" aria-live="polite">
+      Select “View location” on an incident to see the student's GPS update (if shared).
+    </section>
+    
+    <section id="list" aria-live="polite">
+      <p>Loading authorized safety alerts…</p>
+    </section>
+
+    <section id="analyticsPanel" class="card" style="display: none;" aria-live="polite">
+      <h2>College Safety Analytics</h2>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; flex: 1; min-width: 150px;">
+          <h3>Total Open</h3>
+          <p id="statTotalOpen" style="font-size: 32px; font-weight: 900; color: var(--primary); margin: 0;">0</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; flex: 1; min-width: 150px;">
+          <h3>SOS Alerts</h3>
+          <p id="statTotalSOS" style="font-size: 32px; font-weight: 900; color: var(--danger); margin: 0;">0</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; flex: 1; min-width: 150px;">
+          <h3>Resolved Today</h3>
+          <p id="statResolvedToday" style="font-size: 32px; font-weight: 900; color: #20d889; margin: 0;">0</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="breakGlassModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 24px;">
+      <div class="card" style="width: 100%; max-width: 400px;">
+        <h2 style="color: var(--danger);">🚨 Break Glass Access</h2>
+        <p>You are requesting emergency override access to restricted data.</p>
+        <label style="display: block; font-weight: 600; margin-top: 14px; color: var(--text-muted); font-size: 14px;">Reason for Override:
+          <textarea id="breakGlassReason" rows="3" style="width: 100%; padding: 12px; margin-top: 6px; border: 1px solid var(--card-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--white);"></textarea>
+        </label>
+        <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <button id="btnConfirmBreakGlass" style="flex: 1; padding: 12px; border-radius: 8px; font-weight: bold; background: var(--danger); color: #fff; border: none; cursor: pointer;">CONFIRM ACCESS</button>
+          <button id="btnCancelBreakGlass" style="flex: 1; padding: 12px; border-radius: 8px; font-weight: bold; background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); cursor: pointer;">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3: Case Management & Communication Modal -->
+    <div id="caseModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; padding: 24px;">
+      <div class="card" style="width: 100%; max-width: 600px; display: flex; flex-direction: column; max-height: 85vh;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="margin: 0;">Case Management</h2>
+          <button id="btnCloseCaseModal" style="background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer;">×</button>
+        </div>
+        <div style="margin-top: 12px; display: flex; gap: 8px;">
+          <button id="btnChangeStatus" style="padding: 8px 12px; border-radius: 6px; background: var(--warning); color: #000; border: none; cursor: pointer; font-weight: bold;">Change Status</button>
+          <button id="btnAssignSelf" style="padding: 8px 12px; border-radius: 6px; background: var(--primary); color: #fff; border: none; cursor: pointer; font-weight: bold;">Assign to Me</button>
+        </div>
+        
+        <div style="flex: 1; overflow-y: auto; margin: 16px 0; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; display: flex; flex-direction: column;" id="managementMessages">
+          <!-- Messages and Timeline events load here -->
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="mgmtMessageInput" placeholder="Type message to student..." style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: var(--white);">
+          <label style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-muted);">
+            <input type="checkbox" id="mgmtInternalOnly"> Internal Note
+          </label>
+          <button id="btnMgmtSend" style="padding: 10px 16px; border-radius: 6px; background: var(--primary); color: #fff; border: none; cursor: pointer; font-weight: bold;">Send</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script type="module" src="assets/js/safety/management.js"></script>
+</body>
+</html>

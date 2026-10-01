@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AskExpert | College Women Safety</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-mesh: #040a16;
+      --card-bg: rgba(22, 12, 6, 0.94);
+      --card-border: rgba(245, 158, 11, 0.22);
+      --white: #ffffff;
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
+      --danger: #e11d48;
+      --primary: #f59e0b;
+    }
+    body { margin: 0; font-family: 'Inter', system-ui; background: var(--bg-mesh); color: var(--text); }
+    .wrap { max-width: 680px; margin: auto; padding: 24px; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; margin: 16px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.5); }
+    h1, h2, h3 { margin-top: 0; color: var(--white); }
+    .danger { background: var(--danger); color: #fff; border: 0; border-radius: 10px; padding: 15px 22px; font-size: 17px; font-weight: 800; width: 100%; cursor: pointer; text-align: center; }
+    .primary { background: var(--primary); color: #fff; border: 0; border-radius: 10px; padding: 15px 22px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; margin-bottom: 12px; }
+    .secondary { padding: 12px; border: 1px solid var(--primary); color: var(--primary); background: transparent; border-radius: 9px; margin: 8px 4px 0 0; cursor: pointer; font-weight: 600; }
+    label { display: block; font-weight: 600; margin-top: 14px; color: var(--text-muted); font-size: 14px;}
+    select, textarea, input[type="file"] { box-sizing: border-box; width: 100%; padding: 12px; margin-top: 6px; border: 1px solid var(--card-border); border-radius: 8px; font: inherit; background: rgba(255,255,255,0.05); color: var(--white); }
+    .notice { min-height: 22px; font-size: 14px; margin-top: 8px; }
+    .notice.error { color: #ff6b6b; }
+    .notice.success { color: #20d889; }
+    .status { font-weight: 700; color: var(--primary); }
+    a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .assigned-card { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 16px; }
+    .assigned-card p { margin: 4px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a href="user-dashboard.html">← Dashboard</a>
+    
+    <section class="card">
+      <h1>ASKEXPERT COLLEGE SAFETY</h1>
+      <p>Hi, <strong id="studentName">Student</strong>. Student information is visible ONLY to authorized personnel handling your complaint.</p>
+      <p id="notice" class="notice" aria-live="polite"></p>
+    </section>
+
+    <section class="card" id="sosForm">
+      <h2>Are you facing a problem?</h2>
+      <form id="incidentForm">
+        <label>Complaint Type
+          <select id="category">
+            <option value="harassment">Harassment</option>
+            <option value="ragging">Ragging</option>
+            <option value="bullying">Bullying</option>
+            <option value="unsafe_situation">Threat / Unsafe Situation</option>
+            <option value="road_transport_safety">Transport Issue</option>
+            <option value="hostel_problem">Hostel Issue</option>
+            <option value="academic_issue">Academic Issue</option>
+            <option value="medical_emergency">Emergency SOS</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        
+        <label>Urgency level
+          <select id="severity">
+            <option value="LOW">Low — non-immediate support</option>
+            <option value="MEDIUM">Medium — help needed soon</option>
+            <option value="HIGH" selected>High — urgent help needed</option>
+            <option value="CRITICAL">Critical — immediate danger</option>
+          </select>
+        </label>
+
+        <label>Description
+          <textarea id="message" required maxlength="1000" rows="4" placeholder="Write your problem..."></textarea>
+        </label>
+
+        <label>Evidence (Optional, max 5MB)
+          <input type="file" id="evidenceUpload" accept="image/*,application/pdf" multiple />
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; margin-top: 16px;">
+          <input type="checkbox" id="isAnonymous" style="width: auto; margin: 0;">
+          Submit Anonymously (Your name will be hidden from normal responders)
+        </label>
+
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 20px;">
+          * Your location will only be shared if you explicitly allow it after submission.
+        </p>
+
+        <div id="aiAnalysisBox" style="display: none; background: rgba(255,100,100,0.1); border: 1px solid rgba(255,100,100,0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+          <h4 style="margin:0 0 8px 0; color: #ff6b6b;">AI Risk Indicator</h4>
+          <p id="aiAnalysisText" style="margin:0; font-size:14px;"></p>
+        </div>
+
+        <button class="primary" type="button" id="btnSubmitComplaint">SUBMIT COMPLAINT</button>
+        <button class="danger" type="button" id="btnSendSOS">🚨 SEND SOS</button>
+      </form>
+    </section>
+
+    <section class="card" id="incidentPanel" hidden>
+      <h2>Incident Tracking</h2>
+      <p id="incidentId"></p>
+      <p>Status: <span id="incidentStatus" class="status"></span></p>
+      
+      <div class="assigned-card" id="assignmentCard" hidden>
+        <h3>Assigned College Authority</h3>
+        <p><strong>Name:</strong> <span id="assigneeName">-</span></p>
+        <p><strong>Role:</strong> <span id="assigneeRole">-</span></p>
+        <div id="assigneeContact"></div>
+      </div>
+
+      <p style="margin-top:20px;">Location: <span id="trackingState">Not sharing</span><br>
+        <small id="lastLocation">No location update yet</small>
+      </p>
+      <p style="font-size:13px; color:var(--text-muted);">
+        Location sharing requires your browser permission and stops when you cancel, the incident closes, or 30 minutes end.
+      </p>
+
+      <button id="shareLocation" class="secondary">Share My Location</button>
+      <button id="liveLocation" class="secondary">Enable Live Location (Emergency)</button>
+      <button id="cancelSOS" class="secondary" style="border-color: var(--danger); color: var(--danger);">Close Incident</button>
+
+      <!-- Phase 3: Timeline and Messages -->
+      <div style="margin-top: 24px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+        <h3>Case Timeline & Communication</h3>
+        <div id="caseMessages" style="max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+          <!-- Messages load here -->
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="chatMessage" placeholder="Type a message or clarification..." style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: var(--white);">
+          <button id="btnSendMessage" class="primary" style="width: auto; margin: 0;">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>College emergency contacts</h2>
+      <div id="contacts">Loading authorized college contacts…</div>
+    </section>
+  </main>
+
+  <script type="module" src="assets/js/safety/safety.js"></script>
+</body>
+</html>

@@ -288,7 +288,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/editProfile-BKY8a_g9.js"></script>
+  <script type="module" crossorigin src="/assets/editProfile-BzKhSnSk.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/supabaseClient-Di3C5gu9.js">
   <link rel="stylesheet" crossorigin href="/assets/styles-XX9Cy3k1.css">
 </head>
@@ -324,7 +324,10 @@
 
           <div class="form-group">
             <label class="form-label" for="inputPhone">Phone Number</label>
-            <input type="tel" id="inputPhone" class="form-input" placeholder="e.g. +91 98765 43210" />
+            <div style="position: relative; display: flex; align-items: center;">
+              <span style="position: absolute; left: 16px; color: #ffffff; font-size: 14px; pointer-events: none;">+91</span>
+              <input type="tel" id="inputPhone" class="form-input" placeholder="e.g. 9876543210" required maxlength="10" style="padding-left: 48px; width: 100%;" />
+            </div>
           </div>
 
           <div class="form-group full">

@@ -509,12 +509,6 @@
           Send OTP
         </button>
 
-        <!-- Demo OTP Display Box (For Quick Testing) -->
-        <div id="demoOtpBox" class="demo-otp-box" style="display:none;">
-          <span>⚡ Development Demo OTP: <strong id="demoOtpCode"></strong></span>
-          <button type="button" id="autoFillOtpButton" class="demo-otp-btn">Auto-fill</button>
-        </div>
-
         <!-- OTP Status -->
         <div id="otpStatus" class="status-box"></div>
 
@@ -644,9 +638,6 @@
     const phone = document.getElementById("phone");
     const password = document.getElementById("password");
     const sendOtpButton = document.getElementById("sendOtpButton");
-    const demoOtpBox = document.getElementById("demoOtpBox");
-    const demoOtpCode = document.getElementById("demoOtpCode");
-    const autoFillOtpButton = document.getElementById("autoFillOtpButton");
     const otp = document.getElementById("otp");
     const verifyOtpButton = document.getElementById("verifyOtpButton");
     const accountType = document.getElementById("accountType");
@@ -702,19 +693,11 @@
     }
 
     function resetPageState() {
-      generatedOtp = null;
       otpGeneratedAt = null;
       otpVerified = false;
       if (otpTimer) {
         clearInterval(otpTimer);
         otpTimer = null;
-      }
-      if (demoOtpBox) {
-        demoOtpBox.classList.remove("show");
-        demoOtpBox.style.display = "none";
-      }
-      if (demoOtpCode) {
-        demoOtpCode.textContent = "";
       }
       clearOtpStatus();
       clearFormStatus();
@@ -739,7 +722,7 @@
     /* ========================================================
        SEND OTP
        ======================================================== */
-    sendOtpButton.addEventListener("click", function () {
+    sendOtpButton.addEventListener("click", async function () {
       clearFormStatus();
       let rawPhone = phone.value.trim().replace(/\D/g, "");
 
@@ -749,29 +732,37 @@
         return;
       }
 
-      // Generate a fresh random 6-digit OTP
-      const newOtp = String(Math.floor(100000 + Math.random() * 900000));
-      generatedOtp = newOtp;
-      otpGeneratedAt = Date.now();
-      otpVerified = false;
+      sendOtpButton.disabled = true;
+      sendOtpButton.textContent = "Sending...";
 
-      // Invalidate entered OTP input and keep unverified
-      otp.value = "";
-      otp.disabled = false;
-      verifyOtpButton.disabled = false;
-      verifyOtpButton.textContent = "Verify OTP";
+      try {
+        if (supabase) {
+          const { error } = await supabase.auth.signInWithOtp({
+            phone: "+91" + rawPhone
+          });
+          if (error) throw error;
+        }
 
-      if (demoOtpCode) demoOtpCode.textContent = generatedOtp;
-      if (demoOtpBox) {
-        demoOtpBox.classList.add("show");
-        demoOtpBox.style.display = "flex";
+        otpGeneratedAt = Date.now();
+        otpVerified = false;
+
+        // Invalidate entered OTP input and keep unverified
+        otp.value = "";
+        otp.disabled = false;
+        verifyOtpButton.disabled = false;
+        verifyOtpButton.textContent = "Verify OTP";
+
+        showOtpStatus(
+          "⚡ OTP Sent! Please check your mobile device. (Mobile test notice)",
+          "success"
+        );
+
+        startOtpTimer();
+      } catch (error) {
+        showOtpStatus("Error sending OTP: " + error.message, "error");
+        sendOtpButton.disabled = false;
+        sendOtpButton.textContent = "Send OTP";
       }
-      showOtpStatus(
-        "⚡ Development Demo OTP: " + generatedOtp + " generated. Enter the code or click 'Auto-fill'.",
-        "success"
-      );
-
-      startOtpTimer();
     });
 
     function startOtpTimer() {
@@ -801,13 +792,14 @@
     async function verifyCurrentOtp() {
       clearFormStatus();
       const enteredOtp = otp.value.trim();
+      let rawPhone = phone.value.trim().replace(/\D/g, "");
 
-      if (!generatedOtp) {
+      if (!otpGeneratedAt) {
         showOtpStatus("Please click 'Send OTP' first.", "error");
         return false;
       }
 
-      if (otpGeneratedAt && Date.now() - otpGeneratedAt > 300000) {
+      if (Date.now() - otpGeneratedAt > 300000) {
         showOtpStatus("OTP has expired. Please click 'Resend OTP' to generate a fresh code.", "error");
         otpVerified = false;
         return false;
@@ -818,7 +810,19 @@
         return false;
       }
 
-      if (enteredOtp === generatedOtp) {
+      verifyOtpButton.disabled = true;
+      verifyOtpButton.textContent = "Verifying...";
+
+      try {
+        if (supabase) {
+          const { data, error } = await supabase.auth.verifyOtp({
+            phone: "+91" + rawPhone,
+            token: enteredOtp,
+            type: "sms"
+          });
+          if (error) throw error;
+        }
+
         otpVerified = true;
         if (otpTimer) {
           clearInterval(otpTimer);
@@ -829,11 +833,12 @@
         sendOtpButton.disabled = true;
         sendOtpButton.textContent = "Verified ✓";
         verifyOtpButton.textContent = "Verified ✓";
-        verifyOtpButton.disabled = true;
         return true;
-      } else {
+      } catch (error) {
         otpVerified = false;
-        showOtpStatus("Invalid OTP. Please check and enter the generated code.", "error");
+        showOtpStatus("Invalid OTP: " + error.message, "error");
+        verifyOtpButton.disabled = false;
+        verifyOtpButton.textContent = "Verify OTP";
         return false;
       }
     }
@@ -841,16 +846,6 @@
     verifyOtpButton.addEventListener("click", function () {
       verifyCurrentOtp();
     });
-
-    if (autoFillOtpButton) {
-      autoFillOtpButton.addEventListener("click", function () {
-        if (generatedOtp) {
-          otp.value = generatedOtp;
-          otp.focus();
-          verifyCurrentOtp();
-        }
-      });
-    }
 
     otp.addEventListener("input", function () {
       otp.value = otp.value.replace(/\D/g, "").slice(0, 6);
@@ -865,20 +860,12 @@
 
     phone.addEventListener("input", function () {
       phone.value = phone.value.replace(/\D/g, "").slice(0, 10);
-      if (generatedOtp || otpVerified) {
-        generatedOtp = null;
+      if (otpGeneratedAt || otpVerified) {
         otpGeneratedAt = null;
         otpVerified = false;
         if (otpTimer) {
           clearInterval(otpTimer);
           otpTimer = null;
-        }
-        if (demoOtpBox) {
-          demoOtpBox.classList.remove("show");
-          demoOtpBox.style.display = "none";
-        }
-        if (demoOtpCode) {
-          demoOtpCode.textContent = "";
         }
         otp.value = "";
         otp.disabled = false;

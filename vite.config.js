@@ -40,6 +40,7 @@ export default defineConfig({
         adminLogin: resolve(__dirname, 'admin-login.html'),
         adminDashboard: resolve(__dirname, 'admin-dashboard.html'),
         collegeSafetyManagement: resolve(__dirname, 'college-safety-management.html'),
+        emergencyCommandCenter: resolve(__dirname, 'emergency-command-center.html'),
         collegeConfig: resolve(__dirname, 'college-config.html'),
         adminUsers: resolve(__dirname, 'admin-users.html'),
         adminProfessionals: resolve(__dirname, 'admin-professionals.html'),

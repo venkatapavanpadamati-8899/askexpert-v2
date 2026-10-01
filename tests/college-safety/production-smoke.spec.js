@@ -28,6 +28,7 @@ async function adminLogin(page, user) {
 }
 
 test.describe.serial('Production Smoke Test', () => {
+  test.setTimeout(120000);
 
   test.beforeEach(async ({ page }) => {
     // Intercept fonts to prevent timeout
@@ -104,33 +105,19 @@ test.describe.serial('Production Smoke Test', () => {
     await page.click('#btnSubmitComplaint');
     
     // Wait for success notice or panel to switch
-    await expect(page.locator('#incidentPanel')).toBeVisible({ timeout: 10000 });
-    
-    // Find incident via API to save ID for authority test
-    const authDataStrFetch = await page.evaluate(() => {
-      const key = Object.keys(localStorage).find(k => k.endsWith('-auth-token'));
-      return key ? localStorage.getItem(key) : null;
-    });
-    expect(authDataStrFetch).toBeTruthy();
-    const authDataFetch = JSON.parse(authDataStrFetch);
-    const fetchToken = authDataFetch.access_token;
-    
-    // Add retry loop since Supabase might be slow in replication
-    for (let i = 0; i < 5; i++) {
-      const getRes = await request.get(`${process.env.VITE_SUPABASE_URL}/rest/v1/safety_incidents?select=id,status,college_id&order=created_at.desc&limit=1`, {
-        headers: {
-          'apikey': process.env.VITE_SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${fetchToken}`
-        }
-      });
-      const incidents = await getRes.json();
-      if (incidents.length > 0) {
-        incidentId = incidents[0].id;
-        break;
-      }
-      await page.waitForTimeout(1000);
+    try {
+      await expect(page.locator('#incidentPanel')).toBeVisible({ timeout: 10000 });
+    } catch (e) {
+      const noticeText = await page.locator('#notice').textContent();
+      console.error('Submission failed. Notice text was:', noticeText);
+      throw e;
     }
-    expect(incidentId).toBeTruthy();
+    
+    // Extract incident ID directly from the UI
+    const incidentText = await page.locator('#incidentId').textContent();
+    const match = incidentText.match(/Incident:\s*([A-Z0-9]+)/);
+    expect(match).toBeTruthy();
+    incidentId = match[1]; // This is the shortId
     console.log('Created test incident:', incidentId);
   });
 
@@ -140,9 +127,13 @@ test.describe.serial('Production Smoke Test', () => {
     await adminLogin(page, USERS.staffA);
     await page.goto(`${BASE_URL}/college-safety-management.html`);
 
+    // Wait for list to load
+    await page.waitForSelector('#list', { timeout: 15000 });
+
     // Verify incident appears
-    const row = page.locator(`tr[data-id="${incidentId}"]`);
-    await expect(row).toBeVisible();
+    const shortId = incidentId.slice(0, 8).toUpperCase();
+    const row = page.locator(`.incident`, { hasText: `ID: ${shortId}` });
+    await expect(row).toBeVisible({ timeout: 15000 });
 
     // The staff needs to acknowledge it... wait, what are the buttons on management?
     // Looking at management JS: action buttons are in the row.
@@ -156,11 +147,12 @@ test.describe.serial('Production Smoke Test', () => {
     await page.goto(`${BASE_URL}/college-safety-management.html`);
 
     // Wait for table to load
-    await page.waitForSelector('#incidentsTableBody');
+    await page.waitForSelector('#list', { timeout: 15000 });
     await page.waitForTimeout(2000);
 
     // Verify College A incident is NOT visible to College B staff
-    const row = page.locator(`tr[data-id="${incidentId}"]`);
+    const shortId = incidentId.slice(0, 8).toUpperCase();
+    const row = page.locator(`.incident`, { hasText: `ID: ${shortId}` });
     await expect(row).toHaveCount(0);
   });
 

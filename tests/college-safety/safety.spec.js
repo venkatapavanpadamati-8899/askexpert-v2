@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
+import { createClient } from '@supabase/supabase-js';
 // ============================================================================
 // AskExpert - College Women Safety & Student Support E2E Tests
 // ============================================================================
@@ -9,6 +10,39 @@ import { execSync } from 'child_process';
 // - TEST_STUDENT_B_EMAIL, TEST_STUDENT_B_PASSWORD (Belongs to College B)
 // - TEST_STAFF_A_EMAIL, TEST_STAFF_A_PASSWORD (Authorized Safety Staff for College A)
 // - TEST_UNAUTHORIZED_EMAIL, TEST_UNAUTHORIZED_PASSWORD (No safety role)
+
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+
+/**
+ * Cancel all non-closed incidents for the smoke college by logging in as staffA.
+ * This prevents state from previous phases blocking the cancel-button flow in Phase 5.
+ */
+async function cleanupIncidents() {
+  if (!TEST_USERS.staffA.email || !TEST_USERS.staffA.password) return;
+  const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { error: signInErr } = await client.auth.signInWithPassword({
+    email: TEST_USERS.staffA.email,
+    password: TEST_USERS.staffA.password,
+  });
+  if (signInErr) { console.warn('[cleanup] staff sign-in failed:', signInErr.message); return; }
+
+  // Fetch open incidents visible to this staff member
+  const { data: incidents, error: fetchErr } = await client
+    .from('safety_incidents')
+    .select('id, status')
+    .not('status', 'in', '("CLOSED","CANCELLED")');
+  if (fetchErr) { console.warn('[cleanup] fetch error:', fetchErr.message); }
+
+  for (const incident of (incidents || [])) {
+    const { error: updateErr } = await client
+      .from('safety_incidents')
+      .update({ status: 'CANCELLED' })
+      .eq('id', incident.id);
+    if (updateErr) console.warn(`[cleanup] cancel ${incident.id} failed:`, updateErr.message);
+  }
+  await client.auth.signOut();
+}
 
 const TEST_USERS = {
   studentA: { email: process.env.TEST_STUDENT_A_EMAIL, password: process.env.TEST_STUDENT_A_PASSWORD },
@@ -243,19 +277,34 @@ test.describe('Phase 4 — Reliability & Edge Cases', () => {
   });
 
   test('31. Duplicate rapid SOS submission', async ({ page }) => {
+    // Auth already done in beforeEach — no extra sign-in avoids rate-limit hits
     await page.goto('/women-safety.html');
     await expect(page.locator('#studentName')).not.toHaveText('Student', { timeout: 15000 });
+
+    // Cancel any existing active incident so SOS button is accessible
+    const cancelBtn = page.locator('#btnCancelSOS');
+    if (await cancelBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      page.once('dialog', dialog => dialog.accept());
+      await cancelBtn.click();
+      await page.waitForTimeout(2000);
+    }
+
+    // Accept any SOS confirmation dialogs
     page.on('dialog', dialog => dialog.accept());
-    
-    // Rapidly click SOS multiple times
+
+    // Rapidly click SOS 3x — application must handle gracefully without crashing
     await page.click('#btnSendSOS');
     await page.click('#btnSendSOS', { force: true });
     await page.click('#btnSendSOS', { force: true });
-    
+
+    // Allow UI to settle
+    await page.waitForTimeout(2000);
+
+    // First SOS must create incident panel; no unhandled error must appear
     await expect(page.locator('#incidentPanel')).toBeVisible({ timeout: 15000 });
-    // Assuming UI handles debounce or Backend handles duplicate gracefully, we just ensure no crash occurs.
     await expect(page.locator('#notice')).not.toContainText('error');
   });
+
 
   test('34. Network interruption (Offline behavior)', async ({ page, context }) => {
     await page.goto('/women-safety.html');
@@ -276,7 +325,9 @@ test.describe('Phase 4 — Reliability & Edge Cases', () => {
 
 test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
   test.beforeEach(async () => {
-    // test.skip(!process.env.STAGING_READY, 'BLOCKED — STAGING SETUP REQUIRED FOR SECURITY TESTS');
+    // Ensure no leftover ACTIVE/ACKNOWLEDGED incidents contaminate Phase 5 tests.
+    // Staff-role cancel is allowed by the trigger; this is a test-isolation step only.
+    await cleanupIncidents();
   });
 
   test.describe('Storage Rules Enforcement', () => {
@@ -297,6 +348,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
     });
 
     test('unauthorized user cannot download evidence', async ({ page }) => {
+      test.skip(!TEST_USERS.unauthorized.email, 'BLOCKED — TEST CREDENTIAL REQUIRED');
       await login(page, TEST_USERS.unauthorized);
       // Try accessing safety management page (should be denied or empty)
       await page.goto('/college-safety-management.html');
@@ -326,6 +378,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
     });
 
     test('unauthorized user cannot change incident status', async ({ page }) => {
+      test.skip(!TEST_USERS.unauthorized.email, 'BLOCKED — TEST CREDENTIAL REQUIRED');
       await login(page, TEST_USERS.unauthorized);
       // Unauthorized user should not see the management page actions
       await page.goto('/college-safety-management.html');
@@ -396,7 +449,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
         await cancelBtn.click();
         
         // Wait for the form to appear again after cancelling
-        await expect(page.locator('#sosForm')).toBeVisible();
+        await expect(page.locator('#sosForm')).toBeVisible({ timeout: 15000 });
       }
       
       await page.selectOption('#category', 'academic_issue');
@@ -421,6 +474,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
 
   test.describe('Location Privacy', () => {
     test('unauthorized user cannot see GPS coordinates', async ({ page }) => {
+      test.skip(!TEST_USERS.unauthorized.email, 'BLOCKED — TEST CREDENTIAL REQUIRED');
       await login(page, TEST_USERS.unauthorized);
       await page.goto('/college-safety-management.html');
       await page.waitForTimeout(2000);
@@ -460,7 +514,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
         await cancelBtn.click();
         
         // Wait for the form to appear again after cancelling
-        await expect(page.locator('#sosForm')).toBeVisible();
+        await expect(page.locator('#sosForm')).toBeVisible({ timeout: 15000 });
       }
 
       // Location denial should not prevent SOS

@@ -31,6 +31,9 @@ test.describe.serial('Production Smoke Test', () => {
   test.setTimeout(120000);
 
   test.beforeEach(async ({ page }) => {
+    page.on('console', msg => console.log(`[Browser] ${msg.type()}: ${msg.text()}`));
+    page.on('pageerror', err => console.log(`[Browser Error] ${err.message}`));
+    
     // Intercept fonts to prevent timeout
     await page.route('**/*', (route) => {
       const url = route.request().url();
@@ -73,11 +76,14 @@ test.describe.serial('Production Smoke Test', () => {
     
     await page.reload();
     
-    // Wait for either the form or active panel to be ready
+    // Wait for either the form or active panel to be ready, AND for profile to load
     await page.waitForFunction(() => {
       const form = document.getElementById('sosForm');
       const panel = document.getElementById('incidentPanel');
-      return (form && !form.hidden) || (panel && !panel.hidden);
+      const name = document.getElementById('studentName');
+      const isReady = (form && !form.hidden) || (panel && !panel.hidden);
+      const isProfileLoaded = name && name.textContent !== 'Student';
+      return isReady && isProfileLoaded;
     });
 
     const cancelBtn = page.locator('#cancelSOS');
@@ -141,12 +147,14 @@ test.describe.serial('Production Smoke Test', () => {
   });
 
   test('3. Cross-college check', async ({ page }) => {
+    test.skip(!USERS.staffB.email, 'BLOCKED — TEST_STAFF_B_EMAIL required');
     expect(incidentId).toBeTruthy();
 
+    // Staff B (College B) must NOT see College A's incident
     await adminLogin(page, USERS.staffB);
     await page.goto(`${BASE_URL}/college-safety-management.html`);
 
-    // Wait for table to load
+    // Wait for incident list to load
     await page.waitForSelector('#list', { timeout: 15000 });
     await page.waitForTimeout(2000);
 

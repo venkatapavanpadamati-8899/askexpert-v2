@@ -130,7 +130,16 @@ test.describe.serial('Production Smoke Test', () => {
     // Verify incident appears
     const shortId = incidentId.slice(0, 8).toUpperCase();
     const row = page.locator(`.incident`, { hasText: `ID: ${shortId}` });
-    await expect(row).toBeVisible({ timeout: 15000 });
+    
+    try {
+      await expect(row).toBeVisible({ timeout: 15000 });
+    } catch (e) {
+      const listHtml = await page.locator('#list').innerHTML();
+      console.log('--- LIST HTML DUMP ---');
+      console.log(listHtml);
+      console.log('----------------------');
+      throw e;
+    }
 
     // The staff needs to acknowledge it... wait, what are the buttons on management?
     // Looking at management JS: action buttons are in the row.

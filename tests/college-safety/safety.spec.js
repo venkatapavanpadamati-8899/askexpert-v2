@@ -27,11 +27,13 @@ async function cleanupIncidents() {
   });
   if (signInErr) { console.warn('[cleanup] staff sign-in failed:', signInErr.message); return; }
 
+  console.log('[cleanup] fetching incidents...');
   // Fetch open incidents visible to this staff member
   const { data: incidents, error: fetchErr } = await client
     .from('safety_incidents')
     .select('id, status')
     .not('status', 'in', '("CLOSED","CANCELLED")');
+  console.log('[cleanup] fetch result:', fetchErr ? fetchErr.message : (incidents ? incidents.length : 0));
   if (fetchErr) { console.warn('[cleanup] fetch error:', fetchErr.message); }
 
   for (const incident of (incidents || [])) {

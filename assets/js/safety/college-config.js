@@ -18,7 +18,7 @@ document.querySelectorAll('.section-tabs button').forEach(btn => {
 });
 
 async function loadCollege() {
-  if (!state.profile?.college_id) {
+  if (!state.profile?.college_id || state.profile.college_id === 'null') {
     setNotice('Your account is not assigned to a college.', 'error');
     return;
   }
@@ -41,7 +41,7 @@ async function saveCollege() {
 }
 
 async function loadDepartments() {
-  if (!state.profile?.college_id) return;
+  if (!state.profile?.college_id || state.profile.college_id === 'null') return;
   const { data, error } = await supabase.from('profiles')
     .select('department')
     .eq('college_id', state.profile.college_id)
@@ -64,7 +64,7 @@ async function loadDepartments() {
 }
 
 async function loadStaff() {
-  if (!state.profile?.college_id) return;
+  if (!state.profile?.college_id || state.profile.college_id === 'null') return;
   const { data, error } = await supabase.from('safety_staff')
     .select('*, profile:profiles!profile_id(full_name, email, department)')
     .eq('college_id', state.profile.college_id);
@@ -123,7 +123,7 @@ window.toggleStaff = async (staffId, active) => {
 };
 
 async function loadContacts() {
-  if (!state.profile?.college_id) return;
+  if (!state.profile?.college_id || state.profile.college_id === 'null') return;
   const { data, error } = await supabase.from('safety_contacts')
     .select('*')
     .eq('college_id', state.profile.college_id)

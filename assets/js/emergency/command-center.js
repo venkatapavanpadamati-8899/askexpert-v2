@@ -85,7 +85,7 @@ function renderIncidents() {
 }
 
 async function loadIncidents() {
-  if (!state.profile?.college_id) {
+  if (!state.profile?.college_id || state.profile.college_id === 'null') {
     state.incidents = [];
     renderIncidents();
     return;
@@ -104,7 +104,7 @@ async function loadIncidents() {
 }
 
 async function loadSecurityLogs() {
-  if (!state.profile?.college_id) return;
+  if (!state.profile?.college_id || state.profile.college_id === 'null') return;
 
   const { data, error } = await supabase.from('safety_security_events')
     .select('*')

@@ -164,7 +164,7 @@ async function renderIncidents() {
 }
 
 async function loadIncidents() {
-  if (!state.profile?.college_id) {
+  if (!state.profile?.college_id || state.profile.college_id === 'null') {
     $('list').innerHTML = '<p class="empty">You are not assigned to a college.</p>';
     await renderAnalytics();
     return;

@@ -144,11 +144,15 @@ async function loadIncident() {
       // Fetch the staff role from safety_staff table
       let staffRole = 'Responder';
       if (data.assigned_responder_id) {
-        const { data: staffData } = await supabase.from('safety_staff')
-          .select('staff_role, availability')
-          .eq('profile_id', data.assigned_responder_id)
-          .eq('college_id', data.college_id)
-          .maybeSingle();
+        let staffData = null;
+        if (data.college_id && data.college_id !== 'null') {
+          const res = await supabase.from('safety_staff')
+            .select('staff_role, availability')
+            .eq('profile_id', data.assigned_responder_id)
+            .eq('college_id', data.college_id)
+            .maybeSingle();
+          staffData = res.data;
+        }
         if (staffData) {
           staffRole = staffData.staff_role?.replace(/_/g, ' ').toUpperCase() || 'Responder';
           const avail = staffData.availability || 'AVAILABLE';
@@ -187,7 +191,7 @@ function localAIAnalyze(text) {
 let lastSOSTime = 0;
 
 async function createIncident(isSOS = false) {
-  if (!state.profile.college_id) return setNotice('Your account is not assigned to a college. Contact support.', 'error');
+  if (!state.profile?.college_id || state.profile.college_id === 'null') return setNotice('Your account is not assigned to a college. Contact support.', 'error');
   
   // Abuse protection: SOS cooldown
   if (isSOS) {

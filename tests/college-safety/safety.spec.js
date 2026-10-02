@@ -58,17 +58,7 @@ async function login(page, user) {
       console.log(`[NETWORK ERROR] ${response.status()} ${response.url()}`);
     }
   });
-  page.on('requestfailed', request => {
-    console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`);
-  });
-  await page.route('**/*', (route) => {
-    const url = route.request().url();
-    if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
-      route.abort();
-    } else {
-      route.continue();
-    }
-  });
+  page.on('requestfailed', request => console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`));
   await page.goto('/login.html');
   await page.fill('#email', user.email);
   await page.fill('#password', user.password);
@@ -83,17 +73,7 @@ async function adminLogin(page, user) {
       console.log(`[NETWORK ERROR] ${response.status()} ${response.url()}`);
     }
   });
-  page.on('requestfailed', request => {
-    console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`);
-  });
-  await page.route('**/*', (route) => {
-    const url = route.request().url();
-    if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
-      route.abort();
-    } else {
-      route.continue();
-    }
-  });
+  page.on('requestfailed', request => console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`));
   await page.goto('/admin-login.html');
   await page.fill('#adminEmailInput', user.email);
   await page.fill('#adminPasswordInput', user.password);
@@ -279,6 +259,7 @@ test.describe('Phase 3 — RLS / Security', () => {
 test.describe('Phase 4 — Reliability & Edge Cases', () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!TEST_USERS.studentA.email, 'BLOCKED — TEST CREDENTIAL REQUIRED: Student College A');
+    await cleanupIncidents();
     await login(page, TEST_USERS.studentA);
   });
 
@@ -298,6 +279,8 @@ test.describe('Phase 4 — Reliability & Edge Cases', () => {
     // Accept any SOS confirmation dialogs
     page.on('dialog', dialog => dialog.accept());
 
+    await page.fill('#message', 'Emergency test message');
+
     // Rapidly click SOS 3x — application must handle gracefully without crashing
     await page.click('#btnSendSOS');
     await page.click('#btnSendSOS', { force: true });
@@ -307,6 +290,9 @@ test.describe('Phase 4 — Reliability & Edge Cases', () => {
     await page.waitForTimeout(2000);
 
     // First SOS must create incident panel; no unhandled error must appear
+    const noticeText = await page.locator('#notice').textContent();
+    console.log('Notice text is:', noticeText);
+    
     await expect(page.locator('#incidentPanel')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('#notice')).not.toContainText('error');
   });
@@ -437,6 +423,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
       // Test state contamination from previous tests is now handled by test suite flow
 
       // First create an anonymous complaint as Student A
+      await cleanupIncidents();
       await login(page, TEST_USERS.studentA);
       await page.goto('/women-safety.html');
       await page.waitForTimeout(1000);
@@ -449,7 +436,7 @@ test.describe('Phase 5 — Security Hardening (Staging Verification)', () => {
         return (form && !form.hidden) || (panel && !panel.hidden);
       });
 
-      const cancelBtn = page.locator('#cancelSOS');
+      const cancelBtn = page.locator('#btnCancelSOS');
       if (await cancelBtn.isVisible()) {
         page.once('dialog', d => d.accept());
         await cancelBtn.click();

@@ -230,18 +230,20 @@ async function init() {
 
   await loadIncidents();
   
-  state.channel = supabase.channel(`college-safety-mgmt-${state.profile.college_id}`)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'safety_incidents', filter: `college_id=eq.${state.profile.college_id}` }, async () => { 
-      // Notify authority if it's not them doing the change (simple toast via alert/console)
-      console.log('New safety incident update received');
-      await loadIncidents(); 
-    })
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'safety_messages' }, async (payload) => { 
-      if (activeIncidentId === payload.new.incident_id) {
-        await loadCaseMessages(activeIncidentId);
-      }
-    })
-    .subscribe();
+  if (state.profile?.college_id) {
+    state.channel = supabase.channel(`college-safety-mgmt-${state.profile.college_id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'safety_incidents', filter: `college_id=eq.${state.profile.college_id}` }, async () => { 
+        // Notify authority if it's not them doing the change (simple toast via alert/console)
+        console.log('New safety incident update received');
+        await loadIncidents(); 
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'safety_messages' }, async (payload) => { 
+        if (activeIncidentId === payload.new.incident_id) {
+          await loadCaseMessages(activeIncidentId);
+        }
+      })
+      .subscribe();
+  }
 }
 
 async function openCaseModal(id) {

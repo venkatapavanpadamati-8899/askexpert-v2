@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Configuration
-const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'https://askexpert-v2.vercel.app';
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173';
 const USERS = {
   studentA: { email: process.env.TEST_STUDENT_A_EMAIL, password: process.env.TEST_STUDENT_A_PASSWORD },
   staffA: { email: process.env.TEST_STAFF_A_EMAIL, password: process.env.TEST_STAFF_A_PASSWORD },
@@ -34,16 +34,6 @@ test.describe.serial('Production Smoke Test', () => {
     page.on('console', msg => console.log(`[Browser] ${msg.type()}: ${msg.text()}`));
     page.on('pageerror', err => console.log(`[Browser Error] ${err.message}`));
     page.on('requestfailed', request => console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`));
-    
-    // Intercept fonts to prevent timeout
-    await page.route('**/*', (route) => {
-      const url = route.request().url();
-      if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
-        route.abort();
-      } else {
-        route.continue();
-      }
-    });
   });
 
   test('1. Student submits non-emergency complaint', async ({ page, request }) => {

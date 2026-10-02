@@ -75,16 +75,26 @@ async function confirmBreakGlass() {
 $('btnConfirmBreakGlass').addEventListener('click', confirmBreakGlass);
 $('btnCancelBreakGlass').addEventListener('click', () => { $('breakGlassModal').style.display = 'none'; });
 
-function renderAnalytics() {
+async function renderAnalytics() {
   const totalOpen = state.incidents.length;
   const sosAlerts = state.incidents.filter(i => i.severity === 'CRITICAL' || i.incident_type === 'medical_emergency').length;
-  // In a real app we'd fetch resolved today from a broader query.
-  
+
+  // Fetch resolved today count from DB
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from('safety_incidents')
+    .select('id', { count: 'exact', head: true })
+    .eq('college_id', state.profile.college_id)
+    .eq('status', 'RESOLVED')
+    .gte('updated_at', todayStart.toISOString());
+
   $('statTotalOpen').textContent = totalOpen;
   $('statTotalSOS').textContent = sosAlerts;
+  $('statResolvedToday').textContent = count ?? 0;
 }
 
-function renderIncidents() {
+async function renderIncidents() {
   const el = $('list');
   $('count').textContent = state.incidents.length;
   if (!state.incidents.length) { el.innerHTML = '<p>No active incidents found for your college.</p>'; return; }
@@ -146,7 +156,7 @@ function renderIncidents() {
     `;
   }).join('');
   
-  renderAnalytics();
+  await renderAnalytics();
 }
 
 async function loadIncidents() {

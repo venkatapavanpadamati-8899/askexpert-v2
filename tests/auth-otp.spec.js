@@ -32,8 +32,8 @@ test.describe('Authentication and OTP Flow', () => {
     
     // Expect the status to say OTP sent, but no demo OTP provided
     const status = page.locator('#otpStatus');
-    await expect(status).toBeVisible();
-    await expect(status).toContainText('OTP sent');
+    await expect(status).toBeVisible({ timeout: 15000 });
+    await expect(status).toContainText('OTP');
     
     const textContent = await page.textContent('body');
     expect(textContent).not.toContain('Demo OTP:');

@@ -5,6 +5,7 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
 
 test.describe('KYC & Admin Approval Flow', () => {
+  test.describe.configure({ mode: 'serial' });
 
   test('Expert KYC submission and unauthorized access blocked', async () => {
     const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -43,7 +44,10 @@ test.describe('KYC & Admin Approval Flow', () => {
       degree_qualification: 'MBBS Test',
       identity_document_type: 'Aadhaar / ID',
       masked_identity_number: 'TEST-1234',
-      verification_status: 'pending'
+      verification_status: 'pending',
+      degree_document_path: 'dummy/path/degree.pdf',
+      license_document_path: 'dummy/path/license.pdf',
+      id_document_path: 'dummy/path/id.pdf'
     }).select('id').single();
     
     if (kycErr && kycErr.code === '42501') {
@@ -85,7 +89,7 @@ test.describe('KYC & Admin Approval Flow', () => {
     expect(signInErr).toBeNull();
 
     // To test approval, we need an unverified expert. We'll find one in the DB that has a pending verification.
-    const { data: pendingKyc } = await client.from('professional_verifications').select('expert_id').eq('status', 'pending').limit(1).single();
+    const { data: pendingKyc } = await client.from('professional_verifications').select('expert_id').eq('verification_status', 'pending').limit(1).single();
     
     if (pendingKyc && pendingKyc.expert_id) {
       // 2. Approve via RPC (as admin)

@@ -33,6 +33,7 @@ test.describe.serial('Production Smoke Test', () => {
   test.beforeEach(async ({ page }) => {
     page.on('console', msg => console.log(`[Browser] ${msg.type()}: ${msg.text()}`));
     page.on('pageerror', err => console.log(`[Browser Error] ${err.message}`));
+    page.on('requestfailed', request => console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`));
     
     // Intercept fonts to prevent timeout
     await page.route('**/*', (route) => {

@@ -85,6 +85,12 @@ function renderIncidents() {
 }
 
 async function loadIncidents() {
+  if (!state.profile?.college_id) {
+    state.incidents = [];
+    renderIncidents();
+    return;
+  }
+
   const { data, error } = await supabase.from('vw_safety_incidents_safe')
     .select('*')
     .eq('college_id', state.profile.college_id)
@@ -98,6 +104,8 @@ async function loadIncidents() {
 }
 
 async function loadSecurityLogs() {
+  if (!state.profile?.college_id) return;
+
   const { data, error } = await supabase.from('safety_security_events')
     .select('*')
     .eq('college_id', state.profile.college_id)

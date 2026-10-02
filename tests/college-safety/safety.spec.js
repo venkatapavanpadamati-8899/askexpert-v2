@@ -58,6 +58,9 @@ async function login(page, user) {
       console.log(`[NETWORK ERROR] ${response.status()} ${response.url()}`);
     }
   });
+  page.on('requestfailed', request => {
+    console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`);
+  });
   await page.route('**/*', (route) => {
     const url = route.request().url();
     if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
@@ -79,6 +82,9 @@ async function adminLogin(page, user) {
     if (response.status() >= 400 && response.url().includes('supabase.co')) {
       console.log(`[NETWORK ERROR] ${response.status()} ${response.url()}`);
     }
+  });
+  page.on('requestfailed', request => {
+    console.log(`[REQUEST FAILED] ${request.failure().errorText} ${request.url()}`);
   });
   await page.route('**/*', (route) => {
     const url = route.request().url();

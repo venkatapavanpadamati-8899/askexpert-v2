@@ -1,0 +1,10 @@
+warning: in the working copy of 'assets/js/emergency/command-center.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/js/safety/management.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'dist/admin-dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/college-safety/production-smoke.spec.js', LF will be replaced by CRLF the next time Git touches it
+ assets/js/emergency/command-center.js         |  8 [32m+++++++[m
+ assets/js/safety/management.js                | 30 [32m++++++++++++++++++[m[31m---------[m
+ dist/admin-dashboard.html                     |  2 [32m+[m[31m-[m
+ tests/college-safety/production-smoke.spec.js |  1 [32m+[m
+ tests/college-safety/safety.spec.js           |  6 [32m++++++[m
+ 5 files changed, 36 insertions(+), 11 deletions(-)

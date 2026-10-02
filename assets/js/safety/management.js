@@ -79,19 +79,23 @@ async function renderAnalytics() {
   const totalOpen = state.incidents.length;
   const sosAlerts = state.incidents.filter(i => i.severity === 'CRITICAL' || i.incident_type === 'medical_emergency').length;
 
-  // Fetch resolved today count from DB
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const { count } = await supabase
-    .from('safety_incidents')
-    .select('id', { count: 'exact', head: true })
-    .eq('college_id', state.profile.college_id)
-    .eq('status', 'RESOLVED')
-    .gte('updated_at', todayStart.toISOString());
+  let resolvedCount = 0;
+  if (state.profile?.college_id) {
+    // Fetch resolved today count from DB
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const { count } = await supabase
+      .from('safety_incidents')
+      .select('id', { count: 'exact', head: true })
+      .eq('college_id', state.profile.college_id)
+      .eq('status', 'RESOLVED')
+      .gte('updated_at', todayStart.toISOString());
+    resolvedCount = count || 0;
+  }
 
   $('statTotalOpen').textContent = totalOpen;
   $('statTotalSOS').textContent = sosAlerts;
-  $('statResolvedToday').textContent = count ?? 0;
+  $('statResolvedToday').textContent = resolvedCount;
 }
 
 async function renderIncidents() {
@@ -160,6 +164,12 @@ async function renderIncidents() {
 }
 
 async function loadIncidents() {
+  if (!state.profile?.college_id) {
+    $('list').innerHTML = '<p class="empty">You are not assigned to a college.</p>';
+    await renderAnalytics();
+    return;
+  }
+
   const { data, error } = await supabase.from('vw_safety_incidents_safe')
     .select('*')
     .eq('college_id', state.profile.college_id)

@@ -829,7 +829,7 @@
             <span>💬</span>
             <span>Live Chat</span>
           </div>
-          <span class="nav-badge" style="background: var(--green);" id="navActiveChatsCount">3</span>
+          <span class="nav-badge" style="background: var(--green); display: none;" id="navActiveChatsCount">0</span>
         </a>
 
         <a href="notifications.html" class="nav-item">
@@ -837,7 +837,7 @@
             <span>🔔</span>
             <span>Notifications</span>
           </div>
-          <span class="nav-badge" style="background: #ff4757;" id="navNotifCount">2</span>
+          <span class="nav-badge" style="background: #ff4757; display: none;" id="navNotifCount">0</span>
         </a>
 
         <a href="payments.html" class="nav-item">
@@ -1251,7 +1251,18 @@
       document.getElementById("statWallet").textContent = `₹${walletBalance.toLocaleString()}`;
       const sideWallet = document.getElementById("sideWalletBalance");
       if (sideWallet) sideWallet.textContent = `₹${walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-      document.getElementById("navQuestionsCount").textContent = totalQuestions;
+      
+      const navQ = document.getElementById("navQuestionsCount");
+      if (navQ) {
+        navQ.textContent = totalQuestions;
+        navQ.style.display = totalQuestions > 0 ? "flex" : "none";
+      }
+
+      const navC = document.getElementById("navActiveChatsCount");
+      if (navC) {
+        navC.textContent = activeChats;
+        navC.style.display = activeChats > 0 ? "flex" : "none";
+      }
     }
 
     /* ========================================================

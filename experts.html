@@ -1174,7 +1174,6 @@
         availability_status: item.availability_status || "available",
         account_status: item.account_status || "active",
         verified: true,
-        is_demo: false,
         location: item.location || "India"
       };
     }
@@ -1292,7 +1291,6 @@
         const profileUrl = `expert-profile.html?expert=${encodeURIComponent(exp.id)}`;
         const chatUrl = `chat.html?expert=${encodeURIComponent(exp.id)}`;
 
-        const demoBadge = exp.is_demo ? `<span class="badge-demo">DEMO</span>` : '';
         const catBadge = exp.category ? `<span class="badge-cat-tag">${escapeHTML(exp.category)}</span>` : '';
 
         card.innerHTML = `
@@ -1308,7 +1306,6 @@
                 <div class="expert-name-title">
                   <span class="expert-name">${escapeHTML(exp.full_name)}</span>
                   <span class="badge-verif">✓ Verified</span>
-                  ${demoBadge}
                 </div>
                 <div style="margin-top: 2px; margin-bottom: 2px;">
                   ${catBadge}

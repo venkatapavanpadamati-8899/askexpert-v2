@@ -13,26 +13,38 @@ test.describe('Chat & Realtime Access', () => {
     await expect(page).toHaveURL(/.*login\.html/);
   });
 
-  test('User A cannot access User B\'s chat session (RLS)', async ({ page }) => {
-    // 1. Log in as Student A
+  test('User A cannot access User B\'s chat session (RLS)', async () => {
+    const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // 1. Sign in as Student A
     const emailA = process.env.TEST_STUDENT_A_EMAIL || 'test-student@askexpert.com';
     const passwordA = process.env.TEST_STUDENT_A_PASSWORD || 'TestPass123!';
     
-    await page.goto('/login.html');
-    await page.fill('#email', emailA);
-    await page.fill('#password', passwordA);
-    await page.click('#loginButton');
-    await page.waitForURL(/.*user-dashboard\.html/);
+    const { data: authData, error: signInErr } = await client.auth.signInWithPassword({
+      email: emailA,
+      password: passwordA,
+    });
     
-    // 2. We need a chat session belonging to someone else. 
-    // For this test, we try to access a random/fake uuid. If RLS works, we get no rows.
-    await page.goto('/chat.html?session=00000000-0000-0000-0000-000000000000');
+    expect(signInErr).toBeNull();
+    const studentA_ID = authData.user.id;
+
+    // 2. Fetch a conversation where Student A is NOT a participant.
+    // If RLS is working, this query should return 0 rows for Student A.
+    // We'll query all conversations and verify that every returned conversation
+    // has studentA_ID as either user_id or expert_id.
+    const { data: convs, error: fetchErr } = await client.from('conversations').select('*');
+    expect(fetchErr).toBeNull();
     
-    // Check if error box is shown or redirected
-    const errorText = await page.textContent('body');
-    // The exact error message depends on implementation, but it shouldn't load the chat interface
-    // Let's assert it shows an error or redirects
-    const hasError = errorText.includes('error') || errorText.includes('not found') || errorText.includes('Unauthorized') || page.url().includes('login.html') || page.url().includes('user-dashboard.html');
-    expect(hasError).toBeTruthy();
+    if (convs && convs.length > 0) {
+      for (const conv of convs) {
+        const isParticipant = (conv.user_id === studentA_ID || conv.expert_id === studentA_ID);
+        expect(isParticipant).toBeTruthy();
+      }
+    }
+    
+    // 3. To be absolutely sure, try to fetch a specific known conversation ID (fake or real)
+    const { data: specificConv } = await client.from('conversations').select('*').eq('id', '00000000-0000-0000-0000-000000000000');
+    // Even if it exists, it should be hidden from Student A (unless they are a participant)
+    expect(specificConv).toHaveLength(0);
   });
 });

@@ -1632,8 +1632,22 @@
             languages: languages
           }).eq("id", currentUserId);
 
-          // Save professional verification record
-          await supabase.from("professional_verifications").upsert(verifRecord, { onConflict: "expert_id" });
+          // Check if a record exists
+          const { data: existing } = await supabase
+            .from("professional_verifications")
+            .select("id")
+            .eq("expert_id", currentUserId)
+            .maybeSingle();
+
+          if (existing) {
+            await supabase.from("professional_verifications").update(verifRecord).eq("expert_id", currentUserId);
+          } else {
+            const { error: insertErr } = await supabase.from("professional_verifications").insert([verifRecord]);
+            if (insertErr) {
+              console.warn("DB insert error:", insertErr);
+              throw insertErr;
+            }
+          }
         } catch (dbErr) {
           console.warn("DB submission warning:", dbErr);
         }

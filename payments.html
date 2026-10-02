@@ -901,8 +901,11 @@
       } catch (err) {
         console.warn("Auth check:", err);
       }
+      
       if (!currentUserId) {
-        currentUserId = localStorage.getItem("askexpert_guest_user_id") || "guest_user";
+        const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace(`login.html?redirect=${redirectUrl}`);
+        return;
       }
     }
 

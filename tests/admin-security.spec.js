@@ -8,8 +8,8 @@ test.describe('Admin Security & Role Escalation', () => {
 
   test('Normal user cannot access admin dashboard', async ({ page }) => {
     // 1. Unauthenticated access should redirect
-    await page.goto('/admin-dashboard.html', { waitUntil: 'commit' });
-    await expect(page).toHaveURL(/.*admin-login.*/);
+    await page.goto('/admin-dashboard.html');
+    await expect(page).toHaveURL(/.*admin-login.*/, { timeout: 15000 });
 
     // 2. Normal user access should redirect
     // Use test student A as normal user

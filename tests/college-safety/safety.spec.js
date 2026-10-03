@@ -154,10 +154,16 @@ test.describe('Phase 2 — Authority Flow', () => {
     });
     page.on('console', msg => console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`));
     await page.goto('/college-safety-management.html');
-    const firstIncident = page.locator('.incident').first();
-    await firstIncident.locator('button:has-text("Acknowledge & Assign to Me")').click();
     
-    await expect(firstIncident.locator('.badge.ACKNOWLEDGED')).toBeVisible({ timeout: 15000 });
+    const incidentCard = page.locator('.incident').filter({ hasText: 'Acknowledge & Assign to Me' }).first();
+    await expect(incidentCard).toBeVisible({ timeout: 15000 });
+
+    const idText = await incidentCard.locator('.meta small').first().textContent();
+    
+    await incidentCard.locator('button', { hasText: 'Acknowledge & Assign to Me' }).click();
+    
+    const specificIncidentCard = page.locator('.incident').filter({ hasText: idText });
+    await expect(specificIncidentCard.locator('.badge.ACKNOWLEDGED')).toBeVisible({ timeout: 15000 });
   });
 });
 

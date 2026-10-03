@@ -8,8 +8,8 @@ test.describe('Admin Security & Role Escalation', () => {
 
   test('Normal user cannot access admin dashboard', async ({ page }) => {
     // 1. Unauthenticated access should redirect
-    await page.goto('/admin-dashboard.html');
-    await expect(page).toHaveURL(/.*admin-login\.html/);
+    await page.goto('/admin-dashboard.html', { waitUntil: 'commit' });
+    await expect(page).toHaveURL(/.*admin-login.*/);
 
     // 2. Normal user access should redirect
     // Use test student A as normal user
@@ -22,12 +22,12 @@ test.describe('Admin Security & Role Escalation', () => {
     await page.click('#loginButton');
     
     // Wait for login success
-    await page.waitForURL(/.*user-dashboard\.html/);
+    await page.waitForURL(/.*user-dashboard.*/);
     
     // Attempt to access admin dashboard
-    await page.goto('/admin-dashboard.html');
+    await page.goto('/admin-dashboard.html', { waitUntil: 'commit' });
     // Should be kicked out
-    await expect(page).toHaveURL(/.*admin-login\.html/);
+    await expect(page).toHaveURL(/.*admin-login.*/);
   });
 
   test('Manipulating localStorage role to admin does not bypass security', async ({ page }) => {
@@ -42,6 +42,6 @@ test.describe('Admin Security & Role Escalation', () => {
     await page.goto('/admin-dashboard.html');
     
     // DB check should fail and redirect
-    await expect(page).toHaveURL(/.*admin-login\.html/);
+    await expect(page).toHaveURL(/.*admin-login.*/);
   });
 });

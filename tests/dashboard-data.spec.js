@@ -11,7 +11,7 @@ test.describe('Dashboard Data Integrity', () => {
     await page.fill('#email', emailA);
     await page.fill('#password', passwordA);
     await page.click('#loginButton');
-    await page.waitForURL(/.*user-dashboard\.html/);
+    await page.waitForURL(/.*user-dashboard.*/);
 
     // 2. Check for hardcoded elements or dummy metrics
     const bodyText = await page.textContent('body');

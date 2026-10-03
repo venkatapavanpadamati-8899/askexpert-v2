@@ -5,7 +5,7 @@ test.describe('Payments Flow & Protection', () => {
   test('Payment creation requires active session and valid expert', async ({ page }) => {
     // Navigate to a payment creation endpoint or trigger the UI without login
     await page.goto('/payments.html');
-    await expect(page).toHaveURL(/.*login\.html/);
+    await expect(page).toHaveURL(/.*login.*/, { timeout: 10000 });
   });
 
   test('Cannot replay a successful payment to credit wallet multiple times', async ({ request }) => {

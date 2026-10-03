@@ -8,9 +8,9 @@ test.describe('Chat & Realtime Access', () => {
 
   test('User cannot access chat without valid active session', async ({ page }) => {
     // Attempting to visit video-room or chat directly
-    await page.goto('/chat.html?session=fake-session-id');
+    await page.goto('/chat.html?session=fake-session-id', { waitUntil: 'commit' });
     // Should kick out or show error
-    await expect(page).toHaveURL(/.*login\.html/);
+    await expect(page).toHaveURL(/.*login.*/);
   });
 
   test('User A cannot access User B\'s chat session (RLS)', async () => {

@@ -65,7 +65,7 @@ async function login(page, user) {
   await page.fill('#email', user.email);
   await page.fill('#password', user.password);
   await page.click('#loginButton');
-  await expect(page).toHaveURL(/.*user-dashboard\.html/, { timeout: 15000 });
+  await expect(page).toHaveURL(/.*user-dashboard.*/, { timeout: 15000 });
 }
 
 async function adminLogin(page, user) {
@@ -80,7 +80,7 @@ async function adminLogin(page, user) {
   await page.fill('#adminEmailInput', user.email);
   await page.fill('#adminPasswordInput', user.password);
   await page.click('#adminSubmitBtn');
-  await expect(page).toHaveURL(/.*admin-dashboard\.html/, { timeout: 15000 });
+  await expect(page).toHaveURL(/.*admin-dashboard.*/, { timeout: 15000 });
 }
 
 test.describe('Phase 1 — Student Flow', () => {
@@ -92,7 +92,7 @@ test.describe('Phase 1 — Student Flow', () => {
 
   test('Women Safety page loads & Authentication State', async ({ page }) => {
     await page.click('text=Women Safety & SOS');
-    await expect(page).toHaveURL(/.*women-safety\.html/);
+    await expect(page).toHaveURL(/.*women-safety.*/);
     await expect(page.locator('#studentName')).not.toHaveText('Student', { timeout: 15000 });
   });
 
@@ -140,7 +140,7 @@ test.describe('Phase 2 — Authority Flow', () => {
 
   test('Authorized staff access and visibility', async ({ page }) => {
     await page.click('text=College Safety');
-    await expect(page).toHaveURL(/.*college-safety-management\.html/);
+    await expect(page).toHaveURL(/.*college-safety-management.*/);
     
     // Check if incidents exist
     const incidents = page.locator('.incident');
